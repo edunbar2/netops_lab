@@ -1,0 +1,22 @@
+# {{ hostname }} RHEL host setup
+# username: cloud-user
+# password: redhat
+
+IFACE=$(nmcli -t -f DEVICE,TYPE dev status | awk -F: '$2=="ethernet" {print $1; exit}')
+sudo nmcli con delete LAB-{{ hostname }} 2>/dev/null || true
+sudo nmcli con add type ethernet ifname "$IFACE" con-name LAB-{{ hostname }}
+sudo nmcli con mod LAB-{{ hostname }} ipv4.method manual ipv4.addresses {{ ip }} ipv4.gateway {{ gateway }}
+{% if ipv6 is defined %}sudo nmcli con mod LAB-{{ hostname }} ipv6.method manual ipv6.addresses {{ ipv6 }}
+{% endif -%}
+{% if gateway_v6 is defined %}sudo nmcli con mod LAB-{{ hostname }} ipv6.gateway {{ gateway_v6 }}
+{% endif -%}
+{% if dns is defined %}sudo nmcli con mod LAB-{{ hostname }} ipv4.dns {{ dns }}
+{% endif -%}
+sudo nmcli con up LAB-{{ hostname }}
+
+ip addr show "$IFACE"
+ip route
+ip -6 route
+ping -c 4 {{ gateway }}
+{% if gateway_v6 is defined %}ping -6 -c 4 {{ gateway_v6 }}
+{% endif -%}

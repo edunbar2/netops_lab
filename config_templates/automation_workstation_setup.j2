@@ -1,0 +1,28 @@
+# {{ hostname }} automation workstation notes
+# Configure the host, then use it for Python, JSON, RESTCONF/NETCONF, and mock API tasks.
+
+ip addr add {{ ip }} dev eth0 2>/dev/null || true
+ip route replace default via {{ gateway }}
+{% if dns is defined %}echo "nameserver {{ dns }}" > /etc/resolv.conf
+{% endif -%}
+
+mkdir -p /root/lab
+cat > /root/lab/inventory.json <<'EOF'
+{{ inventory_json | default("{}") }}
+EOF
+
+cat > /root/lab/restconf_response.json <<'EOF'
+{{ restconf_response_json | default("{}") }}
+EOF
+
+cat > /root/lab/show_ip_interface_brief.txt <<'EOF'
+{{ show_ip_interface_brief | default("") }}
+EOF
+
+cat > /root/lab/parse_interfaces.py <<'EOF'
+{{ parser_script | default("# write your parser here") }}
+EOF
+
+ip addr show eth0
+ip route
+ping -c 4 {{ gateway }}

@@ -1,0 +1,51 @@
+!
+hostname {{ hostname }}
+feature interface-vlan
+{% for feature in features | default([]) %}
+feature {{ feature }}
+{% endfor %}
+!
+username {{ username | default("admin") }} password {{ password | default("admin") }} role network-admin
+!
+{% for vlan in vlans | default([]) %}
+vlan {{ vlan.id }}
+{% if vlan.name is defined %}  name {{ vlan.name }}
+{% endif -%}
+{% endfor %}
+!
+{% for intf in interfaces | default([]) %}
+interface {{ intf.name }}
+{% if intf.description is defined %}  description {{ intf.description }}
+{% endif -%}
+{% if intf.switchport is defined and intf.switchport == false %}  no switchport
+{% endif -%}
+{% if intf.ip is defined %}  ip address {{ intf.ip | ip_addr }}/{{ intf.ip.split('/')[1] }}
+{% endif -%}
+{% for line in intf.lines | default([]) %}  {{ line }}
+{% endfor -%}
+  no shutdown
+!
+{% endfor %}
+{% for svi in svis | default([]) %}
+interface vlan{{ svi.vlan }}
+{% if svi.ip is defined %}  ip address {{ svi.ip | ip_addr }}/{{ svi.ip.split('/')[1] }}
+{% endif -%}
+{% for line in svi.lines | default([]) %}  {{ line }}
+{% endfor -%}
+  no shutdown
+!
+{% endfor %}
+{% for bgp in bgp_processes | default([]) %}
+router bgp {{ bgp.asn }}
+{% if bgp.router_id is defined %}  router-id {{ bgp.router_id }}
+{% endif -%}
+{% for neighbor in bgp.neighbors | default([]) %}  neighbor {{ neighbor.ip }} remote-as {{ neighbor.remote_as }}
+{% endfor -%}
+{% for net in bgp.networks | default([]) %}  network {{ net.prefix }}/{{ net.prefix_length }}
+{% endfor -%}
+!
+{% endfor %}
+{% for block in extra_config | default([]) %}
+{{ block }}
+{% endfor %}
+copy running-config startup-config

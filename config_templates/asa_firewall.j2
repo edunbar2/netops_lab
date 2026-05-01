@@ -1,0 +1,47 @@
+!
+hostname {{ hostname }}
+domain-name {{ domain_name | default("lab.local") }}
+enable password {{ enable_secret | default("admin") }}
+username {{ username | default("admin") }} password {{ password | default("admin") }} privilege 15
+!
+{% for intf in interfaces | default([]) %}
+interface {{ intf.name }}
+{% if intf.description is defined %} description {{ intf.description }}
+{% endif -%}
+{% if intf.nameif is defined %} nameif {{ intf.nameif }}
+{% endif -%}
+{% if intf.security_level is defined %} security-level {{ intf.security_level }}
+{% endif -%}
+{% if intf.ip is defined %} ip address {{ intf.ip | ip_addr }} {{ intf.ip | ip_mask }}
+{% endif -%}
+{% for line in intf.lines | default([]) %} {{ line }}
+{% endfor -%}
+ no shutdown
+!
+{% endfor %}
+{% for route in routes | default([]) %}
+route {{ route.interface }} {{ route.network }} {{ route.mask }} {{ route.next_hop }}
+{% endfor %}
+{% for obj in network_objects | default([]) %}
+object network {{ obj.name }}
+{% if obj.subnet is defined %} subnet {{ obj.subnet | network_addr }} {{ obj.subnet | ip_mask }}
+{% endif -%}
+{% if obj.host is defined %} host {{ obj.host }}
+{% endif -%}
+{% for line in obj.lines | default([]) %} {{ line }}
+{% endfor -%}
+!
+{% endfor %}
+{% for acl in access_lists | default([]) %}
+access-list {{ acl.name }} {{ acl.line }}
+{% endfor %}
+{% for acg in access_groups | default([]) %}
+access-group {{ acg.acl }} {{ acg.direction }} interface {{ acg.interface }}
+{% endfor %}
+{% for block in extra_config | default([]) %}
+{{ block }}
+{% endfor %}
+ssh 0.0.0.0 0.0.0.0 {{ ssh_interface | default("inside") }}
+aaa authentication ssh console LOCAL
+telnet 0.0.0.0 0.0.0.0 {{ telnet_interface | default("inside") }}
+write memory

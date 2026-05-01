@@ -1,0 +1,50 @@
+{% include "ios_common_header.j2" %}
+ip routing
+spanning-tree mode rapid-pvst
+{% for vlan in vlans | default([]) %}
+vlan {{ vlan.id }}
+{% if vlan.name is defined %} name {{ vlan.name }}
+{% endif -%}
+{% endfor %}
+!
+{% for intf in interfaces | default([]) %}
+interface {{ intf.name }}
+{% if intf.description is defined %} description {{ intf.description }}
+{% endif -%}
+{% if intf.switchport is defined and intf.switchport == false %} no switchport
+{% endif -%}
+{% if intf.ip is defined %} ip address {{ intf.ip | ip_addr }} {{ intf.ip | ip_mask }}
+{% endif -%}
+{% for line in intf.lines | default([]) %} {{ line }}
+{% endfor -%}
+ no shutdown
+!
+{% endfor %}
+{% for svi in svis | default([]) %}
+interface Vlan{{ svi.vlan }}
+{% if svi.ip is defined %} ip address {{ svi.ip | ip_addr }} {{ svi.ip | ip_mask }}
+{% endif -%}
+{% for hsrp in svi.hsrp | default([]) %} standby {{ hsrp.group }} ip {{ hsrp.vip }}
+ standby {{ hsrp.group }} priority {{ hsrp.priority }}
+{% if hsrp.preempt | default(false) %} standby {{ hsrp.group }} preempt
+{% endif -%}
+{% endfor -%}
+{% for line in svi.lines | default([]) %} {{ line }}
+{% endfor -%}
+ no shutdown
+!
+{% endfor %}
+{% for ospf in ospf_processes | default([]) %}
+router ospf {{ ospf.process_id }}
+{% if ospf.router_id is defined %} router-id {{ ospf.router_id }}
+{% endif -%}
+{% for line in ospf.lines | default([]) %} {{ line }}
+{% endfor -%}
+{% for network in ospf.networks | default([]) %} network {{ network }}
+{% endfor -%}
+!
+{% endfor %}
+{% for block in extra_config | default([]) %}
+{{ block }}
+{% endfor %}
+end

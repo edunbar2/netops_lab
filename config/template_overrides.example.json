@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "description": "Optional local template overrides. Copy to config/template_overrides.local.json and update template IDs/settings for your GNS3 server.",
+  "templates": {
+    "iol2": {
+      "template_id": "",
+      "ethernet_adapters": 8,
+      "notes": "Preferred L2 template. Set to your local IOL2 template_id."
+    },
+    "iol3": {
+      "template_id": "",
+      "ethernet_adapters": 8,
+      "notes": "Preferred router template. Set to your local IOL3 template_id."
+    },
+    "rhel9": {
+      "template_id": "",
+      "options": "-cpu host",
+      "default_username": "cloud-user",
+      "default_password": "redhat",
+      "notes": "RHEL9 KVM images may require -cpu host to satisfy x86-64-v2."
+    }
+  }
+}

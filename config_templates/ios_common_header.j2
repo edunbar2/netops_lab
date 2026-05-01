@@ -1,0 +1,17 @@
+!
+hostname {{ hostname }}
+no ip domain-lookup
+ip domain-name {{ domain_name | default("lab.local") }}
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+username {{ username | default("admin") }} privilege 15 secret {{ password | default("admin") }}
+enable secret {{ enable_secret | default("admin") }}
+!
+line con 0
+ logging synchronous
+ exec-timeout 0 0
+line vty 0 4
+ login local
+ transport input telnet ssh
+!

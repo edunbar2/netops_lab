@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "gns3_server": "",
+  "catalog_path": "catalogs/ccnp_encor_lab_catalog.json",
+  "generator_path": "gns3_ccnp_lab_generator.py",
+  "output_dir": "generated_labs",
+  "host_type": "alpine",
+  "theme": "darkly",
+  "auto_config": true,
+  "push_config": true,
+  "push_endpoints": true,
+  "verify": false,
+  "linux_endpoint_username": "root",
+  "linux_endpoint_password": "",
+  "show_legacy_deployments": false,
+  "notes": [
+    "Copy this file to config/app_config.local.json and set gns3_server before generating labs.",
+    "Local config files are intentionally not overwritten by releases.",
+    "1.7 themes are curated; run scripts/setup_environment.py to select from the numbered theme list.",
+    "Run python install.py for first-run setup, dependency installation, config creation, template discovery, and readiness checks.",
+    "2.0.0-beta2 makes the PySide6 Qt GUI the primary development target while preserving the Tk GUI as a legacy fallback.",
+    "Generated labs retain the 1.9 workspace files: metadata.json, topology_map.md, hints.md, and generation_summary.md."
+  ]
+}

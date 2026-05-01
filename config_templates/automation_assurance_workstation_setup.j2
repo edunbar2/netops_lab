@@ -1,0 +1,51 @@
+# {{ hostname }} automation/assurance workstation notes
+# This host stages mock API responses, telemetry outputs, and workflow scripts.
+
+ip addr add {{ ip }} dev eth0 2>/dev/null || true
+ip route replace default via {{ gateway }}
+{% if dns is defined %}echo "nameserver {{ dns }}" > /etc/resolv.conf
+{% endif -%}
+
+mkdir -p /root/lab/api /root/lab/telemetry /root/lab/scripts /root/lab/reports
+
+cat > /root/lab/api/devices.json <<'EOF'
+{{ devices_json | default("{}") }}
+EOF
+
+cat > /root/lab/api/interfaces.json <<'EOF'
+{{ interfaces_json | default("{}") }}
+EOF
+
+cat > /root/lab/api/events.json <<'EOF'
+{{ events_json | default("{}") }}
+EOF
+
+cat > /root/lab/telemetry/netflow_summary.json <<'EOF'
+{{ netflow_json | default("{}") }}
+EOF
+
+cat > /root/lab/telemetry/syslog_sample.log <<'EOF'
+{{ syslog_sample | default("") }}
+EOF
+
+cat > /root/lab/telemetry/snmp_poll.json <<'EOF'
+{{ snmp_poll_json | default("{}") }}
+EOF
+
+cat > /root/lab/scripts/build_inventory.py <<'EOF'
+{{ build_inventory_py | default("# fix this script") }}
+EOF
+
+cat > /root/lab/scripts/find_down_interfaces.py <<'EOF'
+{{ find_down_interfaces_py | default("# fix this script") }}
+EOF
+
+cat > /root/lab/scripts/correlate_events.py <<'EOF'
+{{ correlate_events_py | default("# fix this script") }}
+EOF
+
+chmod +x /root/lab/scripts/*.py
+
+ip addr show eth0
+ip route
+ping -c 4 {{ gateway }}

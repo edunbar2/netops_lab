@@ -1,0 +1,66 @@
+{% include "ios_common_header.j2" %}
+{% if ipv6_unicast_routing | default(false) %}
+ipv6 unicast-routing
+!
+{% endif %}
+{% for intf in interfaces | default([]) %}
+interface {{ intf.name }}
+{% if intf.description is defined %} description {{ intf.description }}
+{% endif -%}
+{% if intf.switchport is defined and intf.switchport == false %} no switchport
+{% endif -%}
+{% if intf.ip is defined %} ip address {{ intf.ip | ip_addr }} {{ intf.ip | ip_mask }}
+{% endif -%}
+{% for ipv6_addr in intf.ipv6 | default([]) %} ipv6 address {{ ipv6_addr }}
+{% endfor -%}
+{% for line in intf.lines | default([]) %} {{ line }}
+{% endfor -%}
+ no shutdown
+!
+{% endfor %}
+{% for static in static_routes | default([]) %}
+ip route {{ static }}
+{% endfor %}
+{% if static_routes is defined and static_routes|length > 0 %}!{% endif %}
+{% for static in ipv6_static_routes | default([]) %}
+ipv6 route {{ static }}
+{% endfor %}
+{% if ipv6_static_routes is defined and ipv6_static_routes|length > 0 %}!{% endif %}
+{% for ospf in ospf_processes | default([]) %}
+router ospf {{ ospf.process_id }}
+{% if ospf.router_id is defined %} router-id {{ ospf.router_id }}
+{% endif -%}
+{% for line in ospf.lines | default([]) %} {{ line }}
+{% endfor -%}
+{% for network in ospf.networks | default([]) %} network {{ network }}
+{% endfor -%}
+!
+{% endfor %}
+{% for ospfv3 in ospfv3_processes | default([]) %}
+ipv6 router ospf {{ ospfv3.process_id }}
+{% if ospfv3.router_id is defined %} router-id {{ ospfv3.router_id }}
+{% endif -%}
+{% for line in ospfv3.lines | default([]) %} {{ line }}
+{% endfor -%}
+!
+{% endfor %}
+{% for bgp in bgp_processes | default([]) %}
+router bgp {{ bgp.asn }}
+{% for line in bgp.lines | default(["bgp log-neighbor-changes"]) %} {{ line }}
+{% endfor -%}
+{% for neighbor in bgp.neighbors | default([]) %} neighbor {{ neighbor.ip }} remote-as {{ neighbor.remote_as }}
+{% if neighbor.update_source is defined %} neighbor {{ neighbor.ip }} update-source {{ neighbor.update_source }}
+{% endif -%}
+{% if neighbor.ebgp_multihop is defined %} neighbor {{ neighbor.ip }} ebgp-multihop {{ neighbor.ebgp_multihop }}
+{% endif -%}
+{% endfor -%}
+{% for net in bgp.networks | default([]) %} network {{ net.prefix }} mask {{ net.mask }}
+{% endfor -%}
+{% for redist in bgp.redistribute | default([]) %} redistribute {{ redist }}
+{% endfor -%}
+!
+{% endfor %}
+{% for block in extra_config | default([]) %}
+{{ block }}
+{% endfor %}
+end

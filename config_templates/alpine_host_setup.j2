@@ -1,0 +1,17 @@
+# {{ hostname }} Alpine Linux Docker host notes
+# Docker nodes are lightweight endpoints. Configure from console if needed.
+
+ip addr add {{ ip }} dev eth0 2>/dev/null || true
+ip route replace default via {{ gateway }}
+{% if ipv6 is defined %}ip -6 addr add {{ ipv6 }} dev eth0 2>/dev/null || true
+{% endif -%}
+{% if gateway_v6 is defined %}ip -6 route replace default via {{ gateway_v6 }}
+{% endif -%}
+{% if dns is defined %}echo "nameserver {{ dns }}" > /etc/resolv.conf
+{% endif -%}
+ip addr show eth0
+ip route
+ip -6 route
+ping -c 4 {{ gateway }}
+{% if gateway_v6 is defined %}ping -6 -c 4 {{ gateway_v6 }}
+{% endif -%}

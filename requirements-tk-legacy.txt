@@ -1,0 +1,4 @@
+requests
+telnetlib3
+Jinja2
+ttkbootstrap

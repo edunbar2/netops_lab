@@ -1,0 +1,24 @@
+# CCNA automation workstation setup
+ip addr add {{ ip }} dev eth0 2>/dev/null || true
+ip route replace default via {{ gateway }}
+echo "nameserver {{ dns | default('1.1.1.1') }}" > /etc/resolv.conf
+mkdir -p /root/ccna/api /root/ccna/scripts
+cat > /root/ccna/api/device.json <<'EOF'
+{{ device_json | default('{}') }}
+EOF
+cat > /root/ccna/api/rest_task.txt <<'EOF'
+{{ rest_task | default('') }}
+EOF
+cat > /root/ccna/scripts/read_inventory.py <<'EOF'
+{{ inventory_py | default('# script placeholder') }}
+EOF
+chmod +x /root/ccna/scripts/read_inventory.py
+ip addr show eth0
+ip route
+
+cat > /root/ccna/api/wireless_notes.txt <<'EOF'
+{{ wireless_notes | default('') }}
+EOF
+cat > /root/ccna/api/security_notes.txt <<'EOF'
+{{ security_notes | default('') }}
+EOF

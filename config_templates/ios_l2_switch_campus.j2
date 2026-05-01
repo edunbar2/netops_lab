@@ -1,0 +1,27 @@
+{% include "ios_common_header.j2" %}
+spanning-tree mode rapid-pvst
+{% for vlan in vlans | default([]) %}
+vlan {{ vlan.id }}
+{% if vlan.name is defined %} name {{ vlan.name }}
+{% endif -%}
+{% endfor %}
+!
+{% for intf in interfaces | default([]) %}
+interface {{ intf.name }}
+{% if intf.description is defined %} description {{ intf.description }}
+{% endif -%}
+{% for line in intf.lines | default([]) %} {{ line }}
+{% endfor -%}
+ no shutdown
+!
+{% endfor %}
+{% for port_channel in port_channels | default([]) %}
+interface Port-channel{{ port_channel.id }}
+{% for line in port_channel.lines | default([]) %} {{ line }}
+{% endfor -%}
+!
+{% endfor %}
+{% for block in extra_config | default([]) %}
+{{ block }}
+{% endfor %}
+end

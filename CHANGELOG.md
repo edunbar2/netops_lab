@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.0.1 - GNS3 generation visibility and release guardrails
+
+- Added GitHub pull request, branch, merge, and testing guardrails for patch, minor, and major release work.
+- Added a GitHub Actions unit-test workflow for pull requests targeting `main`.
+- Changed the Qt command runner to stream generator output while lab generation is running instead of waiting until the command exits.
+- Added flushed generation progress stages before and during GNS3 project creation.
+- Reused a shared HTTP session for GNS3 API calls to reduce connection overhead during project creation.
+- Avoided redundant node-detail API reads when GNS3 create responses already include console metadata.
+- Added unit tests for GNS3 API session use, node metadata refresh behavior, and generation progress output.
+
 ## 4.0.0 - NetOps Labs foundation
 
 - Renamed the user-facing application to **NetOps Labs**.

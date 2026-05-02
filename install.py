@@ -138,7 +138,7 @@ def main() -> int:
     parser.add_argument("-y", "--yes", action="store_true", help="Accept installer defaults where possible")
     args = parser.parse_args()
 
-    print("NetOps Labs 4.0.0 installer")
+    print("NetOps Labs 4.0.1 installer")
     print("=================================")
     print(f"Application directory: {APP_DIR}")
     print(f"Python: {sys.executable}")

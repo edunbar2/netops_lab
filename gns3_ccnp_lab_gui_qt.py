@@ -73,7 +73,7 @@ except Exception as exc:  # pragma: no cover - used only when dependency is abse
     raise
 
 APP_DIR = Path(__file__).resolve().parent
-APP_VERSION = "4.0.0"
+APP_VERSION = "4.0.1"
 APP_NAME = "NetOps Labs"
 APP_SUBTITLE = "Hands-on infrastructure training for networking, Linux, and security."
 LEGACY_APP_NAME = "GNS3 CCNP Labs"
@@ -746,6 +746,7 @@ class ConsoleWorker(QThread):
 
 
 class ProcessWorker(QThread):
+    output = Signal(str)
     finished = Signal(int, str)
 
     def __init__(self, args: List[str], cwd: Path):
@@ -754,17 +755,27 @@ class ProcessWorker(QThread):
         self.cwd = cwd
 
     def run(self) -> None:
+        output_chunks: List[str] = []
         try:
-            proc = subprocess.run(
+            proc = subprocess.Popen(
                 self.args,
                 cwd=str(self.cwd),
                 text=True,
-                stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
+                stdout=subprocess.PIPE,
+                bufsize=1,
             )
-            self.finished.emit(proc.returncode, proc.stdout)
+            if proc.stdout:
+                for line in proc.stdout:
+                    output_chunks.append(line)
+                    self.output.emit(line)
+                proc.stdout.close()
+            return_code = proc.wait()
+            self.finished.emit(return_code, "".join(output_chunks))
         except Exception as exc:
-            self.finished.emit(1, f"Failed to run command: {exc}")
+            message = f"Failed to run command: {exc}"
+            self.output.emit(message)
+            self.finished.emit(1, message)
 
 
 
@@ -963,7 +974,7 @@ class MainWindow(QMainWindow):
 
         self._build_menus()
         self._build_ui()
-        self.statusBar().showMessage("4.0.0 ready. NetOps Labs now organizes practice by study path and lab type.")
+        self.statusBar().showMessage("4.0.1 ready. NetOps Labs now organizes practice by study path and lab type.")
         self.refresh_filters()
         self.refresh_scenarios()
 
@@ -1726,16 +1737,17 @@ class MainWindow(QMainWindow):
         layout.addLayout(actions)
 
         notes = configure_readable_text_edit(QTextEdit()); notes.setReadOnly(True); notes.setMarkdown(f"""
-# NetOps Labs 4.0.0
+# NetOps Labs {APP_VERSION}
 
 Version: `{APP_VERSION}`
 
-NetOps Labs 4.0.0 is the identity and catalog-foundation release.
+NetOps Labs {APP_VERSION} is a stabilization patch for generation visibility, GNS3 API efficiency, and release workflow guardrails.
 
 - The application now presents itself as NetOps Labs.
 - Study Path is the primary catalog filter.
 - Exam alignment is preserved as secondary metadata.
 - Lab Type remains a first-class filter for build, troubleshoot, verify, mixed, hardening, and explore workflows.
+- Lab generation output now streams while the generator is running.
 - Existing 3.x generated labs and workspace metadata remain compatible.
 - The GNS3 Projects page continues to manage existing server projects and stale generated projects.
 """)
@@ -1962,7 +1974,7 @@ NetOps Labs 4.0.0 is the identity and catalog-foundation release.
         self.statusBar().showMessage("Catalog reloaded")
 
     def base_generator_args(self) -> List[str]:
-        args = [sys.executable, str(DEFAULT_GENERATOR)]
+        args = [sys.executable, "-u", str(DEFAULT_GENERATOR)]
         if self.settings.get("gns3_server"):
             args += ["--server", str(self.settings["gns3_server"])]
         if LOCAL_SETTINGS.exists():
@@ -1982,12 +1994,14 @@ NetOps Labs 4.0.0 is the identity and catalog-foundation release.
         self.statusBar().showMessage("Running command...")
         worker = ProcessWorker(args, APP_DIR)
         self.track_thread(worker, "worker")
+        def output_ready(text: str) -> None:
+            target.appendPlainText(text.rstrip("\n"))
         def finished(code: int, output: str) -> None:
-            target.appendPlainText(output)
             target.appendPlainText(f"\nExit code: {code}")
             self.statusBar().showMessage("Command completed" if code == 0 else f"Command failed with exit code {code}")
             if on_done:
                 on_done(code, output)
+        worker.output.connect(output_ready)
         worker.finished.connect(finished)
         worker.start()
 
@@ -3659,7 +3673,7 @@ NetOps Labs 4.0.0 is the identity and catalog-foundation release.
         QMessageBox.information(
             self,
             "About NetOps Labs",
-            "NetOps Labs 4.0.0 Qt GUI. "
+            f"NetOps Labs {APP_VERSION} Qt GUI. "
             "The legacy Tk GUI remains packaged as a fallback.",
         )
 

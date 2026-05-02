@@ -31,7 +31,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 from urllib.parse import urlparse
 
-APP_VERSION = "4.0.0"
+APP_VERSION = "4.0.1"
 
 import requests
 
@@ -53,6 +53,22 @@ DEFAULT_CATALOG_NAMES = ["catalogs/ccnp_encor_lab_catalog.json", "ccnp_encor_lab
 DEFAULT_TEMPLATE_DIRS = ["config_templates"]
 DEFAULT_APP_CONFIG_NAMES = ["config/app_config.local.json", "app_config.local.json"]
 DEFAULT_TEMPLATE_OVERRIDE_NAMES = ["config/template_overrides.local.json", "template_overrides.local.json"]
+_API_SESSION: Optional[requests.Session] = None
+
+
+class ProgressReporter:
+    """Emit simple flushed progress lines for CLI and GUI subprocess readers."""
+
+    def __init__(self, total_steps: int):
+        self.total_steps = max(1, int(total_steps))
+        self.current_step = 0
+
+    def step(self, message: str) -> None:
+        self.current_step += 1
+        print(f"[{self.current_step}/{self.total_steps}] {message}", flush=True)
+
+    def detail(self, message: str) -> None:
+        print(f"  - {message}", flush=True)
 
 
 def find_optional_file(path: Optional[str], default_names: List[str]) -> Optional[Path]:
@@ -609,10 +625,20 @@ def render_configs(env: Any, topology: Dict[str, Any], host_type: str) -> Dict[s
 # GNS3 API
 # -----------------------------
 
+def gns3_api_session() -> requests.Session:
+    """Return a shared requests session so GNS3 API calls reuse HTTP connections."""
+    global _API_SESSION
+    if _API_SESSION is None:
+        _API_SESSION = requests.Session()
+        _API_SESSION.headers.update({"Accept": "application/json"})
+    return _API_SESSION
+
+
 def api(method: str, base: str, path: str, **kwargs) -> Any:
     url = f"{base.rstrip('/')}/{path.lstrip('/')}"
+    session = kwargs.pop("_session", None) or gns3_api_session()
     try:
-        response = requests.request(method, url, timeout=30, **kwargs)
+        response = session.request(method, url, timeout=30, **kwargs)
     except requests.exceptions.ConnectionError as exc:
         print(f"Could not connect to the GNS3 API at {url}", file=sys.stderr)
         print(f"Test from this machine: curl {GNS3_DEFAULT}/v2/version", file=sys.stderr)
@@ -706,6 +732,27 @@ def start_node(base: str, project_id: str, node_id: str) -> None:
 
 def read_node(base: str, project_id: str, node_id: str) -> Dict[str, Any]:
     return api("GET", base, f"/v2/projects/{project_id}/nodes/{node_id}")
+
+
+def created_node_has_runtime_metadata(node: Dict[str, Any]) -> bool:
+    return bool(node.get("node_id")) and node.get("console") is not None
+
+
+def refresh_created_nodes(base: str, project_id: str, created_nodes: Dict[str, Any], progress: Optional[ProgressReporter] = None) -> Dict[str, Any]:
+    """Fetch node details only when create responses did not include console data."""
+    refreshed: Dict[str, Any] = {}
+    skipped = 0
+    for name, node in created_nodes.items():
+        if created_node_has_runtime_metadata(node):
+            refreshed[name] = node
+            skipped += 1
+            continue
+        if progress:
+            progress.detail(f"Refreshing metadata for {name}")
+        refreshed[name] = read_node(base, project_id, node["node_id"])
+    if progress and skipped:
+        progress.detail(f"Used create responses for {skipped} node(s); skipped redundant node-detail reads")
+    return refreshed
 
 
 # -----------------------------
@@ -2679,10 +2726,25 @@ def build_project(args: argparse.Namespace, catalog: Dict[str, Any], env: Any,
 
     clean_topology = copy.deepcopy(catalog["topologies"][topology_id])
     faulty_topology = apply_data_patches(clean_topology, scenario)
+    progress = ProgressReporter(
+        8
+        + int(bool(args.start or args.push_config or args.push_endpoints or args.verify))
+        + int(bool(args.push_config))
+        + int(bool(args.push_endpoints))
+        + int(bool(args.verify))
+    )
+    progress.step("Preparing lab generation plan")
+    progress.detail(f"Scenario: {scenario_id} - {scenario.get('title', '')}")
+    progress.detail(f"Topology: {topology_id}")
+    progress.detail(f"Nodes: {len(faulty_topology.get('nodes', {}))}; links: {len(faulty_topology.get('links', []))}")
 
     if not getattr(args, "skip_template_port_check", False):
+        progress.step("Checking live GNS3 template port readiness")
         validate_topology_ports_against_live_templates(args.server, catalog, faulty_topology, args.host_type)
+    else:
+        progress.step("Skipping live GNS3 template port readiness check")
 
+    progress.step("Rendering clean and faulty device configurations")
     clean_configs = render_configs(env, clean_topology, args.host_type)
     faulty_configs = render_configs(env, faulty_topology, args.host_type)
     faulty_configs = apply_text_patches(faulty_configs, scenario)
@@ -2690,25 +2752,24 @@ def build_project(args: argparse.Namespace, catalog: Dict[str, Any], env: Any,
     project_name = args.name or f"CCNP_{scenario_id}_{random.randint(1000, 9999)}"
     out_dir = Path(args.out)
 
-    print(f"Creating GNS3 project: {project_name}")
-    print(f"Scenario: {scenario_id} - {scenario.get('title', '')}")
-    print(f"Topology: {topology_id}")
-
+    progress.step(f"Creating GNS3 project: {project_name}")
     project = create_project(args.server, project_name)
     project_id = project["project_id"]
 
+    progress.step(f"Creating {len(faulty_topology['nodes'])} GNS3 node(s)")
     created_nodes: Dict[str, Any] = {}
     for name, spec in faulty_topology["nodes"].items():
         template_key = resolve_node_template_key(spec, args.host_type)
         if template_key not in catalog["templates"]:
             raise SystemExit(f"Unknown template key {template_key!r} for node {name}")
         template = catalog["templates"][template_key]
-        print(f"Creating node {name} from template {template_key}")
+        progress.detail(f"Creating node {name} from template {template_key}")
         created_nodes[name] = create_node(args.server, project_id, name, template, int(spec["x"]), int(spec["y"]))
 
+    progress.step(f"Creating {len(faulty_topology.get('links', []))} GNS3 link(s)")
     for link in faulty_topology.get("links", []):
         label = link.get("label", f"{link['a']}:{link['a_adapter']} <-> {link['b']}:{link['b_adapter']}")
-        print(f"Linking {label}")
+        progress.detail(f"Linking {label}")
         create_catalog_link(
             args.server,
             project_id,
@@ -2719,9 +2780,10 @@ def build_project(args: argparse.Namespace, catalog: Dict[str, Any], env: Any,
             link,
         )
 
-    for name, node in list(created_nodes.items()):
-        created_nodes[name] = read_node(args.server, project_id, node["node_id"])
+    progress.step("Refreshing node runtime metadata")
+    created_nodes = refresh_created_nodes(args.server, project_id, created_nodes, progress)
 
+    progress.step("Writing generated lab workspace files")
     write_lab_files(
         out_dir=out_dir,
         project_name=project_name,
@@ -2745,19 +2807,20 @@ def build_project(args: argparse.Namespace, catalog: Dict[str, Any], env: Any,
     )
 
     if args.start or args.push_config or args.push_endpoints or args.verify:
+        progress.step(f"Starting {len(created_nodes)} GNS3 node(s)")
         for name, node in created_nodes.items():
-            print(f"Starting {name}")
+            progress.detail(f"Starting {name}")
             try:
                 start_node(args.server, project_id, node["node_id"])
             except requests.HTTPError as exc:
                 print(f"Warning: failed to start {name}: {exc}", file=sys.stderr)
 
     if args.push_config:
-        print("Waiting for Cisco consoles and pushing faulty configs with telnetlib3...")
+        progress.step("Waiting for Cisco consoles and pushing faulty configs")
         push_cisco_configs(project_name, faulty_topology, created_nodes, faulty_configs, out_dir, args.console_timeout, args.server)
 
     if args.push_endpoints:
-        print("Waiting for supported endpoint consoles and pushing endpoint configs...")
+        progress.step("Waiting for supported endpoint consoles and pushing endpoint configs")
         push_endpoint_configs(
             project_name, faulty_topology, created_nodes, faulty_configs, out_dir,
             args.endpoint_timeout, args.server, args.host_type,
@@ -2767,23 +2830,23 @@ def build_project(args: argparse.Namespace, catalog: Dict[str, Any], env: Any,
         )
 
     if args.verify:
-        print("Collecting verification output...")
+        progress.step("Collecting verification output")
         collect_verification(project_name, faulty_topology, scenario, created_nodes, out_dir, args.console_timeout, args.server)
 
-    print()
-    print("Done.")
-    print(f"GNS3 project: {project_name}")
-    print(f"Project ID: {project_id}")
-    print(f"Local files: {out_dir / project_name}")
-    print(f"Generation summary: {out_dir / project_name / 'generation_summary.md'}")
+    print(flush=True)
+    print("Done.", flush=True)
+    print(f"GNS3 project: {project_name}", flush=True)
+    print(f"Project ID: {project_id}", flush=True)
+    print(f"Local files: {out_dir / project_name}", flush=True)
+    print(f"Generation summary: {out_dir / project_name / 'generation_summary.md'}", flush=True)
     if args.push_config:
-        print("Cisco configs were pushed automatically where supported.")
+        print("Cisco configs were pushed automatically where supported.", flush=True)
     else:
-        print("Cisco configs were not pushed because config push was disabled.")
+        print("Cisco configs were not pushed because config push was disabled.", flush=True)
     if args.push_endpoints:
-        print("Supported endpoint configs were pushed automatically where supported.")
+        print("Supported endpoint configs were pushed automatically where supported.", flush=True)
     else:
-        print("Endpoint setup files were generated; endpoint push was not requested.")
+        print("Endpoint setup files were generated; endpoint push was not requested.", flush=True)
 
 
 def build_blank_topology_project(args: argparse.Namespace, catalog: Dict[str, Any], env: Any) -> None:
@@ -2794,33 +2857,41 @@ def build_blank_topology_project(args: argparse.Namespace, catalog: Dict[str, An
         raise SystemExit(f"Unknown topology: {topology_id}")
 
     topology = copy.deepcopy(catalog["topologies"][topology_id])
+    progress = ProgressReporter(8 + int(bool(args.start)))
+    progress.step("Preparing blank topology generation plan")
+    progress.detail(f"Topology: {topology_id}")
+    progress.detail(f"Nodes: {len(topology.get('nodes', {}))}; links: {len(topology.get('links', []))}")
 
     if not getattr(args, "skip_template_port_check", False):
+        progress.step("Checking live GNS3 template port readiness")
         validate_topology_ports_against_live_templates(args.server, catalog, topology, args.host_type)
+    else:
+        progress.step("Skipping live GNS3 template port readiness check")
 
+    progress.step("Rendering baseline topology configurations")
     configs = render_configs(env, topology, args.host_type)
     project_name = args.name or f"BLANK_{topology_id}_{random.randint(1000, 9999)}"
     out_dir = Path(args.out)
 
-    print(f"Creating blank GNS3 topology project: {project_name}")
-    print(f"Topology: {topology_id}")
-    print("No scenario faults or answer-key artifacts will be applied.")
-
+    progress.step(f"Creating blank GNS3 topology project: {project_name}")
+    progress.detail("No scenario faults or answer-key artifacts will be applied")
     project = create_project(args.server, project_name)
     project_id = project["project_id"]
 
+    progress.step(f"Creating {len(topology['nodes'])} GNS3 node(s)")
     created_nodes: Dict[str, Any] = {}
     for name, spec in topology["nodes"].items():
         template_key = resolve_node_template_key(spec, args.host_type)
         if template_key not in catalog["templates"]:
             raise SystemExit(f"Unknown template key {template_key!r} for node {name}")
         template = catalog["templates"][template_key]
-        print(f"Creating node {name} from template {template_key}")
+        progress.detail(f"Creating node {name} from template {template_key}")
         created_nodes[name] = create_node(args.server, project_id, name, template, int(spec["x"]), int(spec["y"]))
 
+    progress.step(f"Creating {len(topology.get('links', []))} GNS3 link(s)")
     for link in topology.get("links", []):
         label = link.get("label", f"{link['a']}:{link['a_adapter']} <-> {link['b']}:{link['b_adapter']}")
-        print(f"Linking {label}")
+        progress.detail(f"Linking {label}")
         create_catalog_link(
             args.server,
             project_id,
@@ -2831,9 +2902,10 @@ def build_blank_topology_project(args: argparse.Namespace, catalog: Dict[str, An
             link,
         )
 
-    for name, node in list(created_nodes.items()):
-        created_nodes[name] = read_node(args.server, project_id, node["node_id"])
+    progress.step("Refreshing node runtime metadata")
+    created_nodes = refresh_created_nodes(args.server, project_id, created_nodes, progress)
 
+    progress.step("Writing blank topology workspace files")
     lab_dir = out_dir / project_name
     cfg_dir = lab_dir / "blank_topology_configs"
     cfg_dir.mkdir(parents=True, exist_ok=True)
@@ -2877,18 +2949,19 @@ def build_blank_topology_project(args: argparse.Namespace, catalog: Dict[str, An
     )
 
     if args.start:
+        progress.step(f"Starting {len(created_nodes)} GNS3 node(s)")
         for name, node in created_nodes.items():
-            print(f"Starting {name}")
+            progress.detail(f"Starting {name}")
             try:
                 start_node(args.server, project_id, node["node_id"])
             except requests.HTTPError as exc:
                 print(f"Warning: failed to start {name}: {exc}", file=sys.stderr)
 
-    print()
-    print("Done.")
-    print(f"GNS3 project: {project_name}")
-    print(f"Project ID: {project_id}")
-    print(f"Local files: {lab_dir}")
+    print(flush=True)
+    print("Done.", flush=True)
+    print(f"GNS3 project: {project_name}", flush=True)
+    print(f"Project ID: {project_id}", flush=True)
+    print(f"Local files: {lab_dir}", flush=True)
 
 
 def scenario_lookup_title(catalog: Dict[str, Any], scenario_id: str) -> str:

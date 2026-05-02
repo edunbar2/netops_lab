@@ -2,9 +2,15 @@
 
 **Hands-on infrastructure training for networking, Linux, and security.**
 
-NetOps Labs is the 4.0 successor to NetOps Labs. It keeps the existing GNS3-driven networking workflow while reorganizing the catalog around study paths, lab types, domains, and operational skills instead of treating exams as the primary filter.
+NetOps Labs is the 4.0 successor to GNS3 CCNP Labs. It keeps the existing GNS3-driven networking workflow while reorganizing the catalog around study paths, lab types, domains, and operational skills instead of treating exams as the primary filter.
 
 Existing 3.x generated labs and local metadata remain supported.
+
+## 4.0.1 patch release
+
+4.0.1 improves generation visibility and GNS3 API efficiency. The Qt GUI now streams generator output while a lab is being created, and the generator reports clear progress stages before and during GNS3 project creation.
+
+This patch also adds GitHub branch, pull request, merge, and unit-test guardrails. See [Branching and Release Policy](docs/BRANCHING_AND_RELEASE_POLICY.md).
 
 ## 4.0.0 stable release
 
@@ -87,7 +93,7 @@ Highlights:
 - Replaces duplicate generated-folder buttons with a single output-area artifact group: **Open Generated Lab Folder**, **Open Lab README**, and **Open Lab Configs**.
 - Audits themes: keeps distinct dark themes, reduces built-in light themes to `minty`, `sandstone`, and `morph`, adds custom softer light themes, and adds custom dark green/brown themes.
 
-Current release: **2.0.0**
+Current release: **4.0.1**
 
 NetOps Labs creates hands-on infrastructure labs with a networking-first workflow and room for Linux and security study paths. The current release keeps the mature GNS3 project generation and management features while introducing the study-path catalog foundation for future Secure Enclave Networking and RHEL9 Operations content.
 

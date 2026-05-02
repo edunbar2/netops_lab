@@ -22,7 +22,7 @@ import threading
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-APP_VERSION = "4.0.0"
+APP_VERSION = "4.0.1"
 
 try:
     import ttkbootstrap as ttk

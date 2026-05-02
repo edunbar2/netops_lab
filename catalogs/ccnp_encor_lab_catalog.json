@@ -15330,7 +15330,8 @@
       ],
       "study_paths": [
         "ccna-foundations",
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -15434,7 +15435,8 @@
       ],
       "study_paths": [
         "ccna-foundations",
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -15536,7 +15538,8 @@
       ],
       "study_paths": [
         "ccna-foundations",
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -15639,7 +15642,8 @@
       ],
       "study_paths": [
         "ccna-foundations",
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -15744,7 +15748,8 @@
       ],
       "study_paths": [
         "ccna-foundations",
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -15850,7 +15855,8 @@
       ],
       "study_paths": [
         "ccna-foundations",
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -17382,7 +17388,9 @@
         "sec_vty_acl_blocks_admin"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -17482,7 +17490,9 @@
         "sec_vty_acl_blocks_admin_iosv"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -17581,7 +17591,8 @@
       ],
       "study_paths": [
         "ccna-foundations",
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -17682,7 +17693,8 @@
       ],
       "study_paths": [
         "ccna-foundations",
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -18181,7 +18193,8 @@
         "bgp_wrong_remote_as"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -18283,7 +18296,8 @@
         "bgp_wrong_remote_as_iosv"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -18383,7 +18397,8 @@
         "bgp_missing_network_statement"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -18484,7 +18499,8 @@
         "bgp_missing_network_statement_iosv"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -20062,7 +20078,8 @@
         "bgp_next_hop_unreachable"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -20164,7 +20181,8 @@
         "bgp_next_hop_unreachable_iosv"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -20881,7 +20899,8 @@
         "l3_pbr_acl_mismatch"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -20984,7 +21003,8 @@
         "l3_pbr_acl_mismatch_iosv"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -21481,7 +21501,8 @@
         "svc_nat_acl_wrong_source"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -21580,7 +21601,8 @@
         "svc_nat_acl_wrong_source_iosv"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -23218,7 +23240,8 @@
         "na_syslog_wrong_source_interface"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -23313,7 +23336,8 @@
         "na_syslog_wrong_source_interface_iosv"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -26816,7 +26840,8 @@
         "na_syslog_wrong_host"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -26917,7 +26942,8 @@
         "na_syslog_wrong_host_iosv"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting"
       ],
       "platforms": [
         "gns3",
@@ -28667,7 +28693,9 @@
         "na_ntp_wrong_server"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -28770,7 +28798,9 @@
         "na_ntp_wrong_server_iosv"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -29062,7 +29092,8 @@
         "sec_vty_transport_telnet_enabled"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -29164,7 +29195,8 @@
         "sec_vty_transport_telnet_enabled_iosv"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -37557,7 +37589,8 @@
       ],
       "study_paths": [
         "ccna-foundations",
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -37673,7 +37706,8 @@
       ],
       "study_paths": [
         "ccna-foundations",
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -37789,7 +37823,8 @@
         "svc_port_security_violation_shutdown"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -37905,7 +37940,8 @@
         "svc_port_security_violation_shutdown_iosv"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -38018,7 +38054,8 @@
       ],
       "study_paths": [
         "ccna-foundations",
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -38133,7 +38170,8 @@
       ],
       "study_paths": [
         "ccna-foundations",
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -38459,7 +38497,9 @@
         "svc_errdisable_recovery_missing"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -38562,7 +38602,9 @@
         "svc_errdisable_recovery_missing_iosv"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "network-troubleshooting",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -42271,7 +42313,8 @@
         "sec_asa_management_ssh_wrong_interface"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -42376,7 +42419,8 @@
         "sec_asa_management_ssh_wrong_interface_iosv"
       ],
       "study_paths": [
-        "ccnp-enterprise"
+        "ccnp-enterprise",
+        "secure-enclave-networking"
       ],
       "platforms": [
         "gns3",
@@ -60069,7 +60113,7 @@
     },
     "secure-enclave-networking": {
       "name": "Secure Enclave Networking",
-      "description": "High-security, STIG-like, controlled-environment network operations practice."
+      "description": "Controlled-environment network operations practice focused on access-layer controls, management-plane restrictions, audit readiness, and secure baseline validation. Legacy variants remain available for compatibility and vulnerability-recognition practice."
     },
     "rhel9-operations": {
       "name": "RHEL9 Operations",
@@ -60077,7 +60121,7 @@
     },
     "network-troubleshooting": {
       "name": "Network Troubleshooting",
-      "description": "Incident-style troubleshooting practice across network technologies."
+      "description": "Curated incident-style troubleshooting practice across routing, services, assurance, and security controls."
     }
   }
 }

@@ -2,6 +2,8 @@
 
 ## Unreleased - Packaging automation
 
+- Added `tools/validate_catalog.py` for standalone catalog metadata/reference validation with JSON output, strict mode, legacy normalization, study-path coverage checks, CI integration, and tests.
+- Seeded the Secure Enclave Networking and Network Troubleshooting study paths using existing mature scenarios so the study-path filter exposes meaningful content without adding placeholder labs.
 - Added a GitHub Actions packaging workflow for Windows, macOS, Linux, and source zip artifacts.
 - Added a PyInstaller-based packaging script that builds the Qt GUI and bundled generator executable.
 - Added native packaging outputs for Inno Setup, macOS DMG, and Linux `.deb` where platform tools are available.

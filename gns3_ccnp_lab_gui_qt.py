@@ -72,7 +72,39 @@ except Exception as exc:  # pragma: no cover - used only when dependency is abse
     )
     raise
 
-APP_DIR = Path(__file__).resolve().parent
+def is_frozen_app() -> bool:
+    return bool(getattr(sys, "frozen", False))
+
+
+def packaged_app_dir() -> Path:
+    """Return the directory that contains bundled app data in source or frozen runs."""
+    if is_frozen_app():
+        executable_dir = Path(sys.executable).resolve().parent
+        candidates = [
+            executable_dir,
+            Path(getattr(sys, "_MEIPASS", executable_dir)).resolve(),
+            executable_dir.parent / "Resources",
+            executable_dir.parent.parent / "Resources",
+        ]
+        for candidate in candidates:
+            if (candidate / "catalogs").exists() or (candidate / "config_templates").exists():
+                return candidate
+        return executable_dir
+    return Path(__file__).resolve().parent
+
+
+def user_data_dir() -> Path:
+    if sys.platform == "win32":
+        root = Path(os.environ.get("LOCALAPPDATA") or Path.home() / "AppData" / "Local")
+        return root / "NetOps Labs"
+    if sys.platform == "darwin":
+        return Path.home() / "Library" / "Application Support" / "NetOps Labs"
+    root = Path(os.environ.get("XDG_DATA_HOME") or Path.home() / ".local" / "share")
+    return root / "netops-labs"
+
+
+APP_DIR = packaged_app_dir()
+USER_APP_DIR = user_data_dir() if is_frozen_app() else APP_DIR
 APP_VERSION = "4.0.1"
 APP_NAME = "NetOps Labs"
 APP_SUBTITLE = "Hands-on infrastructure training for networking, Linux, and security."
@@ -80,9 +112,11 @@ LEGACY_APP_NAME = "GNS3 CCNP Labs"
 
 DEFAULT_CATALOG = APP_DIR / "catalogs" / "ccnp_encor_lab_catalog.json"
 DEFAULT_GENERATOR = APP_DIR / "gns3_ccnp_lab_generator.py"
-LOCAL_SETTINGS = APP_DIR / "config" / "app_config.local.json"
+LOCAL_SETTINGS = USER_APP_DIR / "config" / "app_config.local.json"
 EXAMPLE_SETTINGS = APP_DIR / "config" / "app_config.example.json"
 SYMBOLS_DIR = APP_DIR / "assets" / "symbols"
+DEFAULT_OUTPUT_DIR = USER_APP_DIR / "generated_labs"
+PACKAGED_GENERATOR_NAMES = ["netops-lab-generator.exe", "netops-lab-generator"]
 
 DIFFICULTY_ORDER = {"intro": 1, "easy": 2, "medium": 3, "hard": 4, "capstone": 5}
 
@@ -416,6 +450,20 @@ def load_settings() -> Dict[str, Any]:
     settings = read_json(EXAMPLE_SETTINGS)
     settings.update(read_json(LOCAL_SETTINGS))
     return settings
+
+
+def packaged_generator_path() -> Optional[Path]:
+    """Return the bundled generator executable when running from a packaged app."""
+    if not is_frozen_app():
+        return None
+    executable_dir = Path(sys.executable).resolve().parent
+    candidates: List[Path] = []
+    for root in [executable_dir, APP_DIR]:
+        candidates.extend(root / name for name in PACKAGED_GENERATOR_NAMES)
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    return None
 
 
 def normalize_token(value: Any) -> str:
@@ -1696,7 +1744,8 @@ class MainWindow(QMainWindow):
         form = QFormLayout(box)
         self.settings_theme = QComboBox(); self.settings_theme.addItems(qt_theme_names()); self.settings_theme.setCurrentText(normalize_qt_theme(self.settings.get("theme", "darkly")))
         self.settings_server = QLineEdit(str(self.settings.get("gns3_server", "")))
-        self.settings_output = QLineEdit(str(self.settings.get("output_dir", "generated_labs")))
+        default_output = str(DEFAULT_OUTPUT_DIR if is_frozen_app() else "generated_labs")
+        self.settings_output = QLineEdit(str(self.settings.get("output_dir", default_output)))
         out_browse = QPushButton("Browse")
         out_browse.clicked.connect(self.browse_output_dir)
         out_row = QWidget(); out_l = QHBoxLayout(out_row); out_l.setContentsMargins(0,0,0,0); out_l.addWidget(self.settings_output, 1); out_l.addWidget(out_browse)
@@ -1865,9 +1914,10 @@ NetOps Labs {APP_VERSION} is a stabilization patch for generation visibility, GN
 """)
 
     def output_dir(self) -> Path:
-        value = self.settings.get("output_dir") or APP_DIR / "generated_labs"
+        value = self.settings.get("output_dir") or DEFAULT_OUTPUT_DIR
         path = Path(str(value)).expanduser()
-        return path if path.is_absolute() else (APP_DIR / path).resolve()
+        base = USER_APP_DIR if is_frozen_app() else APP_DIR
+        return path if path.is_absolute() else (base / path).resolve()
 
     def apply_qt_theme(self, theme: str) -> None:
         theme = normalize_qt_theme(theme)
@@ -1946,7 +1996,7 @@ NetOps Labs {APP_VERSION} is a stabilization patch for generation visibility, GN
         self.settings.update({
             "theme": normalize_qt_theme(self.settings_theme.currentText()),
             "gns3_server": self.settings_server.text().strip(),
-            "output_dir": self.settings_output.text().strip() or "generated_labs",
+            "output_dir": self.settings_output.text().strip() or str(DEFAULT_OUTPUT_DIR if is_frozen_app() else "generated_labs"),
             "host_type": self.settings_host_type.currentText(),
             "push_config": self.settings_push_config.isChecked(),
             "push_endpoints": self.settings_push_endpoints.isChecked(),
@@ -1974,7 +2024,11 @@ NetOps Labs {APP_VERSION} is a stabilization patch for generation visibility, GN
         self.statusBar().showMessage("Catalog reloaded")
 
     def base_generator_args(self) -> List[str]:
-        args = [sys.executable, "-u", str(DEFAULT_GENERATOR)]
+        packaged_generator = packaged_generator_path()
+        if packaged_generator:
+            args = [str(packaged_generator)]
+        else:
+            args = [sys.executable, "-u", str(DEFAULT_GENERATOR)]
         if self.settings.get("gns3_server"):
             args += ["--server", str(self.settings["gns3_server"])]
         if LOCAL_SETTINGS.exists():
@@ -2058,7 +2112,10 @@ NetOps Labs {APP_VERSION} is a stabilization patch for generation visibility, GN
 
     def run_audit(self) -> None:
         audit_script = APP_DIR / "scripts" / "audit_labs.py"
-        args = [sys.executable, str(audit_script)] if audit_script.exists() else [sys.executable, str(DEFAULT_GENERATOR), "--qa-report"]
+        if audit_script.exists() and not is_frozen_app():
+            args = [sys.executable, str(audit_script)]
+        else:
+            args = self.base_generator_args() + ["--qa-report"]
         self.run_command(args, self.advanced_output)
 
     def extract_lab_dir(self, output: str) -> Optional[Path]:

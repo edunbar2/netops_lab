@@ -12,6 +12,8 @@ Existing 3.x generated labs and local metadata remain supported.
 
 This patch also adds GitHub branch, pull request, merge, and unit-test guardrails. See [Branching and Release Policy](docs/BRANCHING_AND_RELEASE_POLICY.md).
 
+Packaging work is tracked in [Packaging NetOps Labs](docs/PACKAGING.md). GitHub Actions can build Windows, macOS, Linux, and source-zip artifacts for release testing.
+
 ## 4.0.0 stable release
 
 4.0.0 keeps the PySide6/Qt interface as the default GUI for NetOps Labs. The legacy Tk/ttkbootstrap GUI is still included as a fallback, but the Qt interface is the normal 3.0 path.

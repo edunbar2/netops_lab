@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased - Packaging automation
+
+- Added `tools/validate_catalog.py` for standalone catalog metadata/reference validation with JSON output, strict mode, legacy normalization, study-path coverage checks, CI integration, and tests.
+- Seeded the Secure Enclave Networking and Network Troubleshooting study paths using existing mature scenarios so the study-path filter exposes meaningful content without adding placeholder labs.
+- Added a GitHub Actions packaging workflow for Windows, macOS, Linux, and source zip artifacts.
+- Added a PyInstaller-based packaging script that builds the Qt GUI and bundled generator executable.
+- Added native packaging outputs for Inno Setup, macOS DMG, and Linux `.deb` where platform tools are available.
+- Made packaged Qt builds use a bundled generator executable and per-user settings/output paths.
+- Added post-copy macOS app bundle signing and verification so DMGs do not ship with invalid nested binary signatures.
+- Reduced packaged build size by avoiding full PySide6 collection and keeping the bundled generator free of Qt/data duplication.
+- Added packaging documentation and unit tests for packaging helpers.
+
 ## 4.0.1 - GNS3 generation visibility and release guardrails
 
 - Added GitHub pull request, branch, merge, and testing guardrails for patch, minor, and major release work.

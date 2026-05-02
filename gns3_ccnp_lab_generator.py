@@ -56,6 +56,26 @@ DEFAULT_TEMPLATE_OVERRIDE_NAMES = ["config/template_overrides.local.json", "temp
 _API_SESSION: Optional[requests.Session] = None
 
 
+def packaged_app_dir() -> Path:
+    """Return the directory that contains bundled app data in source or frozen runs."""
+    if getattr(sys, "frozen", False):
+        executable_dir = Path(sys.executable).resolve().parent
+        candidates = [
+            executable_dir,
+            Path(getattr(sys, "_MEIPASS", executable_dir)).resolve(),
+            executable_dir.parent / "Resources",
+            executable_dir.parent.parent / "Resources",
+        ]
+        for candidate in candidates:
+            if (candidate / "catalogs").exists() or (candidate / "config_templates").exists():
+                return candidate
+        return executable_dir
+    return Path(__file__).resolve().parent
+
+
+APP_DIR = packaged_app_dir()
+
+
 class ProgressReporter:
     """Emit simple flushed progress lines for CLI and GUI subprocess readers."""
 
@@ -79,10 +99,9 @@ def find_optional_file(path: Optional[str], default_names: List[str]) -> Optiona
             raise SystemExit(2)
         return p
 
-    script_dir = Path(__file__).resolve().parent
     cwd = Path.cwd()
     for name in default_names:
-        for p in [cwd / name, script_dir / name]:
+        for p in [cwd / name, APP_DIR / name]:
             if p.exists():
                 return p
     return None
@@ -210,10 +229,9 @@ def find_catalog(path: Optional[str]) -> Path:
             raise SystemExit(2)
         return p
 
-    script_dir = Path(__file__).resolve().parent
     cwd = Path.cwd()
     for name in DEFAULT_CATALOG_NAMES:
-        for p in [cwd / name, script_dir / name]:
+        for p in [cwd / name, APP_DIR / name]:
             if p.exists():
                 return p
 
@@ -247,12 +265,11 @@ def resolve_template_dirs(args: argparse.Namespace, catalog: Dict[str, Any]) -> 
         dirs.append(Path(args.template_dir))
 
     catalog_dir = Path(catalog["_catalog_dir"])
-    script_dir = Path(__file__).resolve().parent
 
     for entry in catalog.get("config_template_dirs", DEFAULT_TEMPLATE_DIRS):
         ep = Path(entry)
         dirs.append(ep if ep.is_absolute() else catalog_dir / ep)
-        dirs.append(ep if ep.is_absolute() else script_dir / ep)
+        dirs.append(ep if ep.is_absolute() else APP_DIR / ep)
 
     # Preserve order but dedupe and require existing dirs.
     seen = set()

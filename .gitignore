@@ -1,2 +1,16 @@
 config/app_config.local.json
 config/template_overrides.local.json
+build/
+dist/
+generated_labs/
+local_templates_*.json
+netops roadmap.rtf
+__pycache__/
+*.pyc
+__MACOSX/
+._*
+.DS_Store
+
+# Local pi agent state; never include in this project.
+.pi/
+.pi/**

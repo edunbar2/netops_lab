@@ -717,6 +717,25 @@ class CatalogStore:
         return []
 
 
+ANSI_ESCAPE_RE = re.compile(r"\x1B\[[0-?]*[ -/]*[@-~]")
+
+
+def sanitize_console_text(raw: bytes) -> str:
+    """Decode and normalize console output for safer rendering in Qt widgets."""
+    text = raw.decode("utf-8", errors="replace")
+    text = ANSI_ESCAPE_RE.sub("", text)
+    cleaned_chars: List[str] = []
+    for ch in text:
+        if ch in {"\n", "\r", "\t"}:
+            cleaned_chars.append(ch)
+            continue
+        category = ord(ch)
+        if category < 32 or category == 127:
+            continue
+        cleaned_chars.append(ch)
+    return "".join(cleaned_chars)
+
+
 class ConsoleWorker(QThread):
     output = Signal(str, str)
     status = Signal(str, str)
@@ -773,7 +792,9 @@ class ConsoleWorker(QThread):
                 try:
                     data = sock.recv(4096)
                     if data:
-                        self.output.emit(self.device_name, data.decode("utf-8", errors="ignore"))
+                        cleaned = sanitize_console_text(data)
+                        if cleaned:
+                            self.output.emit(self.device_name, cleaned)
                     else:
                         self.status.emit(self.device_name, "Console closed by remote host.")
                         break
@@ -3698,7 +3719,12 @@ NetOps Labs {APP_VERSION} is a stabilization patch for generation visibility, GN
         tab = self.console_tabs.get(device_name)
         if not tab:
             return
-        tab["output"].appendPlainText(text.rstrip("\n"))
+        output_widget = tab["output"]
+        cursor = output_widget.textCursor()
+        cursor.movePosition(cursor.End)
+        cursor.insertText(text)
+        output_widget.setTextCursor(cursor)
+        output_widget.ensureCursorVisible()
 
     def on_console_status(self, device_name: str, status: str) -> None:
         if self.active_console_name() == device_name:

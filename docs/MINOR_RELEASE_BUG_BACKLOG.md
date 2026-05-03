@@ -108,4 +108,4 @@ Secondary fallback:
 - Test/verification:
   - Replay captured console output containing problematic bytes and validate rendered output has no artifact boxes where avoidable.
   - Manual spot checks across IOS/ASAv/RHEL sessions.
-- Status: triaged
+- Status: fixed (pending manual console spot checks across IOS/ASAv/RHEL sessions)

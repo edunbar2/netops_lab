@@ -162,7 +162,6 @@ QT_STYLESHEET = """
 QMainWindow, QWidget {
     background: #111827;
     color: #e5e7eb;
-    font-size: 13px;
 }
 QFrame#Sidebar {
     background: #0b1220;
@@ -1106,20 +1105,33 @@ class MainWindow(QMainWindow):
 
     def ui_scale_factor(self) -> float:
         width_factor = self.width() / 1760.0
-        dpi_factor = max(0.9, min(1.35, self.logicalDpiX() / 96.0))
-        scale = width_factor * (0.85 + 0.15 * dpi_factor)
-        return max(0.9, min(1.55, scale))
+        dpi_factor = max(0.9, min(1.6, self.logicalDpiX() / 96.0))
+        scale = width_factor * (0.8 + 0.2 * dpi_factor)
+        return max(0.95, min(1.9, scale))
 
     def apply_dynamic_ui_scale(self) -> None:
         scale = self.ui_scale_factor()
-        base_pt = max(11.0, min(18.0, 13.0 * scale))
-        mono_pt = max(11.0, min(17.0, 12.0 * scale))
+        base_pt = max(11.5, min(22.0, 13.0 * scale))
+        mono_pt = max(11.0, min(20.0, 12.0 * scale))
 
         regular = QFont()
         regular.setPointSizeF(base_pt)
         monospace = QFont("Courier New")
         monospace.setStyleHint(QFont.Monospace)
         monospace.setPointSizeF(mono_pt)
+
+        app = QApplication.instance()
+        if app is not None:
+            app.setFont(regular)
+
+        if hasattr(self, "menuBar") and self.menuBar() is not None:
+            self.menuBar().setFont(regular)
+        if hasattr(self, "statusBar") and self.statusBar() is not None:
+            self.statusBar().setFont(regular)
+
+        if hasattr(self, "navigation"):
+            nav_width = int(max(190, min(340, 220 * scale)))
+            self.navigation.setFixedWidth(nav_width)
 
         for attr in [
             "detail_text", "guided_view", "guided_hint_view", "doc_view", "topology_detail",
@@ -1136,9 +1148,9 @@ class MainWindow(QMainWindow):
                 widget.setFont(monospace)
 
         if hasattr(self, "scenario_table"):
-            self.scenario_table.verticalHeader().setDefaultSectionSize(int(max(26, min(46, 30 * scale))))
+            self.scenario_table.verticalHeader().setDefaultSectionSize(int(max(26, min(52, 30 * scale))))
         if hasattr(self, "topology_table"):
-            self.topology_table.verticalHeader().setDefaultSectionSize(int(max(24, min(42, 28 * scale))))
+            self.topology_table.verticalHeader().setDefaultSectionSize(int(max(24, min(48, 28 * scale))))
 
     def _build_menus(self) -> None:
         menu = self.menuBar()
@@ -1176,6 +1188,7 @@ class MainWindow(QMainWindow):
         sidebar = QFrame()
         sidebar.setObjectName("Sidebar")
         sidebar.setFixedWidth(190)
+        self.navigation = sidebar
         side_layout = QVBoxLayout(sidebar)
         title = QLabel("NetOps\nLabs")
         title.setObjectName("PageTitle")

@@ -87,7 +87,7 @@ Secondary fallback:
 - Test/verification:
   - GUI validation with multiple window sizes/DPI settings; confirm readable minimum font and topology label scale.
   - Add pytest-qt assertions for font-size changes on resize where practical.
-- Status: triaged
+- Status: fixed (pending multi-monitor/HiDPI visual verification)
 
 - ID: BUG-003
 - Title: Console shows character artifact boxes for some device output

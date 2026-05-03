@@ -1031,6 +1031,7 @@ class MainWindow(QMainWindow):
 
         self._build_menus()
         self._build_ui()
+        self.apply_dynamic_ui_scale()
         self.statusBar().showMessage("4.0.1 ready. NetOps Labs now organizes practice by study path and lab type.")
         self.refresh_filters()
         self.refresh_scenarios()
@@ -1075,6 +1076,48 @@ class MainWindow(QMainWindow):
             self.stop_thread_safely(worker, timeout_ms=35000)
         self.cleanup_finished_threads()
         super().closeEvent(event)
+
+    def resizeEvent(self, event) -> None:
+        super().resizeEvent(event)
+        self.apply_dynamic_ui_scale()
+        if hasattr(self, "topology_scene") and hasattr(self, "topology_graphics") and not self.topology_scene.itemsBoundingRect().isNull():
+            self.topology_graphics.fitInView(self.topology_scene.sceneRect(), Qt.KeepAspectRatio)
+
+    def ui_scale_factor(self) -> float:
+        width_factor = self.width() / 1760.0
+        dpi_factor = max(0.9, min(1.35, self.logicalDpiX() / 96.0))
+        scale = width_factor * (0.85 + 0.15 * dpi_factor)
+        return max(0.9, min(1.55, scale))
+
+    def apply_dynamic_ui_scale(self) -> None:
+        scale = self.ui_scale_factor()
+        base_pt = max(11.0, min(18.0, 13.0 * scale))
+        mono_pt = max(11.0, min(17.0, 12.0 * scale))
+
+        regular = QFont()
+        regular.setPointSizeF(base_pt)
+        monospace = QFont("Courier New")
+        monospace.setStyleHint(QFont.Monospace)
+        monospace.setPointSizeF(mono_pt)
+
+        for attr in [
+            "detail_text", "guided_view", "guided_hint_view", "doc_view", "topology_detail",
+            "reports_view", "lifecycle_status", "project_detail", "practice_status", "practice_summary",
+            "practice_notes", "output_text", "advanced_output"
+        ]:
+            widget = getattr(self, attr, None)
+            if widget is not None:
+                widget.setFont(regular)
+
+        for attr in ["config_view", "compare_left", "compare_right"]:
+            widget = getattr(self, attr, None)
+            if widget is not None:
+                widget.setFont(monospace)
+
+        if hasattr(self, "scenario_table"):
+            self.scenario_table.verticalHeader().setDefaultSectionSize(int(max(26, min(46, 30 * scale))))
+        if hasattr(self, "topology_table"):
+            self.topology_table.verticalHeader().setDefaultSectionSize(int(max(24, min(42, 28 * scale))))
 
     def _build_menus(self) -> None:
         menu = self.menuBar()
@@ -3066,17 +3109,21 @@ NetOps Labs {APP_VERSION} is a stabilization patch for generation visibility, GN
 
         node_map: Dict[str, Dict[str, Any]] = {}
         cols = max(2, min(4, int(len(nodes) ** 0.5) + 1))
-        spacing_x = 320
-        spacing_y = 230
-        origin_x = 90
-        origin_y = 90
-        width = 96
-        height = 72
+        scale = self.ui_scale_factor() if hasattr(self, "ui_scale_factor") else 1.0
+        spacing_x = int(320 * scale)
+        spacing_y = int(230 * scale)
+        origin_x = int(90 * scale)
+        origin_y = int(90 * scale)
+        width = int(96 * scale)
+        height = int(72 * scale)
 
-        line_pen = QPen(QColor("#f2f2f2")); line_pen.setWidth(3); line_pen.setCosmetic(True)
-        node_pen = QPen(QColor("#eeeeee")); node_pen.setWidth(2); node_pen.setCosmetic(True)
+        line_pen = QPen(QColor("#f2f2f2")); line_pen.setWidth(max(2, int(3 * scale))); line_pen.setCosmetic(True)
+        node_pen = QPen(QColor("#eeeeee")); node_pen.setWidth(max(1, int(2 * scale))); node_pen.setCosmetic(True)
         node_brush = QBrush(QColor("#4b5563"))
         label_bg = QBrush(QColor("#343434"))
+        link_font = QFont(); link_font.setPointSizeF(max(9.0, min(16.0, 10.5 * scale)))
+        node_name_font = QFont(); node_name_font.setPointSizeF(max(10.0, min(18.0, 11.5 * scale))); node_name_font.setBold(True)
+        node_kind_font = QFont(); node_kind_font.setPointSizeF(max(9.0, min(15.0, 10.0 * scale)))
 
         for idx, node in enumerate(nodes):
             name = str(node.get("name", f"Node{idx+1}"))
@@ -3114,9 +3161,10 @@ NetOps Labs {APP_VERSION} is a stabilization patch for generation visibility, GN
                 idx = label_offsets.get(key, 0); label_offsets[key] = idx + 1
                 offset = 22 + (idx * 18)
                 tx = scene.addText(label)
+                tx.setFont(link_font)
                 tx.setDefaultTextColor(QColor("#ffffff"))
                 tx.setZValue(4)
-                tx.setPos(mx + nx * offset - 38, my + ny * offset - 12)
+                tx.setPos(mx + nx * offset - (48 * scale), my + ny * offset - (14 * scale))
                 rect = tx.boundingRect().adjusted(-5, -2, 5, 2)
                 bg_item = scene.addRect(rect.translated(tx.pos()), QPen(QColor("#5f6368")), label_bg)
                 bg_item.setZValue(3)
@@ -3138,13 +3186,15 @@ NetOps Labs {APP_VERSION} is a stabilization patch for generation visibility, GN
             else:
                 self.draw_topology_fallback_node(scene, kind, x, y, w, h, node_pen, node_brush)
             name_item = scene.addText(name)
+            name_item.setFont(node_name_font)
             name_item.setDefaultTextColor(QColor("#ffffff"))
             name_item.setZValue(5)
-            name_item.setPos(x + w / 2 - min(44, len(name) * 3.2), y + h + 8)
+            name_item.setPos(x + w / 2 - min((80 * scale), len(name) * (4.6 * scale)), y + h + (8 * scale))
             kind_item = scene.addText(kind.title())
+            kind_item.setFont(node_kind_font)
             kind_item.setDefaultTextColor(QColor("#d1d5db"))
             kind_item.setZValue(5)
-            kind_item.setPos(x + w / 2 - 28, y + h + 28)
+            kind_item.setPos(x + w / 2 - (38 * scale), y + h + (30 * scale))
 
         rect = scene.itemsBoundingRect()
         scene.setSceneRect(rect.adjusted(-110, -90, 110, 110))

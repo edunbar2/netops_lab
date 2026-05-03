@@ -55,8 +55,8 @@ Scope:
 
 Validation approach:
 
-- For web surfaces: Playwright-based regression checks.
-- For desktop Qt surfaces: use Qt-native automation (`pytest-qt` / QtBot) as primary, with optional image-based fallback where needed.
+- Desktop Qt surfaces: use Qt-native automation (`pytest-qt` / QtBot) as primary, with optional image-based fallback where needed.
+- No web/Playwright checks are required for this desktop-only application.
 
 Acceptance criteria:
 
@@ -144,11 +144,11 @@ Seeded existing mature scenarios into these study paths without adding placehold
 Current validator-reported study-path usage:
 
 ```text
-ccna-foundations: 170
-ccnp-enterprise: 312
-secure-enclave-networking: 20
-network-troubleshooting: 24
-rhel9-operations: 0
+ccna-foundations: 175
+ccnp-enterprise: 317
+secure-enclave-networking: 24
+network-troubleshooting: 27
+rhel9-operations: 3
 ```
 
 ### 2.5 Local Agent Hygiene
@@ -172,20 +172,20 @@ netops roadmap.rtf
 Last local verification:
 
 ```text
-python tools/validate_catalog.py
-Result: 0 error(s), 1 warning(s)
+python tools/validate_catalog.py --strict
+Result: 0 error(s), 0 warning(s)
 
 python -m unittest discover -s tests
-Ran 35 tests - OK
+Ran 35 tests - OK (skipped=2)
 ```
 
 Known warning:
 
 ```text
-study_paths.rhel9-operations: Study path is defined but has no scenarios assigned.
+none
 ```
 
-Disposition: acceptable for this feature PR. The GUI remains driven by populated scenario metadata, and no placeholder RHEL9 labs were added.
+Disposition: quality gate is clean; strict validation is now enabled in CI.
 
 ## 4. Pull Request Scope
 

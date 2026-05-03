@@ -26,8 +26,8 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Validate catalog metadata
-        run: python tools/validate_catalog.py
+      - name: Validate catalog metadata (strict)
+        run: python tools/validate_catalog.py --strict
 
       - name: Run unit tests
         run: python -m unittest discover -s tests

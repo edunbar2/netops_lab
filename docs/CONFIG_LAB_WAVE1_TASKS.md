@@ -8,11 +8,11 @@
 5. [x] rhel9-nmcli-static-ip-dns
 
 ## Batch B
-6. [ ] ccna-standard-extended-acl-placement
-7. [ ] ccna-fhrp-hsrp-gateway-redundancy
-8. [ ] ccnp-ospf-multi-area-abrs-filtering
-9. [ ] ccnp-qos-classification-marking-policy
-10. [ ] nt-config-golden-baseline-campus-switch
+6. [x] ccna-standard-extended-acl-placement
+7. [x] ccna-fhrp-hsrp-gateway-redundancy
+8. [x] ccnp-ospf-multi-area-abrs-filtering
+9. [x] ccnp-qos-classification-marking-policy
+10. [x] nt-config-golden-baseline-campus-switch
 
 ## Batch C
 11. [ ] ccnp-bgp-ebgp-ibgp-localpref-med

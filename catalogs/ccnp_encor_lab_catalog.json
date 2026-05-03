@@ -60024,6 +60024,568 @@
         "Most nmcli failures are profile-name mismatches, not syntax errors.",
         "If DNS appears unchanged, check whether another service is managing resolv.conf."
       ]
+    },
+    "ccna_standard_extended_acl_placement": {
+      "concept_id": "ccna_standard_extended_acl_placement",
+      "title": "CCNA Guided Build: Standard vs Extended ACL Placement",
+      "topology": "campus_dual_core",
+      "exam_blueprints": [
+        "CCNA"
+      ],
+      "domain": "Security Fundamentals",
+      "topic": "ACLs",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 35,
+      "symptom": "Design and apply standard and extended ACLs at proper locations while preserving required traffic.",
+      "requirements": [
+        "Create one standard ACL for management-plane control.",
+        "Create one extended ACL for user-to-server policy filtering.",
+        "Apply standard ACL near destination and extended ACL near source per requirement set.",
+        "Permit required business traffic and deny disallowed flows.",
+        "Add explicit logging on deny statements where requested.",
+        "Verify ACL hit counts and reachability outcomes."
+      ],
+      "faults": [
+        {
+          "device": "DIST1",
+          "fault": "Baseline has no policy controls; ACL plan must be built from requirements.",
+          "fix": "Create and place ACLs correctly on required interfaces/directions."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show access-lists",
+        "show ip interface",
+        "show running-config | section access-list",
+        "ping",
+        "traceroute"
+      ],
+      "curriculum_track": "CCNA",
+      "skills": [
+        "ACLs",
+        "Policy Placement",
+        "Traffic Verification"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Place extended ACLs close to source and standard ACLs closer to destination.",
+        "Validate direction (in/out) per interface before applying ACL.",
+        "Use hit counters to confirm traffic is matching intended statements."
+      ],
+      "expected_results": [
+        "Allowed flows succeed and blocked flows fail per policy matrix.",
+        "ACL counters increment on expected permit/deny lines."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab with no prebuilt ACL policy.",
+        "fix_summary": "Implement standard/extended ACLs with correct placement and interface direction.",
+        "verification": [
+          "show access-lists",
+          "show ip interface"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch B guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "ccna",
+        "security",
+        "acl",
+        "extended-acl",
+        "standard-acl",
+        "build"
+      ],
+      "progression_rank": [
+        5,
+        2,
+        1,
+        "ACLs",
+        "CCNA Guided Build: Standard vs Extended ACL Placement",
+        "ccna_standard_extended_acl_placement"
+      ],
+      "study_paths": [
+        "ccna-foundations"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "CCNA"
+      ],
+      "walkthrough_steps": [
+        "Review required permit/deny matrix.",
+        "Create standard ACL entries for management constraints.",
+        "Create extended ACL entries for app/user traffic policy.",
+        "Apply ACLs to correct interfaces in proper direction.",
+        "Test allow/deny behavior with representative traffic.",
+        "Inspect ACL counters and adjust sequence/order if needed."
+      ],
+      "coaching_notes": [
+        "Wrong interface direction is the most common ACL bug.",
+        "Always include required implicit/explicit permit paths to avoid overblocking."
+      ]
+    },
+    "ccna_fhrp_hsrp_gateway_redundancy": {
+      "concept_id": "ccna_fhrp_hsrp_gateway_redundancy",
+      "title": "CCNA Guided Build: HSRP Gateway Redundancy Baseline",
+      "topology": "campus_dual_core",
+      "exam_blueprints": [
+        "CCNA"
+      ],
+      "domain": "IP Services",
+      "topic": "FHRP/HSRP",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 30,
+      "symptom": "Configure resilient first-hop gateway services with HSRP and verify active/standby behavior.",
+      "requirements": [
+        "Configure HSRP for VLAN 10 and VLAN 20 SVIs on distribution switches.",
+        "Set virtual IP gateway per VLAN.",
+        "Set primary/secondary priorities and preempt policy.",
+        "Track at least one uplink object to trigger failover behavior.",
+        "Verify active/standby roles from both distribution devices.",
+        "Validate host default gateway continuity during failover event."
+      ],
+      "faults": [
+        {
+          "device": "DIST1",
+          "fault": "HSRP not configured in baseline for required VLANs.",
+          "fix": "Build HSRP groups, priorities, and tracking policy."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show standby brief",
+        "show standby vlan 10",
+        "show standby vlan 20",
+        "show track",
+        "ping"
+      ],
+      "curriculum_track": "CCNA",
+      "skills": [
+        "HSRP",
+        "Gateway Redundancy",
+        "Failover Verification"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Set deterministic priorities so expected active role is clear.",
+        "Enable preempt to restore preferred active device after recovery.",
+        "Test failover by administratively impacting tracked uplink."
+      ],
+      "expected_results": [
+        "HSRP groups elect expected active/standby devices.",
+        "Virtual IP remains reachable during failover.",
+        "Role transition behavior matches configured priority/tracking."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab: first-hop redundancy omitted from baseline.",
+        "fix_summary": "Configure HSRP groups with VIP, priority, preempt, and tracking on both peers.",
+        "verification": [
+          "show standby brief",
+          "show track"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch B guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "ccna",
+        "ip-services",
+        "hsrp",
+        "fhrp",
+        "redundancy",
+        "build"
+      ],
+      "progression_rank": [
+        4,
+        2,
+        1,
+        "FHRP/HSRP",
+        "CCNA Guided Build: HSRP Gateway Redundancy Baseline",
+        "ccna_fhrp_hsrp_gateway_redundancy"
+      ],
+      "study_paths": [
+        "ccna-foundations"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "CCNA"
+      ],
+      "walkthrough_steps": [
+        "Identify VLAN SVIs participating in gateway redundancy.",
+        "Configure HSRP group and virtual IP on DIST1 VLAN interfaces.",
+        "Configure matching HSRP groups on DIST2 with lower priority.",
+        "Enable preempt and add uplink tracking where required.",
+        "Verify active/standby state and priorities.",
+        "Trigger failover and confirm gateway continuity."
+      ],
+      "coaching_notes": [
+        "HSRP group/VLAN mismatches cause silent failures.",
+        "Failover testing is mandatory; config alone is not proof."
+      ]
+    },
+    "ccnp_ospf_multi_area_abrs_filtering": {
+      "concept_id": "ccnp_ospf_multi_area_abrs_filtering",
+      "title": "CCNP Guided Build: OSPF Multi-Area ABR Filtering",
+      "topology": "ospf_multi_area_enterprise",
+      "exam_blueprints": [
+        "ENARSI",
+        "ENCOR"
+      ],
+      "domain": "Infrastructure",
+      "topic": "OSPF",
+      "difficulty": "advanced",
+      "lab_type": "build",
+      "estimated_minutes": 50,
+      "symptom": "Build multi-area OSPF with ABR summarization/filtering to enforce route policy between areas.",
+      "requirements": [
+        "Configure area 0 backbone and at least one non-backbone area adjacency set.",
+        "Define ABR router IDs and stable adjacency policy.",
+        "Implement area range summarization at ABR where required.",
+        "Apply prefix filtering/distribution policy per scenario requirements.",
+        "Verify LSA visibility and routing table outcomes in each area.",
+        "Demonstrate policy effect before/after applying ABR controls."
+      ],
+      "faults": [
+        {
+          "device": "ABR1",
+          "fault": "ABR policy controls and summaries are absent in baseline.",
+          "fix": "Implement multi-area ABR controls per requirements and verify route propagation behavior."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show ip ospf neighbor",
+        "show ip ospf database",
+        "show ip route ospf",
+        "show ip protocols"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "OSPF Multi-Area",
+        "ABR Policy",
+        "Route Summarization"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Stabilize adjacencies before applying summarization/filtering knobs.",
+        "Validate policy from downstream area perspective, not just ABR output.",
+        "Capture baseline route table before policy changes for comparison."
+      ],
+      "expected_results": [
+        "Inter-area routes reflect configured summaries/policies.",
+        "Denied prefixes are absent where expected while required routes remain present."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab: ABR policy behavior is intentionally undeployed in starter state.",
+        "fix_summary": "Implement area design, ABR summaries, and filtering controls per requirements.",
+        "verification": [
+          "show ip ospf database",
+          "show ip route ospf"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch B guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENARSI",
+      "tags": [
+        "ccnp",
+        "enarsi",
+        "encor",
+        "ospf",
+        "multi-area",
+        "abr",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "OSPF",
+        "CCNP Guided Build: OSPF Multi-Area ABR Filtering",
+        "ccnp_ospf_multi_area_abrs_filtering"
+      ],
+      "study_paths": [
+        "ccnp-enterprise"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENARSI",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Confirm topology area boundaries and ABR roles.",
+        "Establish OSPF adjacencies for area 0 and non-backbone area.",
+        "Set ABR route summarization directives where required.",
+        "Apply area/filter policy for permitted/blocked prefixes.",
+        "Compare route tables and LSDB views before and after policy.",
+        "Remediate any unintended reachability loss."
+      ],
+      "coaching_notes": [
+        "ABR filtering mistakes can blackhole large route sets; validate incrementally.",
+        "Use controlled baseline snapshots to prove policy effect."
+      ]
+    },
+    "ccnp_qos_classification_marking_policy": {
+      "concept_id": "ccnp_qos_classification_marking_policy",
+      "title": "CCNP Guided Build: QoS Classification, Marking, and Policy Application",
+      "topology": "qos_architecture_lab",
+      "exam_blueprints": [
+        "ENCOR"
+      ],
+      "domain": "Infrastructure",
+      "topic": "QoS",
+      "difficulty": "advanced",
+      "lab_type": "build",
+      "estimated_minutes": 45,
+      "symptom": "Build QoS classes and marking policy for branch/WAN traffic and validate queuing/mark behavior.",
+      "requirements": [
+        "Define class-maps for voice, critical data, and default traffic.",
+        "Create policy-map with DSCP marking and bandwidth/priority behavior per requirements.",
+        "Apply service-policy on intended interface/direction.",
+        "Generate representative traffic classes for validation.",
+        "Verify class counters and policy actions using show commands.",
+        "Adjust policy ordering if class matches are not behaving as intended."
+      ],
+      "faults": [
+        {
+          "device": "EDGE1",
+          "fault": "QoS policies are unconfigured in baseline.",
+          "fix": "Implement classification, marking, and service-policy attachment."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show class-map",
+        "show policy-map",
+        "show policy-map interface",
+        "show run | section policy-map"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "QoS",
+        "Classification",
+        "Policy Verification"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Start by validating ACL/class-map match logic before touching policy-map actions.",
+        "Attach policy in the correct direction; wrong direction yields zero counters.",
+        "Use class counters as primary truth for matching behavior."
+      ],
+      "expected_results": [
+        "Traffic classes match expected counters.",
+        "DSCP/priority behavior aligns with policy requirements."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab: QoS controls are intentionally absent in baseline.",
+        "fix_summary": "Create class-map/policy-map and apply service-policy in correct direction.",
+        "verification": [
+          "show policy-map interface",
+          "show class-map"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch B guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "ccnp",
+        "encor",
+        "qos",
+        "classification",
+        "marking",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "QoS",
+        "CCNP Guided Build: QoS Classification, Marking, and Policy Application",
+        "ccnp_qos_classification_marking_policy"
+      ],
+      "study_paths": [
+        "ccnp-enterprise"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Define class-maps for required traffic classes.",
+        "Build policy-map actions including marking/priority directives.",
+        "Apply policy to target interface in required direction.",
+        "Generate traffic for each class.",
+        "Inspect class counters and policy results.",
+        "Refine match/action order until outcomes align with requirements."
+      ],
+      "coaching_notes": [
+        "Zero packet counters usually mean wrong attachment point/direction or match criteria mismatch."
+      ]
+    },
+    "nt_config_golden_baseline_campus_switch": {
+      "concept_id": "nt_config_golden_baseline_campus_switch",
+      "title": "NT Guided Build: Campus Switch Golden Baseline Configuration",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Infrastructure",
+      "topic": "Configuration Baselines",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 30,
+      "symptom": "Build a reusable secure campus switch baseline and verify operational consistency.",
+      "requirements": [
+        "Configure hostname, local credentials, and basic management protections.",
+        "Set management SVI/IP and default gateway per lab plan.",
+        "Enable SSH-only remote access and disable insecure services where specified.",
+        "Apply access-port baseline controls (PortFast/BPDU Guard) on endpoint ports.",
+        "Configure logging/NTP essentials according to brief.",
+        "Capture baseline verification output for compliance evidence."
+      ],
+      "faults": [
+        {
+          "device": "ACCESS1",
+          "fault": "Switch starts from minimal bootstrap config without operational baseline.",
+          "fix": "Apply required golden baseline configuration set."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show run",
+        "show ip interface brief",
+        "show spanning-tree summary",
+        "show ssh",
+        "show logging"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "Baseline Hardening",
+        "Operations Consistency",
+        "Switch Access Controls"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Apply management-plane settings before locking down remote access.",
+        "Use interface ranges for consistent access-port policy deployment.",
+        "Validate baseline against a checklist, not memory."
+      ],
+      "expected_results": [
+        "Device baseline matches required management/security standard.",
+        "Remote access and access-port controls function as intended."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab: baseline standards are intentionally not pre-applied.",
+        "fix_summary": "Apply full golden baseline template and verify compliance outputs.",
+        "verification": [
+          "show run",
+          "show ssh",
+          "show spanning-tree summary"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch B guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "operations",
+        "baseline",
+        "switching",
+        "hardening",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        2,
+        1,
+        "Configuration Baselines",
+        "NT Guided Build: Campus Switch Golden Baseline Configuration",
+        "nt_config_golden_baseline_campus_switch"
+      ],
+      "study_paths": [
+        "network-troubleshooting"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Apply identity and local authentication baseline.",
+        "Configure management SVI addressing and default gateway.",
+        "Enable SSH-only management and disable insecure services.",
+        "Apply access-port baseline templates using interface range.",
+        "Configure logging/NTP essentials.",
+        "Collect verification outputs and compare to baseline checklist."
+      ],
+      "coaching_notes": [
+        "Golden baseline work is about repeatability; keep config structured and template-friendly."
+      ]
     }
   },
   "study_plans": {

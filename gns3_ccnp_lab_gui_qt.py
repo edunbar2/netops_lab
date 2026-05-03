@@ -802,24 +802,33 @@ class ProcessWorker(QThread):
         self.args = args
         self.cwd = cwd
 
-    def run(self) -> None:
+    def _run_once(self) -> tuple[int, str]:
         output_chunks: List[str] = []
+        proc = subprocess.Popen(
+            self.args,
+            cwd=str(self.cwd),
+            text=True,
+            stderr=subprocess.STDOUT,
+            stdout=subprocess.PIPE,
+            stdin=subprocess.DEVNULL,
+            bufsize=1,
+            close_fds=True,
+        )
+        if proc.stdout:
+            for line in proc.stdout:
+                output_chunks.append(line)
+                self.output.emit(line)
+            proc.stdout.close()
+        return_code = proc.wait()
+        return return_code, "".join(output_chunks)
+
+    def run(self) -> None:
         try:
-            proc = subprocess.Popen(
-                self.args,
-                cwd=str(self.cwd),
-                text=True,
-                stderr=subprocess.STDOUT,
-                stdout=subprocess.PIPE,
-                bufsize=1,
-            )
-            if proc.stdout:
-                for line in proc.stdout:
-                    output_chunks.append(line)
-                    self.output.emit(line)
-                proc.stdout.close()
-            return_code = proc.wait()
-            self.finished.emit(return_code, "".join(output_chunks))
+            return_code, output_text = self._run_once()
+            if return_code != 0 and "Bad file descriptor" in output_text and "init_sys_streams" in output_text:
+                self.output.emit("\n[warn] Readiness process hit a stale file-descriptor condition; retrying once with a clean subprocess context...\n")
+                return_code, output_text = self._run_once()
+            self.finished.emit(return_code, output_text)
         except Exception as exc:
             message = f"Failed to run command: {exc}"
             self.output.emit(message)

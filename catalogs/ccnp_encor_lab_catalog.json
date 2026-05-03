@@ -59565,6 +59565,465 @@
         "Avoid allowing all VLANs by default; explicitly constrain the trunk VLAN list.",
         "Access-port misassignment often appears as one-way reachability; verify switchport mode and access VLAN."
       ]
+    },
+    "ccna_router_on_a_stick_intervlan": {
+      "concept_id": "ccna_router_on_a_stick_intervlan",
+      "title": "CCNA Guided Build: Router-on-a-Stick Inter-VLAN Routing",
+      "topology": "campus_dual_core",
+      "exam_blueprints": [
+        "CCNA"
+      ],
+      "domain": "IP Connectivity",
+      "topic": "Inter-VLAN Routing",
+      "difficulty": "beginner",
+      "lab_type": "build",
+      "estimated_minutes": 35,
+      "symptom": "Implement inter-VLAN routing using a single router trunk link and verify end-to-end reachability.",
+      "requirements": [
+        "Create VLAN 10 and VLAN 20 on the access/distribution path used for the lab.",
+        "Configure the switch uplink toward router as an 802.1Q trunk carrying VLANs 10 and 20.",
+        "Create router subinterfaces for VLAN 10 and VLAN 20 with dot1Q encapsulation.",
+        "Assign default-gateway addresses to each VLAN on the router subinterfaces.",
+        "Assign host-facing access ports to the correct VLANs.",
+        "Verify cross-VLAN connectivity and routing-table entries."
+      ],
+      "faults": [
+        {
+          "device": "R1",
+          "fault": "Starter baseline lacks router subinterfaces and trunk mapping.",
+          "fix": "Build subinterfaces, trunk, and VLAN assignments per requirements."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show ip interface brief",
+        "show running-config interface gi0/0.10",
+        "show running-config interface gi0/0.20",
+        "show interfaces trunk",
+        "show ip route connected"
+      ],
+      "curriculum_track": "CCNA",
+      "skills": [
+        "Inter-VLAN Routing",
+        "802.1Q Subinterfaces",
+        "Switchport Trunking"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Configure switch VLANs and trunk first, then router subinterfaces.",
+        "Encapsulation VLAN IDs on subinterfaces must match switch VLAN IDs.",
+        "Use brief show commands after each step to catch typo-driven failures early."
+      ],
+      "expected_results": [
+        "Hosts in VLAN 10 and VLAN 20 reach their respective gateway IPs.",
+        "Inter-VLAN ping succeeds through router subinterfaces.",
+        "Router shows connected routes for both VLAN subnets."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab: inter-VLAN services are intentionally absent in baseline.",
+        "fix_summary": "Configure trunk + router subinterfaces with matching VLAN IDs and gateway addressing.",
+        "verification": [
+          "show ip interface brief",
+          "show interfaces trunk",
+          "show ip route connected"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch A guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "ccna",
+        "ip-connectivity",
+        "intervlan",
+        "router-on-a-stick",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        2,
+        1,
+        "Inter-VLAN Routing",
+        "CCNA Guided Build: Router-on-a-Stick Inter-VLAN Routing",
+        "ccna_router_on_a_stick_intervlan"
+      ],
+      "study_paths": [
+        "ccna-foundations"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "CCNA"
+      ],
+      "walkthrough_steps": [
+        "Identify router-facing switch uplink interface.",
+        "Create VLAN 10 and VLAN 20 on involved switch(es).",
+        "Set uplink as trunk and allow VLANs 10,20.",
+        "Create router subinterface for VLAN 10 with encapsulation dot1Q 10 and gateway IP.",
+        "Create router subinterface for VLAN 20 with encapsulation dot1Q 20 and gateway IP.",
+        "Place host ports into correct access VLANs.",
+        "Run verification and confirm cross-VLAN reachability."
+      ],
+      "coaching_notes": [
+        "Most failures are VLAN ID mismatch between trunk and subinterface encapsulation.",
+        "For subinterfaces, parent physical interface must be up/no shut."
+      ]
+    },
+    "ccna_ospf_single_area_baseline": {
+      "concept_id": "ccna_ospf_single_area_baseline",
+      "title": "CCNA Guided Build: OSPF Single-Area Baseline",
+      "topology": "campus_dual_core",
+      "exam_blueprints": [
+        "CCNA"
+      ],
+      "domain": "IP Connectivity",
+      "topic": "OSPF",
+      "difficulty": "beginner",
+      "lab_type": "build",
+      "estimated_minutes": 35,
+      "symptom": "Build a clean single-area OSPF baseline and verify adjacency and route exchange.",
+      "requirements": [
+        "Enable OSPF process 10 on core/distribution routers used in the path.",
+        "Set explicit router IDs per device.",
+        "Advertise all inter-router transit links in area 0.",
+        "Advertise loopback or LAN test prefixes in area 0.",
+        "Set passive interfaces for non-neighbor-facing ports where appropriate.",
+        "Verify full adjacency and learned OSPF routes on each router."
+      ],
+      "faults": [
+        {
+          "device": "CORE1",
+          "fault": "OSPF process and network statements are intentionally incomplete in baseline.",
+          "fix": "Implement complete single-area OSPF requirements across participating routers."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show ip ospf neighbor",
+        "show ip protocols",
+        "show ip route ospf",
+        "show ip ospf interface brief"
+      ],
+      "curriculum_track": "CCNA",
+      "skills": [
+        "OSPF",
+        "Routing Baseline",
+        "Verification Discipline"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Bring up interfaces and IP addressing first before enabling OSPF.",
+        "Use passive-interface default plus selective no passive-interface on peering links.",
+        "Confirm area values are consistent on both sides of each adjacency."
+      ],
+      "expected_results": [
+        "All intended adjacencies reach FULL state.",
+        "Each router learns remote OSPF routes.",
+        "OSPF interface brief output matches design intent."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab: OSPF control plane is intentionally not fully configured.",
+        "fix_summary": "Configure OSPF process/router-id/networks/passive policy for a complete area 0 baseline.",
+        "verification": [
+          "show ip ospf neighbor",
+          "show ip route ospf"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch A guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "ccna",
+        "ip-connectivity",
+        "ospf",
+        "single-area",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        2,
+        1,
+        "OSPF",
+        "CCNA Guided Build: OSPF Single-Area Baseline",
+        "ccna_ospf_single_area_baseline"
+      ],
+      "study_paths": [
+        "ccna-foundations"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "CCNA"
+      ],
+      "walkthrough_steps": [
+        "Confirm addressing on all inter-router links.",
+        "Enable OSPF process 10 and set router ID on each participating router.",
+        "Advertise transit networks into area 0.",
+        "Advertise loopback/LAN networks into area 0.",
+        "Apply passive-interface policy with exceptions for peering links.",
+        "Verify FULL neighbors and OSPF routes.",
+        "Document discrepancies and remediate until outputs match expected state."
+      ],
+      "coaching_notes": [
+        "Area mismatches and wildcard typos are the two most common misses.",
+        "Neighbor comes up only when both routing and L3 interface state are correct."
+      ]
+    },
+    "senk_asav_inside_outside_nat": {
+      "concept_id": "senk_asav_inside_outside_nat",
+      "title": "SENK Guided Build: ASAv Inside-Outside Dynamic NAT Baseline",
+      "topology": "security_hardening_lab",
+      "exam_blueprints": [
+        "ENCOR"
+      ],
+      "domain": "Security",
+      "topic": "ASAv NAT",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 40,
+      "symptom": "Implement baseline inside-to-outside NAT on ASAv and verify translation and policy behavior.",
+      "requirements": [
+        "Configure inside and outside interface security levels and addressing as defined in lab brief.",
+        "Define object network for inside subnet.",
+        "Configure dynamic PAT from inside subnet to outside interface.",
+        "Allow ICMP/required test traffic from inside toward outside test target.",
+        "Verify xlate and conn tables during traffic tests.",
+        "Ensure return traffic is handled as expected by stateful inspection."
+      ],
+      "faults": [
+        {
+          "device": "ASAv1",
+          "fault": "NAT and related policy are intentionally incomplete in starter baseline.",
+          "fix": "Build object NAT/PAT and permit policy required for inside-to-outside access."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show run nat",
+        "show xlate",
+        "show conn",
+        "show access-list",
+        "packet-tracer input inside icmp 10.10.10.10 8 0 8.8.8.8"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "ASAv",
+        "NAT/PAT",
+        "Policy Verification"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Validate interface roles (inside/outside) before NAT configuration.",
+        "Confirm object network subnet mask accuracy; /24 vs /25 mistakes are common.",
+        "Generate traffic before checking xlate/conn tables."
+      ],
+      "expected_results": [
+        "Inside hosts can reach outside test destination per policy.",
+        "xlate table shows dynamic translation entries.",
+        "packet-tracer confirms expected permit path for test flow."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab: inside/outside NAT policy is intentionally absent in baseline.",
+        "fix_summary": "Define inside object, apply dynamic PAT to outside interface, and verify with traffic + xlate/conn checks.",
+        "verification": [
+          "show run nat",
+          "show xlate",
+          "show conn"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch A guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "security",
+        "asav",
+        "nat",
+        "pat",
+        "secure-enclave",
+        "build"
+      ],
+      "progression_rank": [
+        5,
+        2,
+        1,
+        "ASAv NAT",
+        "SENK Guided Build: ASAv Inside-Outside Dynamic NAT Baseline",
+        "senk_asav_inside_outside_nat"
+      ],
+      "study_paths": [
+        "secure-enclave-networking"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Confirm inside/outside interface designation and reachability.",
+        "Create object network for inside subnet.",
+        "Apply dynamic PAT to outside interface.",
+        "Review/adjust access policy to permit test flow.",
+        "Generate test traffic from inside toward outside target.",
+        "Inspect xlate and connection tables for expected entries.",
+        "Run packet-tracer and reconcile any deny outputs."
+      ],
+      "coaching_notes": [
+        "No translation appears without matching traffic; always generate traffic first.",
+        "Inside/outside reversal is a frequent configuration error."
+      ]
+    },
+    "rhel9_nmcli_static_ip_dns": {
+      "concept_id": "rhel9_nmcli_static_ip_dns",
+      "title": "RHEL9 Guided Build: nmcli Static IP and DNS Baseline",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Automation",
+      "topic": "Linux Endpoint Networking",
+      "difficulty": "beginner",
+      "lab_type": "build",
+      "estimated_minutes": 25,
+      "symptom": "Configure a RHEL9 endpoint with static addressing and DNS using nmcli, then validate resolver behavior.",
+      "requirements": [
+        "Identify active NetworkManager connection profile for the target NIC.",
+        "Configure static IPv4 address and prefix on the active profile.",
+        "Configure default gateway and DNS server list.",
+        "Disable automatic DNS overwrite where required by profile behavior.",
+        "Bring connection down/up and confirm settings persist.",
+        "Verify reachability to gateway and DNS resolution for test hostname."
+      ],
+      "faults": [
+        {
+          "device": "RHEL9-CLIENT",
+          "fault": "Endpoint starts with DHCP/default profile unsuitable for static lab target.",
+          "fix": "Apply static nmcli profile settings and validate persistency."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "nmcli connection show",
+        "nmcli device show",
+        "ip addr",
+        "ip route",
+        "resolvectl status || cat /etc/resolv.conf",
+        "ping -c 3 8.8.8.8"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "RHEL9",
+        "NetworkManager",
+        "nmcli"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Use nmcli -p connection show to avoid editing the wrong profile.",
+        "Apply ipv4.method manual when moving from DHCP to static config.",
+        "Cycle the connection profile to ensure runtime state matches saved settings."
+      ],
+      "expected_results": [
+        "Interface has configured static IP/prefix after reconnect.",
+        "Default route points to intended gateway.",
+        "DNS servers are present and name resolution works for test queries."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab: endpoint baseline uses non-static defaults.",
+        "fix_summary": "Set static IPv4/gateway/DNS via nmcli and reactivate the profile.",
+        "verification": [
+          "nmcli connection show",
+          "ip route",
+          "resolvectl status || cat /etc/resolv.conf"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch A guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "rhel9",
+        "nmcli",
+        "dns",
+        "static-ip",
+        "operations",
+        "build"
+      ],
+      "progression_rank": [
+        6,
+        1,
+        1,
+        "Linux Endpoint Networking",
+        "RHEL9 Guided Build: nmcli Static IP and DNS Baseline",
+        "rhel9_nmcli_static_ip_dns"
+      ],
+      "study_paths": [
+        "rhel9-operations"
+      ],
+      "platforms": [
+        "gns3",
+        "rhel9"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "List devices and identify active connection profile.",
+        "Set ipv4.method manual with static address/prefix.",
+        "Set gateway and DNS servers on the same profile.",
+        "Bring profile down and back up.",
+        "Validate interface and route table state.",
+        "Validate resolver configuration and DNS lookup behavior.",
+        "Capture outputs for grading evidence."
+      ],
+      "coaching_notes": [
+        "Most nmcli failures are profile-name mismatches, not syntax errors.",
+        "If DNS appears unchanged, check whether another service is managing resolv.conf."
+      ]
     }
   },
   "study_plans": {

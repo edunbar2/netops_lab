@@ -1,11 +1,11 @@
 # Wave 1 Implementation Tasks (Configuration-Guided Labs)
 
 ## Batch A (start here)
-1. [ ] ccna-vlan-trunk-native-hardening
-2. [ ] ccna-router-on-a-stick-intervlan
-3. [ ] ccna-ospf-single-area-baseline
-4. [ ] senk-asav-inside-outside-nat
-5. [ ] rhel9-nmcli-static-ip-dns
+1. [x] ccna-vlan-trunk-native-hardening
+2. [x] ccna-router-on-a-stick-intervlan
+3. [x] ccna-ospf-single-area-baseline
+4. [x] senk-asav-inside-outside-nat
+5. [x] rhel9-nmcli-static-ip-dns
 
 ## Batch B
 6. [ ] ccna-standard-extended-acl-placement

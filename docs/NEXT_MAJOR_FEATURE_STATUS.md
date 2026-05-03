@@ -122,7 +122,9 @@ docs/LOCAL_AGENT_PROMPTS_NEXT_FEATURE.md
 
 ## Recommended next tasks
 
-1. Build the first real RHEL9 Operations seed labs instead of using placeholders.
-2. Decide whether validator CI should remain non-strict or become strict for release branches only.
-3. Add a GUI/CLI action for running catalog validation from developer workflows if desired.
-4. Continue toward roadmap item 4.0.2/4.0.3 content-quality improvements.
+1. Execute Wave 1 guided configuration lab rollout (see `docs/CONFIG_LAB_EXPANSION_PLAN.md` and `docs/CONFIG_LAB_WAVE1_TASKS.md`).
+2. Build the first real RHEL9 Operations seed labs instead of using placeholders.
+3. Run minor stabilization release process with tracked bug backlog (`docs/MINOR_RELEASE_BUG_BACKLOG.md`).
+4. Decide whether validator CI should remain non-strict or become strict for release branches only.
+5. Add a GUI/CLI action for running catalog validation from developer workflows if desired.
+6. Continue toward roadmap item 4.0.2/4.0.3 content-quality improvements.

@@ -16,6 +16,54 @@ Prepare the next feature release by adding a standalone catalog validation found
 
 The feature should remain compatible with existing 3.x/4.0 catalog metadata and must not require PySide6, GNS3, network access, or local agent state to validate catalog quality.
 
+## 1.5 Pre-Next-Major Release Steps (new)
+
+### Step A — Guided Network Configuration Expansion (highest priority)
+
+Goal:
+
+- Rebalance curriculum away from troubleshooting-heavy labs.
+- Convert legacy "skill-check" style toward explicit, guided network-configuration labs that teach a concrete skill with a clear walkthrough path.
+
+Execution model:
+
+- Use agent-assisted concept generation to propose candidate labs across all study paths.
+- Human-reviewed implementation in repo to ensure technical accuracy, pedagogy quality, and consistency with catalog standards.
+
+Current concept report delivered:
+
+- 40 proposed concepts (8 per study path) with objective, prerequisites, configuration targets, 6–10 step walkthroughs, validation checks, common mistakes, estimated duration, and difficulty.
+- Prioritized first-20 implementation shortlist prepared for staged rollout.
+
+Acceptance criteria:
+
+- Add first wave of approved configuration-guided labs to each study path (balanced distribution).
+- Preserve validator compatibility and avoid student-facing answer leakage.
+- Publish updated modality ratio targets and demonstrate measurable reduction in troubleshooting-only share.
+
+### Step B — Minor Stabilization Release (bugfix + polish)
+
+Goal:
+
+- Ship a dedicated minor release focused on defects, UX polish, and reliability improvements before the next major feature release.
+
+Scope:
+
+- Address bug backlog items as they are collected.
+- Prioritize high-frequency workflow issues, GUI friction, and regressions.
+- Include desktop GUI validation pass in release checklist.
+
+Validation approach:
+
+- For web surfaces: Playwright-based regression checks.
+- For desktop Qt surfaces: use Qt-native automation (`pytest-qt` / QtBot) as primary, with optional image-based fallback where needed.
+
+Acceptance criteria:
+
+- Bug backlog triaged and closed to agreed threshold.
+- Regression test pass for touched areas.
+- Release notes document fixes and known residual limitations.
+
 ## 2. Completed Work
 
 ### 2.1 Catalog Validator

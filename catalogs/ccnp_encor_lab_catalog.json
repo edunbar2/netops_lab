@@ -61681,6 +61681,577 @@
         "Most failures come from interface/direction mismatch or identifier typos.",
         "Validate after every major change."
       ]
+    },
+    "rhel9_systemd_service_recovery_journalctl": {
+      "concept_id": "rhel9_systemd_service_recovery_journalctl",
+      "title": "RHEL9 Guided Build: systemd Service Recovery with journalctl",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Automation",
+      "topic": "Linux Operations",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 30,
+      "symptom": "Harden service startup and troubleshooting workflow by validating unit state, logs, restart policy, and dependency ordering.",
+      "requirements": [
+        "Inspect service and unit-file state with systemctl and identify startup blockers.",
+        "Use journalctl filtering to isolate the latest failure reason for the target service.",
+        "Apply required unit overrides (for restart behavior and ordering) using drop-in configuration.",
+        "Reload daemon metadata and recover the service to stable active state.",
+        "Verify service persistence and clean restart behavior across manual restart tests."
+      ],
+      "faults": [
+        {
+          "device": "RHEL9-SRV",
+          "fault": "Target service baseline lacks resilient restart/ordering configuration.",
+          "fix": "Apply guided systemd override and validate recovered health."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "systemctl status LABAPP.service",
+        "systemctl cat LABAPP.service",
+        "journalctl -u LABAPP.service -n 80 --no-pager",
+        "systemctl show LABAPP.service -p ActiveState -p SubState -p Restart",
+        "systemctl restart LABAPP.service"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "RHEL9",
+        "systemd",
+        "journalctl"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Use `systemctl edit` for overrides instead of editing vendor unit files directly.",
+        "Confirm both runtime health and configured restart semantics.",
+        "Validate after each override change to isolate mistakes early."
+      ],
+      "expected_results": [
+        "Service reaches and stays in active (running) state.",
+        "Journal entries no longer show repeating startup-failure loop.",
+        "Unit override parameters match required policy and survive daemon-reload."
+      ],
+      "answer_key": {
+        "root_cause": "Service resiliency and ordering controls were not aligned with operational requirements.",
+        "fix_summary": "Use journal-driven diagnosis, apply drop-in override, daemon-reload, and restart validation.",
+        "verification": [
+          "systemctl status LABAPP.service",
+          "journalctl -u LABAPP.service -n 50 --no-pager",
+          "systemctl show LABAPP.service -p Restart"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Step 3 RHEL9 Operations expansion lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "rhel9",
+        "systemd",
+        "journalctl",
+        "service-recovery",
+        "operations",
+        "build"
+      ],
+      "progression_rank": [
+        6,
+        2,
+        1,
+        "Linux Operations",
+        "RHEL9 Guided Build: systemd Service Recovery with journalctl",
+        "rhel9_systemd_service_recovery_journalctl"
+      ],
+      "study_paths": [
+        "rhel9-operations"
+      ],
+      "platforms": [
+        "gns3",
+        "rhel9"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Capture current unit status and recent failure logs.",
+        "Identify required restart/order policy from requirements.",
+        "Create or update service drop-in override entries.",
+        "Run daemon-reload and restart the service.",
+        "Validate active state and absence of recurring startup errors.",
+        "Document final override and health evidence."
+      ],
+      "coaching_notes": [
+        "Avoid direct edits under /usr/lib/systemd/system in guided labs.",
+        "Keep log window narrow while iterating to focus on current attempt."
+      ]
+    },
+    "rhel9_rsyslog_remote_forwarding_queue_hardening": {
+      "concept_id": "rhel9_rsyslog_remote_forwarding_queue_hardening",
+      "title": "RHEL9 Guided Build: rsyslog Remote Forwarding and Queue Hardening",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Automation",
+      "topic": "Linux Operations",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 35,
+      "symptom": "Configure reliable log forwarding with buffering so temporary collector interruption does not lose critical events.",
+      "requirements": [
+        "Create dedicated rsyslog forwarding rule for selected facilities/severities.",
+        "Configure action queue parameters to tolerate collector outages.",
+        "Validate spool/queue behavior during transient destination unreachability.",
+        "Restore connectivity and confirm queued events flush successfully.",
+        "Persist and verify forwarding configuration after rsyslog restart."
+      ],
+      "faults": [
+        {
+          "device": "RHEL9-SRV",
+          "fault": "Baseline logs are local-only and lose burst events when remote collector is unavailable.",
+          "fix": "Implement queued forwarding path with durable buffering."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "rsyslogd -N1",
+        "systemctl status rsyslog",
+        "logger -p local0.notice \"queue-test-event\"",
+        "ls -l /var/spool/rsyslog",
+        "tail -n 50 /var/log/messages"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "RHEL9",
+        "rsyslog",
+        "operations"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Validate syntax with rsyslogd -N1 before restart.",
+        "Separate input filtering from forwarding action tuning.",
+        "Use controlled test events with logger for deterministic validation."
+      ],
+      "expected_results": [
+        "Forwarding action is active and queue-backed.",
+        "Queue persists events during simulated outage.",
+        "Buffered events flush when collector path is restored."
+      ],
+      "answer_key": {
+        "root_cause": "Forwarding path lacked durable queue controls for intermittent collector reachability.",
+        "fix_summary": "Build queued forwarding action, verify during outage simulation, confirm flush on recovery.",
+        "verification": [
+          "rsyslogd -N1",
+          "systemctl status rsyslog",
+          "ls -l /var/spool/rsyslog"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Step 3 RHEL9 Operations expansion lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "rhel9",
+        "rsyslog",
+        "logging",
+        "queue",
+        "operations",
+        "build"
+      ],
+      "progression_rank": [
+        6,
+        2,
+        1,
+        "Linux Operations",
+        "RHEL9 Guided Build: rsyslog Remote Forwarding and Queue Hardening",
+        "rhel9_rsyslog_remote_forwarding_queue_hardening"
+      ],
+      "study_paths": [
+        "rhel9-operations"
+      ],
+      "platforms": [
+        "gns3",
+        "rhel9"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Define forwarding target and message selection policy.",
+        "Implement queued forwarding action in rsyslog config.",
+        "Validate syntax and restart rsyslog safely.",
+        "Generate test logs and simulate collector interruption.",
+        "Observe queue growth and confirm no event loss.",
+        "Restore path and verify queue drain/forward completion."
+      ],
+      "coaching_notes": [
+        "Queue settings are action-specific; global defaults can be misleading.",
+        "Treat rsyslog syntax validation as a required checkpoint."
+      ]
+    },
+    "rhel9_chrony_ntp_hardening_and_drift_validation": {
+      "concept_id": "rhel9_chrony_ntp_hardening_and_drift_validation",
+      "title": "RHEL9 Guided Build: chrony NTP Hardening and Drift Validation",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Automation",
+      "topic": "Linux Operations",
+      "difficulty": "beginner",
+      "lab_type": "build",
+      "estimated_minutes": 25,
+      "symptom": "Standardize secure time synchronization and verify offset stability for operations and logging accuracy.",
+      "requirements": [
+        "Configure approved NTP sources in chrony and remove unauthorized defaults.",
+        "Enforce chrony startup and persistent service enablement.",
+        "Validate synchronization state, source reachability, and offset/drift.",
+        "Confirm time service behavior after service restart and reboot simulation checks."
+      ],
+      "faults": [
+        {
+          "device": "RHEL9-CLIENT",
+          "fault": "Baseline chrony configuration references non-approved defaults and lacks validation evidence.",
+          "fix": "Apply approved source policy and verify stable synchronization."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "chronyc sources -v",
+        "chronyc tracking",
+        "timedatectl status",
+        "systemctl status chronyd"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "RHEL9",
+        "chrony",
+        "time-sync"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Check both source reachability and current selected source.",
+        "Tracking output provides offset and root dispersion evidence.",
+        "Restart chronyd once after config edits to confirm startup cleanliness."
+      ],
+      "expected_results": [
+        "chronyd is enabled and active.",
+        "Approved sources are configured and reachable.",
+        "Tracking output shows healthy offset/jitter suitable for operations."
+      ],
+      "answer_key": {
+        "root_cause": "Time-sync policy was not aligned to approved sources or operational verification.",
+        "fix_summary": "Update chrony source list, restart service, and validate tracking/sources output.",
+        "verification": [
+          "chronyc sources -v",
+          "chronyc tracking",
+          "timedatectl status"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Step 3 RHEL9 Operations expansion lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "rhel9",
+        "chrony",
+        "ntp",
+        "time-sync",
+        "operations",
+        "build"
+      ],
+      "progression_rank": [
+        6,
+        1,
+        1,
+        "Linux Operations",
+        "RHEL9 Guided Build: chrony NTP Hardening and Drift Validation",
+        "rhel9_chrony_ntp_hardening_and_drift_validation"
+      ],
+      "study_paths": [
+        "rhel9-operations"
+      ],
+      "platforms": [
+        "gns3",
+        "rhel9"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review baseline chrony configuration and identify unauthorized sources.",
+        "Apply approved NTP source entries and service settings.",
+        "Restart chronyd and validate active/enable state.",
+        "Run chronyc sources and tracking for sync evidence.",
+        "Confirm system time status and persistence checks.",
+        "Record output evidence for grading artifacts."
+      ],
+      "coaching_notes": [
+        "Source reachability can lag briefly after restart\u2014recheck before concluding failure.",
+        "Capture both source list and tracking output for complete evidence."
+      ]
+    },
+    "rhel9_selinux_httpd_contexts_restorecon": {
+      "concept_id": "rhel9_selinux_httpd_contexts_restorecon",
+      "title": "RHEL9 Guided Build: SELinux HTTPD Context Recovery with restorecon",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Automation",
+      "topic": "Linux Security",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 30,
+      "symptom": "Recover a web content path blocked by incorrect SELinux labels and validate durable context policy handling.",
+      "requirements": [
+        "Identify SELinux denial indicators impacting web content access.",
+        "Inspect file contexts on served content path and compare with expected type.",
+        "Apply persistent context mapping and relabel target content path.",
+        "Validate HTTP service access and absence of repeat SELinux denials."
+      ],
+      "faults": [
+        {
+          "device": "RHEL9-WEB",
+          "fault": "Web content path has non-compliant SELinux labels causing access denial.",
+          "fix": "Define expected context mapping and relabel affected paths."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "getenforce",
+        "ls -Z /var/www/html",
+        "semanage fcontext -l | grep /var/www/html",
+        "restorecon -Rv /var/www/html",
+        "journalctl -t setroubleshoot --no-pager -n 30 || ausearch -m AVC -ts recent"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "RHEL9",
+        "SELinux",
+        "restorecon"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Use persistent fcontext mapping before restorecon when non-default paths are involved.",
+        "Verify labels after relabel, not only command exit status.",
+        "Confirm service functionality alongside AVC silence."
+      ],
+      "expected_results": [
+        "Content path has expected SELinux type labels.",
+        "HTTP service can access content without AVC denials.",
+        "Context behavior remains correct after repeated restorecon."
+      ],
+      "answer_key": {
+        "root_cause": "SELinux file context mismatch blocked HTTPD content access.",
+        "fix_summary": "Apply persistent fcontext mapping and relabel with restorecon.",
+        "verification": [
+          "ls -Z /var/www/html",
+          "semanage fcontext -l | grep /var/www/html",
+          "ausearch -m AVC -ts recent"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Step 3 RHEL9 Operations expansion lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "rhel9",
+        "selinux",
+        "httpd",
+        "restorecon",
+        "security",
+        "build"
+      ],
+      "progression_rank": [
+        6,
+        2,
+        1,
+        "Linux Security",
+        "RHEL9 Guided Build: SELinux HTTPD Context Recovery with restorecon",
+        "rhel9_selinux_httpd_contexts_restorecon"
+      ],
+      "study_paths": [
+        "rhel9-operations"
+      ],
+      "platforms": [
+        "gns3",
+        "rhel9"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Trigger and capture baseline access-denied symptoms.",
+        "Inspect current file labels and expected SELinux types.",
+        "Define persistent context mapping with semanage fcontext.",
+        "Relabel path using restorecon and re-test access.",
+        "Check logs for AVC cleanup and stable operation.",
+        "Archive evidence outputs for learner verification."
+      ],
+      "coaching_notes": [
+        "Temporary chcon changes are insufficient for durable operations workflows.",
+        "Always validate both labeling state and application behavior."
+      ]
+    },
+    "rhel9_podman_systemd_container_autostart": {
+      "concept_id": "rhel9_podman_systemd_container_autostart",
+      "title": "RHEL9 Guided Build: Podman Container Service with systemd Autostart",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Automation",
+      "topic": "Linux Operations",
+      "difficulty": "advanced",
+      "lab_type": "build",
+      "estimated_minutes": 40,
+      "symptom": "Operationalize a Podman workload by generating and validating systemd-managed lifecycle controls.",
+      "requirements": [
+        "Deploy target container with explicit port/volume/runtime constraints.",
+        "Generate systemd unit for container lifecycle management.",
+        "Enable autostart and verify container recovery after service restart simulation.",
+        "Validate logs and health checks from both podman and systemd perspectives."
+      ],
+      "faults": [
+        {
+          "device": "RHEL9-SRV",
+          "fault": "Container runs manually but has no durable service lifecycle integration.",
+          "fix": "Integrate container with systemd unit and verify persistence behavior."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "podman ps -a",
+        "systemctl status container-LABAPP.service",
+        "systemctl is-enabled container-LABAPP.service",
+        "podman logs LABAPP",
+        "ss -tulpn"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "RHEL9",
+        "Podman",
+        "systemd"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Use generated unit files to standardize restart behavior.",
+        "Validate both container status and exposed service socket state.",
+        "Capture unit enablement evidence, not just running state."
+      ],
+      "expected_results": [
+        "Container lifecycle is controlled by a systemd service.",
+        "Service is enabled and recovers cleanly after restart tests.",
+        "Application endpoint remains reachable with expected logging output."
+      ],
+      "answer_key": {
+        "root_cause": "Workload lacked managed lifecycle controls for operational reliability.",
+        "fix_summary": "Generate/enable container systemd unit and validate restart/autostart behavior.",
+        "verification": [
+          "podman ps -a",
+          "systemctl status container-LABAPP.service",
+          "systemctl is-enabled container-LABAPP.service"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Step 3 RHEL9 Operations expansion lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "rhel9",
+        "podman",
+        "systemd",
+        "containers",
+        "operations",
+        "build"
+      ],
+      "progression_rank": [
+        6,
+        3,
+        1,
+        "Linux Operations",
+        "RHEL9 Guided Build: Podman Container Service with systemd Autostart",
+        "rhel9_podman_systemd_container_autostart"
+      ],
+      "study_paths": [
+        "rhel9-operations"
+      ],
+      "platforms": [
+        "gns3",
+        "rhel9"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Deploy baseline container using required runtime settings.",
+        "Generate a systemd unit and place it in correct scope.",
+        "Reload daemon, enable, and start the container service.",
+        "Run lifecycle restart checks and verify container recovery.",
+        "Validate app reachability and inspect logs.",
+        "Document operational evidence for autostart compliance."
+      ],
+      "coaching_notes": [
+        "Service naming consistency matters between podman and systemd artifacts.",
+        "Don\u2019t skip daemon-reload after unit generation updates."
+      ]
     }
   },
   "study_plans": {

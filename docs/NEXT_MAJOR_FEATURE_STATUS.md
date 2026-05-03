@@ -1,6 +1,6 @@
 # Next Major Feature Status
 
-Branch: `local-agent/next-major-feature-roadmap`
+Branch: `feat/config-lab-wave1-batch-a`
 
 ## Completed in this pass
 
@@ -70,7 +70,7 @@ RHEL9 Operations is now seeded with real scenarios and appears in validator usag
 Updated `.github/workflows/unit-tests.yml` to run:
 
 ```bash
-python tools/validate_catalog.py
+python tools/validate_catalog.py --strict
 python -m unittest discover -s tests
 ```
 
@@ -87,7 +87,7 @@ ccna-foundations: 175
 ccnp-enterprise: 317
 secure-enclave-networking: 24
 network-troubleshooting: 27
-rhel9-operations: 3
+rhel9-operations: 8
 ```
 
 GUI-visible populated study paths include all five configured paths, including RHEL9 Operations.
@@ -111,6 +111,5 @@ docs/LOCAL_AGENT_PROMPTS_NEXT_FEATURE.md
 
 1. Complete manual verification and mark BUG-001/BUG-002/BUG-003 as `verified` in `docs/MINOR_RELEASE_BUG_BACKLOG.md`.
 2. Prepare a stabilization release notes section summarizing Wave 1 and the three GUI/runtime fixes.
-3. Continue expanding RHEL9 Operations with additional guided labs (beyond current seed set).
-4. Add a GUI/CLI action for running catalog validation from developer workflows if desired.
-5. Continue toward roadmap item 4.0.2/4.0.3 content-quality improvements.
+3. Add a GUI/CLI action for running catalog validation from developer workflows if desired.
+4. Continue toward roadmap item 4.0.2/4.0.3 content-quality improvements.

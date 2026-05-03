@@ -26,7 +26,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 try:
     from PySide6.QtCore import Qt, QThread, Signal, QObject, qInstallMessageHandler
-    from PySide6.QtGui import QPalette, QAction, QColor, QBrush, QPen, QFont, QPixmap, QTextOption
+    from PySide6.QtGui import QPalette, QAction, QColor, QBrush, QPen, QFont, QPixmap, QTextOption, QTextCursor
     from PySide6.QtWidgets import (
         QApplication,
         QAbstractItemView,
@@ -3142,22 +3142,23 @@ NetOps Labs {APP_VERSION} is a stabilization patch for generation visibility, GN
             return
 
         node_map: Dict[str, Dict[str, Any]] = {}
-        cols = max(2, min(4, int(len(nodes) ** 0.5) + 1))
+        cols = max(2, min(3, int(len(nodes) ** 0.5) + 1))
         scale = self.ui_scale_factor() if hasattr(self, "ui_scale_factor") else 1.0
-        spacing_x = int(320 * scale)
-        spacing_y = int(230 * scale)
-        origin_x = int(90 * scale)
-        origin_y = int(90 * scale)
-        width = int(96 * scale)
-        height = int(72 * scale)
+        topo_scale = max(1.1, min(2.4, scale * 1.3))
+        spacing_x = int(380 * topo_scale)
+        spacing_y = int(280 * topo_scale)
+        origin_x = int(90 * topo_scale)
+        origin_y = int(90 * topo_scale)
+        width = int(132 * topo_scale)
+        height = int(100 * topo_scale)
 
-        line_pen = QPen(QColor("#f2f2f2")); line_pen.setWidth(max(2, int(3 * scale))); line_pen.setCosmetic(True)
-        node_pen = QPen(QColor("#eeeeee")); node_pen.setWidth(max(1, int(2 * scale))); node_pen.setCosmetic(True)
+        line_pen = QPen(QColor("#f2f2f2")); line_pen.setWidth(max(2, int(3 * topo_scale))); line_pen.setCosmetic(True)
+        node_pen = QPen(QColor("#eeeeee")); node_pen.setWidth(max(1, int(2 * topo_scale))); node_pen.setCosmetic(True)
         node_brush = QBrush(QColor("#4b5563"))
         label_bg = QBrush(QColor("#343434"))
-        link_font = QFont(); link_font.setPointSizeF(max(9.0, min(16.0, 10.5 * scale)))
-        node_name_font = QFont(); node_name_font.setPointSizeF(max(10.0, min(18.0, 11.5 * scale))); node_name_font.setBold(True)
-        node_kind_font = QFont(); node_kind_font.setPointSizeF(max(9.0, min(15.0, 10.0 * scale)))
+        link_font = QFont(); link_font.setPointSizeF(max(12.0, min(24.0, 12.5 * topo_scale)))
+        node_name_font = QFont(); node_name_font.setPointSizeF(max(13.0, min(26.0, 14.0 * topo_scale))); node_name_font.setBold(True)
+        node_kind_font = QFont(); node_kind_font.setPointSizeF(max(11.0, min(20.0, 12.0 * topo_scale)))
 
         for idx, node in enumerate(nodes):
             name = str(node.get("name", f"Node{idx+1}"))
@@ -3198,7 +3199,7 @@ NetOps Labs {APP_VERSION} is a stabilization patch for generation visibility, GN
                 tx.setFont(link_font)
                 tx.setDefaultTextColor(QColor("#ffffff"))
                 tx.setZValue(4)
-                tx.setPos(mx + nx * offset - (48 * scale), my + ny * offset - (14 * scale))
+                tx.setPos(mx + nx * offset - (56 * topo_scale), my + ny * offset - (16 * topo_scale))
                 rect = tx.boundingRect().adjusted(-5, -2, 5, 2)
                 bg_item = scene.addRect(rect.translated(tx.pos()), QPen(QColor("#5f6368")), label_bg)
                 bg_item.setZValue(3)
@@ -3223,12 +3224,12 @@ NetOps Labs {APP_VERSION} is a stabilization patch for generation visibility, GN
             name_item.setFont(node_name_font)
             name_item.setDefaultTextColor(QColor("#ffffff"))
             name_item.setZValue(5)
-            name_item.setPos(x + w / 2 - min((80 * scale), len(name) * (4.6 * scale)), y + h + (8 * scale))
+            name_item.setPos(x + w / 2 - min((96 * topo_scale), len(name) * (5.2 * topo_scale)), y + h + (10 * topo_scale))
             kind_item = scene.addText(kind.title())
             kind_item.setFont(node_kind_font)
             kind_item.setDefaultTextColor(QColor("#d1d5db"))
             kind_item.setZValue(5)
-            kind_item.setPos(x + w / 2 - (38 * scale), y + h + (30 * scale))
+            kind_item.setPos(x + w / 2 - (46 * topo_scale), y + h + (38 * topo_scale))
 
         rect = scene.itemsBoundingRect()
         scene.setSceneRect(rect.adjusted(-110, -90, 110, 110))
@@ -3734,7 +3735,7 @@ NetOps Labs {APP_VERSION} is a stabilization patch for generation visibility, GN
             return
         output_widget = tab["output"]
         cursor = output_widget.textCursor()
-        cursor.movePosition(cursor.End)
+        cursor.movePosition(QTextCursor.End)
         cursor.insertText(text)
         output_widget.setTextCursor(cursor)
         output_widget.ensureCursorVisible()

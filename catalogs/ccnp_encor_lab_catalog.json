@@ -59446,6 +59446,125 @@
       "exam_alignment": [
         "CCNA"
       ]
+    },
+    "ccna_vlan_trunk_native_hardening": {
+      "concept_id": "ccna_vlan_trunk_native_hardening",
+      "title": "CCNA Guided Build: VLAN Trunk Native VLAN Hardening",
+      "topology": "campus_dual_core",
+      "exam_blueprints": [
+        "CCNA"
+      ],
+      "domain": "Network Access",
+      "topic": "VLANs and Trunks",
+      "difficulty": "beginner",
+      "lab_type": "build",
+      "estimated_minutes": 30,
+      "symptom": "Build and verify secure trunk behavior across distribution and access switches from requirements.",
+      "requirements": [
+        "Create VLAN 10 (USERS_A), VLAN 20 (USERS_B), and VLAN 999 (NATIVE_BLACKHOLE) on DIST1, DIST2, ACC1, and ACC2.",
+        "Configure DIST1<->ACC1 and DIST2<->ACC2 links as 802.1Q trunks.",
+        "Set native VLAN to 999 on all configured trunk links.",
+        "Restrict allowed VLAN list on trunks to 10,20,999.",
+        "Ensure access ports for hosts use VLAN 10 or VLAN 20 as labeled in the topology notes.",
+        "Verify trunk state, native VLAN, and allowed VLAN consistency end-to-end."
+      ],
+      "faults": [
+        {
+          "device": "DIST1",
+          "fault": "Starter baseline omits hardened trunk settings and native VLAN controls.",
+          "fix": "Implement all listed requirements and verify output alignment."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show vlan brief",
+        "show interfaces trunk",
+        "show interface status",
+        "show running-config interface gi0/2",
+        "show running-config interface gi0/3"
+      ],
+      "curriculum_track": "CCNA",
+      "skills": [
+        "VLAN",
+        "802.1Q Trunking",
+        "Layer 2 Hardening"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Create VLANs first on all participating switches, then apply trunk settings.",
+        "Use one interface as a golden template and replicate on peer trunk ports.",
+        "Validate both native VLAN and allowed VLAN list in show interfaces trunk output."
+      ],
+      "expected_results": [
+        "All required VLANs exist on each participating switch.",
+        "Target links are trunking with native VLAN 999.",
+        "Allowed VLAN list is limited to 10,20,999 on each trunk.",
+        "Endpoint-facing access ports map to intended VLANs."
+      ],
+      "answer_key": {
+        "root_cause": "Lab is configuration-first; secure trunk and VLAN baseline must be built from requirements.",
+        "fix_summary": "Create VLANs and apply hardened trunk settings (native VLAN 999 and allowed VLAN restrictions) on required links.",
+        "verification": [
+          "show vlan brief",
+          "show interfaces trunk",
+          "show running-config interface gi0/2",
+          "show running-config interface gi0/3"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch A initial guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "ccna",
+        "network-access",
+        "vlan",
+        "trunk",
+        "native-vlan",
+        "hardening",
+        "build"
+      ],
+      "progression_rank": [
+        2,
+        2,
+        1,
+        "VLANs and Trunks",
+        "CCNA Guided Build: VLAN Trunk Native VLAN Hardening",
+        "ccna_vlan_trunk_native_hardening"
+      ],
+      "study_paths": [
+        "ccna-foundations"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "CCNA"
+      ],
+      "walkthrough_steps": [
+        "Identify trunk-facing interfaces between distribution and access layers from topology labels.",
+        "Create VLANs 10, 20, and 999 on all required switches.",
+        "Configure trunk mode and 802.1Q encapsulation where required by platform.",
+        "Set native VLAN 999 on each trunk link.",
+        "Restrict allowed VLAN list to 10,20,999 on each trunk.",
+        "Assign endpoint access ports to VLAN 10 or 20 per host intent.",
+        "Run verification commands and capture output proving native/allowed VLAN consistency."
+      ],
+      "coaching_notes": [
+        "Mismatch native VLANs are a common issue; always verify both ends of each trunk.",
+        "Avoid allowing all VLANs by default; explicitly constrain the trunk VLAN list.",
+        "Access-port misassignment often appears as one-way reachability; verify switchport mode and access VLAN."
+      ]
     }
   },
   "study_plans": {

@@ -15,18 +15,18 @@
 10. [x] nt-config-golden-baseline-campus-switch
 
 ## Batch C
-11. [ ] ccnp-bgp-ebgp-ibgp-localpref-med
-12. [ ] ccnp-vrf-lite-mp-bgp-leak
-13. [ ] ccnp-netflow-flexible-monitor-export
-14. [ ] senk-asav-static-nat-dmz-publishing
-15. [ ] senk-aaa-tacacs-local-fallback
+11. [x] ccnp-bgp-ebgp-ibgp-localpref-med
+12. [x] ccnp-vrf-lite-mp-bgp-leak
+13. [x] ccnp-netflow-flexible-monitor-export
+14. [x] senk-asav-static-nat-dmz-publishing
+15. [x] senk-aaa-tacacs-local-fallback
 
 ## Batch D
-16. [ ] senk-site2site-ipsec-ikev2-vti
-17. [ ] rhel9-vlan-subinterfaces-nmcli
-18. [ ] rhel9-firewalld-zones-services-richrules
-19. [ ] nt-config-ip-sla-track-failover
-20. [ ] nt-config-change-window-checkpoint-rollback
+16. [x] senk-site2site-ipsec-ikev2-vti
+17. [x] rhel9-vlan-subinterfaces-nmcli
+18. [x] rhel9-firewalld-zones-services-richrules
+19. [x] nt-config-ip-sla-track-failover
+20. [x] nt-config-change-window-checkpoint-rollback
 
 ## Definition of Done per lab
 - Catalog metadata entry created/updated

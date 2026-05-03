@@ -60586,6 +60586,1101 @@
       "coaching_notes": [
         "Golden baseline work is about repeatability; keep config structured and template-friendly."
       ]
+    },
+    "ccnp_bgp_ebgp_ibgp_localpref_med": {
+      "concept_id": "ccnp_bgp_ebgp_ibgp_localpref_med",
+      "title": "CCNP Guided Build: eBGP/iBGP with Local Preference and MED",
+      "topology": "advanced_routing_lab",
+      "exam_blueprints": [
+        "ENARSI",
+        "ENCOR"
+      ],
+      "domain": "Infrastructure",
+      "topic": "BGP",
+      "difficulty": "advanced",
+      "lab_type": "build",
+      "estimated_minutes": 55,
+      "symptom": "Build and validate the target configuration from guided requirements.",
+      "requirements": [
+        "Establish eBGP peering to ISP edge and iBGP inside AS.",
+        "Advertise required prefixes with route-policy controls.",
+        "Set local preference for primary exit path decisions.",
+        "Set/interpret MED for inbound path influence where required.",
+        "Validate best path selection and failover behavior."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show ip bgp summary",
+        "show ip bgp",
+        "show ip bgp neighbors",
+        "show ip route bgp"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "BGP",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Stabilize base addressing/link state first.",
+        "Implement one requirement block at a time and verify incrementally.",
+        "Use command output evidence to confirm each objective."
+      ],
+      "expected_results": [
+        "Required configuration elements are present and consistent.",
+        "Verification commands show expected operational state."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab with intentionally incomplete baseline.",
+        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "verification": [
+          "show ip bgp summary",
+          "show ip bgp",
+          "show ip bgp neighbors"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENARSI",
+      "tags": [
+        "ccnp",
+        "bgp",
+        "ebgp",
+        "ibgp",
+        "localpref",
+        "med",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "BGP",
+        "CCNP Guided Build: eBGP/iBGP with Local Preference and MED",
+        "ccnp_bgp_ebgp_ibgp_localpref_med"
+      ],
+      "study_paths": [
+        "ccnp-enterprise"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENARSI",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "Most failures come from interface/direction mismatch or identifier typos.",
+        "Validate after every major change."
+      ]
+    },
+    "ccnp_vrf_lite_mp_bgp_leak": {
+      "concept_id": "ccnp_vrf_lite_mp_bgp_leak",
+      "title": "CCNP Guided Build: VRF-Lite and MP-BGP Route Leak",
+      "topology": "advanced_routing_lab",
+      "exam_blueprints": [
+        "ENARSI",
+        "ENCOR"
+      ],
+      "domain": "Infrastructure",
+      "topic": "VRF/BGP",
+      "difficulty": "advanced",
+      "lab_type": "build",
+      "estimated_minutes": 60,
+      "symptom": "Build and validate the target configuration from guided requirements.",
+      "requirements": [
+        "Create VRFs and bind interfaces correctly.",
+        "Establish MP-BGP address-family configuration for VRF contexts.",
+        "Implement controlled route leaking between selected VRFs.",
+        "Verify isolation is preserved except approved leak paths."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show vrf",
+        "show ip route vrf all",
+        "show bgp vpnv4 unicast all",
+        "show bgp vpnv4 unicast vrf"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "VRF/BGP",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Stabilize base addressing/link state first.",
+        "Implement one requirement block at a time and verify incrementally.",
+        "Use command output evidence to confirm each objective."
+      ],
+      "expected_results": [
+        "Required configuration elements are present and consistent.",
+        "Verification commands show expected operational state."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab with intentionally incomplete baseline.",
+        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "verification": [
+          "show vrf",
+          "show ip route vrf all",
+          "show bgp vpnv4 unicast all"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENARSI",
+      "tags": [
+        "ccnp",
+        "vrf-lite",
+        "mp-bgp",
+        "route-leak",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "VRF/BGP",
+        "CCNP Guided Build: VRF-Lite and MP-BGP Route Leak",
+        "ccnp_vrf_lite_mp_bgp_leak"
+      ],
+      "study_paths": [
+        "ccnp-enterprise"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENARSI",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "Most failures come from interface/direction mismatch or identifier typos.",
+        "Validate after every major change."
+      ]
+    },
+    "ccnp_netflow_flexible_monitor_export": {
+      "concept_id": "ccnp_netflow_flexible_monitor_export",
+      "title": "CCNP Guided Build: Flexible NetFlow Monitor and Export",
+      "topology": "network_assurance_lab",
+      "exam_blueprints": [
+        "ENCOR"
+      ],
+      "domain": "Network Assurance",
+      "topic": "NetFlow",
+      "difficulty": "advanced",
+      "lab_type": "build",
+      "estimated_minutes": 45,
+      "symptom": "Build and validate the target configuration from guided requirements.",
+      "requirements": [
+        "Create flow record with required key/non-key fields.",
+        "Create flow exporter to collector endpoint.",
+        "Create monitor and apply to target interface direction.",
+        "Verify flow cache and exporter statistics during traffic generation."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show flow monitor",
+        "show flow exporter",
+        "show flow record",
+        "show flow monitor cache"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "NetFlow",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Stabilize base addressing/link state first.",
+        "Implement one requirement block at a time and verify incrementally.",
+        "Use command output evidence to confirm each objective."
+      ],
+      "expected_results": [
+        "Required configuration elements are present and consistent.",
+        "Verification commands show expected operational state."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab with intentionally incomplete baseline.",
+        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "verification": [
+          "show flow monitor",
+          "show flow exporter",
+          "show flow record"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "ccnp",
+        "netflow",
+        "assurance",
+        "telemetry",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "NetFlow",
+        "CCNP Guided Build: Flexible NetFlow Monitor and Export",
+        "ccnp_netflow_flexible_monitor_export"
+      ],
+      "study_paths": [
+        "ccnp-enterprise"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "Most failures come from interface/direction mismatch or identifier typos.",
+        "Validate after every major change."
+      ]
+    },
+    "senk_asav_static_nat_dmz_publishing": {
+      "concept_id": "senk_asav_static_nat_dmz_publishing",
+      "title": "SENK Guided Build: ASAv Static NAT for DMZ Publishing",
+      "topology": "security_hardening_lab",
+      "exam_blueprints": [
+        "ENCOR"
+      ],
+      "domain": "Security",
+      "topic": "ASAv NAT",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 45,
+      "symptom": "Build and validate the target configuration from guided requirements.",
+      "requirements": [
+        "Define inside/DMZ/outside object networks as required.",
+        "Configure static NAT for DMZ service publication.",
+        "Apply ACL/policy permitting only approved inbound ports.",
+        "Validate inbound reachability and deny behavior for non-approved traffic."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show run nat",
+        "show xlate",
+        "show access-list",
+        "packet-tracer input outside tcp 198.51.100.10 12345 203.0.113.20 443"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "ASAv NAT",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Stabilize base addressing/link state first.",
+        "Implement one requirement block at a time and verify incrementally.",
+        "Use command output evidence to confirm each objective."
+      ],
+      "expected_results": [
+        "Required configuration elements are present and consistent.",
+        "Verification commands show expected operational state."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab with intentionally incomplete baseline.",
+        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "verification": [
+          "show run nat",
+          "show xlate",
+          "show access-list"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "security",
+        "asav",
+        "static-nat",
+        "dmz",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "ASAv NAT",
+        "SENK Guided Build: ASAv Static NAT for DMZ Publishing",
+        "senk_asav_static_nat_dmz_publishing"
+      ],
+      "study_paths": [
+        "secure-enclave-networking"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "Most failures come from interface/direction mismatch or identifier typos.",
+        "Validate after every major change."
+      ]
+    },
+    "senk_aaa_tacacs_local_fallback": {
+      "concept_id": "senk_aaa_tacacs_local_fallback",
+      "title": "SENK Guided Build: AAA TACACS+ with Local Fallback",
+      "topology": "security_hardening_lab",
+      "exam_blueprints": [
+        "ENCOR"
+      ],
+      "domain": "Security",
+      "topic": "AAA",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 35,
+      "symptom": "Build and validate the target configuration from guided requirements.",
+      "requirements": [
+        "Enable AAA new-model and define TACACS+ server group.",
+        "Configure login/authz methods with local fallback path.",
+        "Apply methods to VTY/console as required.",
+        "Validate successful TACACS auth and fallback behavior during server outage simulation."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show aaa servers",
+        "show run | section aaa",
+        "debug aaa authentication",
+        "show users"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "AAA",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Stabilize base addressing/link state first.",
+        "Implement one requirement block at a time and verify incrementally.",
+        "Use command output evidence to confirm each objective."
+      ],
+      "expected_results": [
+        "Required configuration elements are present and consistent.",
+        "Verification commands show expected operational state."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab with intentionally incomplete baseline.",
+        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "verification": [
+          "show aaa servers",
+          "show run | section aaa",
+          "debug aaa authentication"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "security",
+        "aaa",
+        "tacacs",
+        "fallback",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "AAA",
+        "SENK Guided Build: AAA TACACS+ with Local Fallback",
+        "senk_aaa_tacacs_local_fallback"
+      ],
+      "study_paths": [
+        "secure-enclave-networking"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "Most failures come from interface/direction mismatch or identifier typos.",
+        "Validate after every major change."
+      ]
+    },
+    "senk_site2site_ipsec_ikev2_vti": {
+      "concept_id": "senk_site2site_ipsec_ikev2_vti",
+      "title": "SENK Guided Build: Site-to-Site IPsec IKEv2 over VTI",
+      "topology": "security_hardening_lab",
+      "exam_blueprints": [
+        "ENCOR"
+      ],
+      "domain": "Security",
+      "topic": "IPsec",
+      "difficulty": "advanced",
+      "lab_type": "build",
+      "estimated_minutes": 60,
+      "symptom": "Build and validate the target configuration from guided requirements.",
+      "requirements": [
+        "Define IKEv2 proposal/policy/keyring/profile.",
+        "Configure tunnel interfaces for VTI endpoints.",
+        "Apply IPsec profile and route protected prefixes via tunnel.",
+        "Verify phase establishment, SA counters, and encrypted traffic flow."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show crypto ikev2 sa",
+        "show crypto ipsec sa",
+        "show interface tunnel",
+        "show ip route"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "IPsec",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Stabilize base addressing/link state first.",
+        "Implement one requirement block at a time and verify incrementally.",
+        "Use command output evidence to confirm each objective."
+      ],
+      "expected_results": [
+        "Required configuration elements are present and consistent.",
+        "Verification commands show expected operational state."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab with intentionally incomplete baseline.",
+        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "verification": [
+          "show crypto ikev2 sa",
+          "show crypto ipsec sa",
+          "show interface tunnel"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "security",
+        "ipsec",
+        "ikev2",
+        "vti",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "IPsec",
+        "SENK Guided Build: Site-to-Site IPsec IKEv2 over VTI",
+        "senk_site2site_ipsec_ikev2_vti"
+      ],
+      "study_paths": [
+        "secure-enclave-networking"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "Most failures come from interface/direction mismatch or identifier typos.",
+        "Validate after every major change."
+      ]
+    },
+    "rhel9_vlan_subinterfaces_nmcli": {
+      "concept_id": "rhel9_vlan_subinterfaces_nmcli",
+      "title": "RHEL9 Guided Build: VLAN Subinterfaces with nmcli",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Automation",
+      "topic": "Linux Endpoint Networking",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 30,
+      "symptom": "Build and validate the target configuration from guided requirements.",
+      "requirements": [
+        "Create VLAN connection profiles with nmcli on target parent interface.",
+        "Assign static IP settings for each VLAN profile.",
+        "Activate profiles and verify link/addressing state.",
+        "Validate routing and connectivity per VLAN segment requirements."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "nmcli connection show",
+        "ip -d link show",
+        "ip addr",
+        "ip route"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "Linux Endpoint Networking",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Stabilize base addressing/link state first.",
+        "Implement one requirement block at a time and verify incrementally.",
+        "Use command output evidence to confirm each objective."
+      ],
+      "expected_results": [
+        "Required configuration elements are present and consistent.",
+        "Verification commands show expected operational state."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab with intentionally incomplete baseline.",
+        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "verification": [
+          "nmcli connection show",
+          "ip -d link show",
+          "ip addr"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "rhel9",
+        "nmcli",
+        "vlan",
+        "operations",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "Linux Endpoint Networking",
+        "RHEL9 Guided Build: VLAN Subinterfaces with nmcli",
+        "rhel9_vlan_subinterfaces_nmcli"
+      ],
+      "study_paths": [
+        "rhel9-operations"
+      ],
+      "platforms": [
+        "gns3",
+        "rhel9"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "Most failures come from interface/direction mismatch or identifier typos.",
+        "Validate after every major change."
+      ]
+    },
+    "rhel9_firewalld_zones_services_richrules": {
+      "concept_id": "rhel9_firewalld_zones_services_richrules",
+      "title": "RHEL9 Guided Build: firewalld Zones, Services, and Rich Rules",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Automation",
+      "topic": "Linux Security",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 35,
+      "symptom": "Build and validate the target configuration from guided requirements.",
+      "requirements": [
+        "Assign interfaces/sources to correct firewalld zones.",
+        "Enable required services and remove unneeded defaults.",
+        "Add rich rules for explicit allow/deny policy cases.",
+        "Reload firewalld and verify effective runtime/permanent policy state."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "firewall-cmd --get-active-zones",
+        "firewall-cmd --list-all",
+        "firewall-cmd --list-rich-rules",
+        "firewall-cmd --runtime-to-permanent"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "Linux Security",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Stabilize base addressing/link state first.",
+        "Implement one requirement block at a time and verify incrementally.",
+        "Use command output evidence to confirm each objective."
+      ],
+      "expected_results": [
+        "Required configuration elements are present and consistent.",
+        "Verification commands show expected operational state."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab with intentionally incomplete baseline.",
+        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "verification": [
+          "firewall-cmd --get-active-zones",
+          "firewall-cmd --list-all",
+          "firewall-cmd --list-rich-rules"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "rhel9",
+        "firewalld",
+        "zones",
+        "rich-rules",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "Linux Security",
+        "RHEL9 Guided Build: firewalld Zones, Services, and Rich Rules",
+        "rhel9_firewalld_zones_services_richrules"
+      ],
+      "study_paths": [
+        "rhel9-operations"
+      ],
+      "platforms": [
+        "gns3",
+        "rhel9"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "Most failures come from interface/direction mismatch or identifier typos.",
+        "Validate after every major change."
+      ]
+    },
+    "nt_config_ip_sla_track_failover": {
+      "concept_id": "nt_config_ip_sla_track_failover",
+      "title": "NT Guided Build: IP SLA Tracking and Conditional Failover",
+      "topology": "enterprise_wan_isp",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Infrastructure",
+      "topic": "IP SLA",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 35,
+      "symptom": "Build and validate the target configuration from guided requirements.",
+      "requirements": [
+        "Configure IP SLA probe to target health endpoint.",
+        "Create track object tied to IP SLA reachability state.",
+        "Bind static/default route preference to track object.",
+        "Validate route failover and restoration behavior through state changes."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show ip sla statistics",
+        "show track",
+        "show ip route",
+        "show run | section ip sla"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "IP SLA",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Stabilize base addressing/link state first.",
+        "Implement one requirement block at a time and verify incrementally.",
+        "Use command output evidence to confirm each objective."
+      ],
+      "expected_results": [
+        "Required configuration elements are present and consistent.",
+        "Verification commands show expected operational state."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab with intentionally incomplete baseline.",
+        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "verification": [
+          "show ip sla statistics",
+          "show track",
+          "show ip route"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "operations",
+        "ip-sla",
+        "tracking",
+        "failover",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "IP SLA",
+        "NT Guided Build: IP SLA Tracking and Conditional Failover",
+        "nt_config_ip_sla_track_failover"
+      ],
+      "study_paths": [
+        "network-troubleshooting"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "Most failures come from interface/direction mismatch or identifier typos.",
+        "Validate after every major change."
+      ]
+    },
+    "nt_config_change_window_checkpoint_rollback": {
+      "concept_id": "nt_config_change_window_checkpoint_rollback",
+      "title": "NT Guided Build: Change Window Checkpoint and Rollback",
+      "topology": "campus_dual_core",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Infrastructure",
+      "topic": "Change Management",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 30,
+      "symptom": "Build and validate the target configuration from guided requirements.",
+      "requirements": [
+        "Capture pre-change checkpoint artifacts for target devices.",
+        "Implement planned configuration changes under change window constraints.",
+        "Run post-change validation checks and compare to expected state.",
+        "Execute rollback procedure when validation criteria are not met."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show archive",
+        "show running-config | include archive",
+        "show logging",
+        "show ip interface brief"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "Change Management",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Stabilize base addressing/link state first.",
+        "Implement one requirement block at a time and verify incrementally.",
+        "Use command output evidence to confirm each objective."
+      ],
+      "expected_results": [
+        "Required configuration elements are present and consistent.",
+        "Verification commands show expected operational state."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab with intentionally incomplete baseline.",
+        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "verification": [
+          "show archive",
+          "show running-config | include archive",
+          "show logging"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "operations",
+        "change-window",
+        "rollback",
+        "checkpoint",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "Change Management",
+        "NT Guided Build: Change Window Checkpoint and Rollback",
+        "nt_config_change_window_checkpoint_rollback"
+      ],
+      "study_paths": [
+        "network-troubleshooting"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "Most failures come from interface/direction mismatch or identifier typos.",
+        "Validate after every major change."
+      ]
     }
   },
   "study_plans": {

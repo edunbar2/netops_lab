@@ -1,107 +1,90 @@
 # ENCOR Coverage Matrix
 
-Counts below are **unique lab concepts**, not `_iosv` or fallback scenario entries.
+Counts below are computed from `catalogs/ccnp_encor_lab_catalog.json`. Scenario entries include platform/legacy variants; unique concepts deduplicate entries by `concept_id`.
 
 ## Summary
 
 - Templates: 14
-- Topologies: 31
-- Scenario entries: 291
-- Unique lab concepts: 147
+- Topologies: 54
+- Scenario entries: 447
+- Unique lab concepts: 238
+- Explicit guided study plans: 9
 
 ## By exam tag
 
 | Exam | Unique concepts |
 |---|---:|
-| CCNA | 28 |
-| ENARSI | 26 |
-| ENCOR | 117 |
+| ENCOR | 178 |
+| CCNA | 101 |
+| ENARSI | 42 |
 
 ## By ENCOR-style domain
 
 | Domain | Unique concepts |
 |---|---:|
-| Infrastructure | 56 |
-| Security | 24 |
-| Network Assurance | 12 |
-| Automation | 11 |
+| Infrastructure | 72 |
+| Security | 38 |
+| Automation | 25 |
+| Network Assurance | 17 |
+| Network Access | 13 |
+| IP Services | 12 |
+| Skill Check | 12 |
+| IP Connectivity | 10 |
+| Security Fundamentals | 10 |
+| Automation and Programmability | 8 |
 | Virtualization | 8 |
+| Network Fundamentals | 7 |
 | Architecture | 6 |
 
 ## By topic
 
 | Topic | Unique concepts |
 |---|---:|
+| ASAv | 12 |
+| Skill Check | 12 |
 | Multicast | 10 |
-| OSPF | 8 |
-| ASAv | 6 |
-| BGP | 5 |
+| OSPF | 10 |
+| ACLs | 8 |
+| BGP | 8 |
+| NAT | 7 |
+| Syslog | 7 |
+| Device Access | 6 |
+| QoS | 6 |
 | OSPFv3 | 5 |
-| QoS | 5 |
+| REST APIs | 5 |
+| Redistribution | 5 |
+| AAA | 4 |
 | HSRP | 4 |
-| NAT | 4 |
-| AAA | 3 |
-| ACLs | 3 |
+| Linux Operations | 4 |
+| Python | 4 |
+| SNMP | 4 |
+| STP | 4 |
+| DHCP Snooping | 3 |
 | EEM | 3 |
+| Flexible NetFlow | 3 |
 | GRE | 3 |
-| IPv6 | 3 |
-| Syslog | 3 |
+| IP SLA | 3 |
+| JSON | 3 |
+| OSPFv2 | 3 |
+| Port Security | 3 |
+| RESTCONF | 3 |
 | VRF | 3 |
-| CoPP | 2 |
-| DHCP Snooping | 2 |
-| Device Access | 2 |
-| Flexible NetFlow | 2 |
-| IP SLA | 2 |
-| Layer 2 Trunking | 2 |
-| NX-OS | 2 |
-| PBR | 2 |
-| Port Security | 2 |
-| REST APIs | 2 |
-| RESTCONF | 2 |
-| Redistribution | 2 |
-| SNMP | 2 |
-| STP | 2 |
-| Campus Design | 1 |
-| Dynamic ARP Inspection | 1 |
-| Errdisable | 1 |
-| EtherChannel | 1 |
-| High Availability | 1 |
-| IPv6 ACLs | 1 |
-| JSON | 1 |
-| Management Plane | 1 |
-| NETCONF | 1 |
-| NTP | 1 |
-| Overlay Concepts | 1 |
-| Path Selection | 1 |
-| Python | 1 |
-| QoS Design | 1 |
-| RSPAN | 1 |
-| Routing | 1 |
-| SPAN | 1 |
-| Services | 1 |
-| Storm Control | 1 |
-| VLANs | 1 |
-| YANG | 1 |
+
+Additional one- and two-concept topics are intentionally retained in the catalog for breadth across architecture, access, IPv6, automation, security, RHEL9, and operational workflows.
 
 ## By difficulty
 
 | Difficulty | Unique concepts |
 |---|---:|
-| easy | 46 |
-| hard | 7 |
-| intro | 1 |
-| medium | 63 |
+| medium | 88 |
+| easy | 80 |
+| intro | 26 |
+| hard | 18 |
+| intermediate | 13 |
+| advanced | 7 |
+| beginner | 5 |
+| capstone | 1 |
 
-## Notes toward 1.0.0
+## Current-state notes
 
-The curriculum is now broad enough that remaining work should emphasize quality, answer keys, repeatable validation, guided tracks, and gap closure rather than only adding raw scenario volume.
-
-Recommended remaining release sequence:
-
-```text
-0.12.0  Advanced routing depth: redistribution, filtering, summarization, path selection
-0.13.0  Security/ASAv depth and policy edge cases
-0.14.0  Automation/assurance workflow depth and mock API exercises
-0.15.0  Curriculum QA: answer keys, hints, expected outputs, weak-scenario cleanup
-1.0.0   Feature-complete ENCOR non-controller curriculum baseline
-```
+The curriculum now contains broad ENCOR coverage plus explicit guided paths for ENCOR core/complete, RHEL9 operations, secure enclave networking, and network troubleshooting. Remaining work should emphasize human review quality, generated-lab spot checks, and continued guided-path refinement rather than raw scenario volume alone.

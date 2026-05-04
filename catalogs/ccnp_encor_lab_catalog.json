@@ -60600,7 +60600,7 @@
       "difficulty": "advanced",
       "lab_type": "build",
       "estimated_minutes": 55,
-      "symptom": "Build and validate the target configuration from guided requirements.",
+      "symptom": "Configure eBGP/iBGP reachability with local preference and MED policy so the lab AS selects and advertises the intended BGP paths.",
       "requirements": [
         "Establish eBGP peering to ISP edge and iBGP inside AS.",
         "Advertise required prefixes with route-policy controls.",
@@ -60629,17 +60629,19 @@
       ],
       "prerequisites": [],
       "hints": [
-        "Stabilize base addressing/link state first.",
-        "Implement one requirement block at a time and verify incrementally.",
-        "Use command output evidence to confirm each objective."
+        "Use show ip bgp summary before policy work so neighbor state problems are not mistaken for path-selection problems.",
+        "Apply local preference inbound toward the lab AS where outbound exit choice is decided.",
+        "Check show ip bgp attributes after each route-map change to confirm local preference and MED are attached to the expected prefixes."
       ],
       "expected_results": [
-        "Required configuration elements are present and consistent.",
-        "Verification commands show expected operational state."
+        "eBGP and iBGP neighbors reach Established state and exchange the required prefixes.",
+        "Local preference marks the preferred outbound exit path in the BGP table.",
+        "MED values are present on advertised routes where inbound path influence is required.",
+        "BGP route and failover checks match the intended primary and backup behavior."
       ],
       "answer_key": {
-        "root_cause": "Build lab with intentionally incomplete baseline.",
-        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "root_cause": "The starter baseline intentionally lacks the eBGP/iBGP peering and BGP path-attribute policy for local preference and MED.",
+        "fix_summary": "Configure the required BGP neighbors, advertise the lab prefixes, and apply route-map controls for local preference and MED on the correct neighbor directions.",
         "verification": [
           "show ip bgp summary",
           "show ip bgp",
@@ -60696,8 +60698,9 @@
         "Document final state evidence."
       ],
       "coaching_notes": [
-        "Most failures come from interface/direction mismatch or identifier typos.",
-        "Validate after every major change."
+        "Local preference is evaluated inside the AS and is usually set on inbound updates from exits.",
+        "MED is shared toward neighboring AS paths and only matters when the compared paths are otherwise eligible.",
+        "A route-map applied in the wrong neighbor direction can look syntactically correct while leaving best-path selection unchanged."
       ]
     },
     "ccnp_vrf_lite_mp_bgp_leak": {
@@ -60713,7 +60716,7 @@
       "difficulty": "advanced",
       "lab_type": "build",
       "estimated_minutes": 60,
-      "symptom": "Build and validate the target configuration from guided requirements.",
+      "symptom": "Build VRF-Lite segmentation with MP-BGP route leaking so only approved prefixes move between VRF contexts.",
       "requirements": [
         "Create VRFs and bind interfaces correctly.",
         "Establish MP-BGP address-family configuration for VRF contexts.",
@@ -60741,17 +60744,19 @@
       ],
       "prerequisites": [],
       "hints": [
-        "Stabilize base addressing/link state first.",
-        "Implement one requirement block at a time and verify incrementally.",
-        "Use command output evidence to confirm each objective."
+        "Confirm interface VRF membership with show vrf before troubleshooting missing routes.",
+        "Build each VRF address family separately, then verify show ip route vrf all before adding leak policy.",
+        "Use route-target or import/export policy checks to prove only the selected prefixes are leaked."
       ],
       "expected_results": [
-        "Required configuration elements are present and consistent.",
-        "Verification commands show expected operational state."
+        "All required VRFs exist and the intended interfaces are bound to the correct VRF tables.",
+        "VRF routing tables show isolated routes before route leaking is applied.",
+        "MP-BGP address-family output shows the selected leaked prefixes.",
+        "Connectivity succeeds only along approved leak paths while other VRF isolation remains intact."
       ],
       "answer_key": {
-        "root_cause": "Build lab with intentionally incomplete baseline.",
-        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "root_cause": "The starter baseline intentionally lacks the VRF definitions, interface bindings, MP-BGP address families, and controlled route-leak policy.",
+        "fix_summary": "Create the VRFs, bind interfaces, enable MP-BGP per VRF, and configure selective import/export or route-target controls for the approved leaked routes.",
         "verification": [
           "show vrf",
           "show ip route vrf all",
@@ -60806,8 +60811,9 @@
         "Document final state evidence."
       ],
       "coaching_notes": [
-        "Most failures come from interface/direction mismatch or identifier typos.",
-        "Validate after every major change."
+        "Moving an interface into a VRF can clear its IP settings on some platforms; re-check addressing after binding.",
+        "Leaking too broadly defeats the segmentation objective even if reachability works.",
+        "Use both positive and negative tests: approved prefixes should pass, unrelated VRF routes should stay hidden."
       ]
     },
     "ccnp_netflow_flexible_monitor_export": {
@@ -60822,7 +60828,7 @@
       "difficulty": "advanced",
       "lab_type": "build",
       "estimated_minutes": 45,
-      "symptom": "Build and validate the target configuration from guided requirements.",
+      "symptom": "Configure Flexible NetFlow records, monitors, exporters, and interface attachment so traffic flows are observed and exported.",
       "requirements": [
         "Create flow record with required key/non-key fields.",
         "Create flow exporter to collector endpoint.",
@@ -60850,17 +60856,19 @@
       ],
       "prerequisites": [],
       "hints": [
-        "Stabilize base addressing/link state first.",
-        "Implement one requirement block at a time and verify incrementally.",
-        "Use command output evidence to confirm each objective."
+        "Start with show flow record to verify match fields before attaching the monitor.",
+        "Confirm exporter destination, source interface, UDP port, and version before expecting collector visibility.",
+        "Attach the monitor in the direction where lab traffic actually crosses the interface."
       ],
       "expected_results": [
-        "Required configuration elements are present and consistent.",
-        "Verification commands show expected operational state."
+        "A flow record contains the required match and collect fields for the traffic being measured.",
+        "The flow exporter points at the intended collector transport and source settings.",
+        "The flow monitor is applied on the correct interface and direction.",
+        "show flow monitor/exporter/record output reports active configuration and observed flow data."
       ],
       "answer_key": {
-        "root_cause": "Build lab with intentionally incomplete baseline.",
-        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "root_cause": "The starter baseline intentionally lacks the Flexible NetFlow record, exporter, monitor, and interface attachment.",
+        "fix_summary": "Define the flow record, configure the exporter, bind both into a flow monitor, and apply the monitor to the traffic-bearing interface in the required direction.",
         "verification": [
           "show flow monitor",
           "show flow exporter",
@@ -60914,8 +60922,9 @@
         "Document final state evidence."
       ],
       "coaching_notes": [
-        "Most failures come from interface/direction mismatch or identifier typos.",
-        "Validate after every major change."
+        "A complete monitor that is never applied to an interface will not collect usable flow data.",
+        "Exporter reachability and source selection matter as much as record syntax.",
+        "Choose match fields that answer the lab question instead of collecting unrelated counters only."
       ]
     },
     "senk_asav_static_nat_dmz_publishing": {
@@ -60930,7 +60939,7 @@
       "difficulty": "intermediate",
       "lab_type": "build",
       "estimated_minutes": 45,
-      "symptom": "Build and validate the target configuration from guided requirements.",
+      "symptom": "Publish the DMZ service through ASAv static NAT and access policy without exposing unrelated inside resources.",
       "requirements": [
         "Define inside/DMZ/outside object networks as required.",
         "Configure static NAT for DMZ service publication.",
@@ -60958,17 +60967,19 @@
       ],
       "prerequisites": [],
       "hints": [
-        "Stabilize base addressing/link state first.",
-        "Implement one requirement block at a time and verify incrementally.",
-        "Use command output evidence to confirm each objective."
+        "Use show run nat to verify the real and mapped objects before testing traffic.",
+        "Match the ACL to the post-NAT outside-facing service tuple expected by the ASAv policy model.",
+        "Check show xlate and show access-list counters after a connection attempt to separate NAT issues from policy issues."
       ],
       "expected_results": [
-        "Required configuration elements are present and consistent.",
-        "Verification commands show expected operational state."
+        "Static NAT maps the designated DMZ service address to the approved outside address or port.",
+        "The outside access policy permits only the required published service.",
+        "Translation and access-list counters increment during test traffic.",
+        "Unapproved inbound traffic remains denied by policy."
       ],
       "answer_key": {
-        "root_cause": "Build lab with intentionally incomplete baseline.",
-        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "root_cause": "The starter baseline intentionally lacks the ASAv object NAT and outside access rule needed to publish the DMZ service.",
+        "fix_summary": "Create the DMZ and mapped service objects, configure static NAT for the published service, and permit only the required outside-to-DMZ traffic with an access policy.",
         "verification": [
           "show run nat",
           "show xlate",
@@ -61022,8 +61033,9 @@
         "Document final state evidence."
       ],
       "coaching_notes": [
-        "Most failures come from interface/direction mismatch or identifier typos.",
-        "Validate after every major change."
+        "NAT success without a matching access rule still leaves the service unreachable.",
+        "Overly broad outside ACLs can pass the lab ping test while violating the enclave boundary.",
+        "Use lab-only placeholder addresses and service objects; do not embed real public services or credentials."
       ]
     },
     "senk_aaa_tacacs_local_fallback": {
@@ -61038,7 +61050,7 @@
       "difficulty": "intermediate",
       "lab_type": "build",
       "estimated_minutes": 35,
-      "symptom": "Build and validate the target configuration from guided requirements.",
+      "symptom": "Configure AAA TACACS+ authentication with local fallback so management access survives TACACS outage without weakening normal login control.",
       "requirements": [
         "Enable AAA new-model and define TACACS+ server group.",
         "Configure login/authz methods with local fallback path.",
@@ -61066,17 +61078,19 @@
       ],
       "prerequisites": [],
       "hints": [
-        "Stabilize base addressing/link state first.",
-        "Implement one requirement block at a time and verify incrementally.",
-        "Use command output evidence to confirm each objective."
+        "Use a placeholder such as <tacacs-key> for the shared secret; never add real production secrets.",
+        "Verify the local fallback username before enabling AAA on active management lines.",
+        "Check show aaa servers before interpreting debug aaa authentication failures."
       ],
       "expected_results": [
-        "Required configuration elements are present and consistent.",
-        "Verification commands show expected operational state."
+        "AAA new-model and TACACS server definitions are present with a lab placeholder key.",
+        "Login authentication tries the TACACS group first and then falls back to local users.",
+        "Authorization or accounting settings match the guided requirements where included.",
+        "Debug or show output confirms both server reachability status and fallback behavior."
       ],
       "answer_key": {
-        "root_cause": "Build lab with intentionally incomplete baseline.",
-        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "root_cause": "The starter baseline intentionally lacks AAA new-model, TACACS server configuration, method lists, and validated local fallback controls.",
+        "fix_summary": "Enable AAA, define the TACACS server group with a lab-only key placeholder, configure authentication method lists that prefer TACACS and fall back to local, and bind them to the management lines.",
         "verification": [
           "show aaa servers",
           "show run | section aaa",
@@ -61130,8 +61144,9 @@
         "Document final state evidence."
       ],
       "coaching_notes": [
-        "Most failures come from interface/direction mismatch or identifier typos.",
-        "Validate after every major change."
+        "Method-list order is the lesson: local first bypasses TACACS, while no fallback can lock out the lab.",
+        "A reachable server with a bad key behaves differently from an unreachable server; inspect server status and debug output.",
+        "Keep secrets as placeholders in curriculum content and lab configs."
       ]
     },
     "senk_site2site_ipsec_ikev2_vti": {
@@ -61146,7 +61161,7 @@
       "difficulty": "advanced",
       "lab_type": "build",
       "estimated_minutes": 60,
-      "symptom": "Build and validate the target configuration from guided requirements.",
+      "symptom": "Build a site-to-site IPsec IKEv2 tunnel over a VTI so protected lab networks route securely between sites.",
       "requirements": [
         "Define IKEv2 proposal/policy/keyring/profile.",
         "Configure tunnel interfaces for VTI endpoints.",
@@ -61174,17 +61189,19 @@
       ],
       "prerequisites": [],
       "hints": [
-        "Stabilize base addressing/link state first.",
-        "Implement one requirement block at a time and verify incrementally.",
-        "Use command output evidence to confirm each objective."
+        "Use placeholder pre-shared keys such as <ipsec-key>; never write real secrets into the lab.",
+        "Verify underlay reachability between tunnel endpoints before troubleshooting IKEv2.",
+        "Check show crypto ikev2 sa and show crypto ipsec sa after sending interesting traffic across the routed VTI."
       ],
       "expected_results": [
-        "Required configuration elements are present and consistent.",
-        "Verification commands show expected operational state."
+        "IKEv2 proposal, policy, keyring/profile, and IPsec profile are configured with lab-only placeholders.",
+        "Tunnel interface/VTI state is up and bound to the IPsec profile.",
+        "Crypto IKEv2 and IPsec SAs form when protected traffic is generated.",
+        "Routes send the intended protected prefixes across the tunnel and counters increment."
       ],
       "answer_key": {
-        "root_cause": "Build lab with intentionally incomplete baseline.",
-        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "root_cause": "The starter baseline intentionally lacks the IKEv2 policy material, IPsec profile, VTI tunnel interface, and routing for protected prefixes.",
+        "fix_summary": "Configure IKEv2 proposal/policy/keyring/profile with lab placeholders, attach an IPsec profile to the tunnel interface, and route protected networks over the VTI.",
         "verification": [
           "show crypto ikev2 sa",
           "show crypto ipsec sa",
@@ -61238,8 +61255,9 @@
         "Document final state evidence."
       ],
       "coaching_notes": [
-        "Most failures come from interface/direction mismatch or identifier typos.",
-        "Validate after every major change."
+        "Underlay reachability problems prevent IKE from forming even when crypto syntax is correct.",
+        "VTI designs rely on routing to select protected traffic instead of classic crypto ACL matching.",
+        "Mismatch in IKEv2 proposal, identity, or keyring peer settings commonly leaves the tunnel stuck before IPsec SAs form."
       ]
     },
     "rhel9_vlan_subinterfaces_nmcli": {
@@ -61255,7 +61273,7 @@
       "difficulty": "intermediate",
       "lab_type": "build",
       "estimated_minutes": 30,
-      "symptom": "Build and validate the target configuration from guided requirements.",
+      "symptom": "Create persistent RHEL9 VLAN subinterfaces with nmcli so tagged endpoint networks receive the correct addressing and routes.",
       "requirements": [
         "Create VLAN connection profiles with nmcli on target parent interface.",
         "Assign static IP settings for each VLAN profile.",
@@ -61283,17 +61301,19 @@
       ],
       "prerequisites": [],
       "hints": [
-        "Stabilize base addressing/link state first.",
-        "Implement one requirement block at a time and verify incrementally.",
-        "Use command output evidence to confirm each objective."
+        "Identify the parent NIC with nmcli device status before creating VLAN profiles.",
+        "Set both vlan.id and vlan.parent correctly; a valid profile on the wrong parent will not pass tagged traffic.",
+        "Use nmcli connection up followed by ip -d link show to confirm the kernel created the VLAN device."
       ],
       "expected_results": [
-        "Required configuration elements are present and consistent.",
-        "Verification commands show expected operational state."
+        "nmcli shows parent and VLAN connection profiles with the expected VLAN IDs.",
+        "ip -d link show displays VLAN subinterfaces tied to the correct parent link.",
+        "IPv4 addressing and default or specific routes appear on the intended VLAN profiles.",
+        "Traffic tests use the tagged subinterface path rather than the untagged parent only."
       ],
       "answer_key": {
-        "root_cause": "Build lab with intentionally incomplete baseline.",
-        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "root_cause": "The starter baseline intentionally lacks persistent nmcli VLAN connection profiles and IP settings for the tagged endpoint networks.",
+        "fix_summary": "Create nmcli VLAN profiles on the correct parent interface, assign the required IP addressing and routes, and bring the profiles up persistently.",
         "verification": [
           "nmcli connection show",
           "ip -d link show",
@@ -61348,8 +61368,9 @@
         "Document final state evidence."
       ],
       "coaching_notes": [
-        "Most failures come from interface/direction mismatch or identifier typos.",
-        "Validate after every major change."
+        "Temporary ip link commands may pass a quick test but miss the persistence objective.",
+        "RHEL connection names and interface names are separate; verify both when troubleshooting.",
+        "Leaving IP settings on the parent interface can hide VLAN mistakes during partial reachability tests."
       ]
     },
     "rhel9_firewalld_zones_services_richrules": {
@@ -61365,7 +61386,7 @@
       "difficulty": "intermediate",
       "lab_type": "build",
       "estimated_minutes": 35,
-      "symptom": "Build and validate the target configuration from guided requirements.",
+      "symptom": "Configure RHEL9 firewalld zones, service allowances, and rich rules to permit required lab traffic while denying everything else.",
       "requirements": [
         "Assign interfaces/sources to correct firewalld zones.",
         "Enable required services and remove unneeded defaults.",
@@ -61393,17 +61414,19 @@
       ],
       "prerequisites": [],
       "hints": [
-        "Stabilize base addressing/link state first.",
-        "Implement one requirement block at a time and verify incrementally.",
-        "Use command output evidence to confirm each objective."
+        "Check firewall-cmd --get-active-zones before adding rules so you edit the zone that actually handles traffic.",
+        "Add services before rich rules when the lab calls for standard service objects; reserve rich rules for source-specific controls.",
+        "Compare firewall-cmd --list-all with --permanent output to catch runtime-only changes."
       ],
       "expected_results": [
-        "Required configuration elements are present and consistent.",
-        "Verification commands show expected operational state."
+        "firewall-cmd shows the intended active zone assignments for the relevant interfaces or sources.",
+        "Allowed services and ports appear only in the required zones.",
+        "Rich rules match the specified source/service conditions.",
+        "Runtime and permanent firewalld state remain consistent after reload."
       ],
       "answer_key": {
-        "root_cause": "Build lab with intentionally incomplete baseline.",
-        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "root_cause": "The starter baseline intentionally lacks the firewalld zone assignments, service allowances, rich rules, and permanent state required by the policy.",
+        "fix_summary": "Assign interfaces or sources to the correct zones, add the required services/ports, create source-specific rich rules, and save the runtime policy permanently.",
         "verification": [
           "firewall-cmd --get-active-zones",
           "firewall-cmd --list-all",
@@ -61458,8 +61481,9 @@
         "Document final state evidence."
       ],
       "coaching_notes": [
-        "Most failures come from interface/direction mismatch or identifier typos.",
-        "Validate after every major change."
+        "Editing the default zone is not enough if the active interface belongs to a different zone.",
+        "Runtime-only changes vanish after reload and should not be treated as a completed build.",
+        "Rich rules can accidentally over-permit if the source or service qualifier is omitted."
       ]
     },
     "nt_config_ip_sla_track_failover": {
@@ -61475,7 +61499,7 @@
       "difficulty": "intermediate",
       "lab_type": "build",
       "estimated_minutes": 35,
-      "symptom": "Build and validate the target configuration from guided requirements.",
+      "symptom": "Configure IP SLA tracking with conditional routes so traffic fails over to the backup path when the primary probe fails.",
       "requirements": [
         "Configure IP SLA probe to target health endpoint.",
         "Create track object tied to IP SLA reachability state.",
@@ -61503,17 +61527,19 @@
       ],
       "prerequisites": [],
       "hints": [
-        "Stabilize base addressing/link state first.",
-        "Implement one requirement block at a time and verify incrementally.",
-        "Use command output evidence to confirm each objective."
+        "Verify the probe target is reachable from the intended source before tying it to routing.",
+        "Use show ip sla statistics and show track together; SLA success and track state must agree.",
+        "Compare administrative distance on primary and backup routes so failover selects the intended path."
       ],
       "expected_results": [
-        "Required configuration elements are present and consistent.",
-        "Verification commands show expected operational state."
+        "IP SLA operation runs on schedule and reports reachability statistics for the tracked target.",
+        "Track state follows the SLA result and changes when the primary path fails or recovers.",
+        "The routing table installs the primary conditional route only while the track is up.",
+        "Backup routing takes over during failure and reverts after recovery."
       ],
       "answer_key": {
-        "root_cause": "Build lab with intentionally incomplete baseline.",
-        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "root_cause": "The starter baseline intentionally lacks the IP SLA probe, track object, and conditional primary/backup route logic.",
+        "fix_summary": "Create the IP SLA operation and schedule, bind it to a track object, attach the track to the primary static route, and configure a higher-distance backup route.",
         "verification": [
           "show ip sla statistics",
           "show track",
@@ -61568,8 +61594,9 @@
         "Document final state evidence."
       ],
       "coaching_notes": [
-        "Most failures come from interface/direction mismatch or identifier typos.",
-        "Validate after every major change."
+        "A scheduled but unsourced SLA can test the wrong path and give misleading failover results.",
+        "If the backup route has the same or better distance, traffic may bypass the tracked primary route.",
+        "Failback should be verified too; passing only the failure test misses recovery behavior."
       ]
     },
     "nt_config_change_window_checkpoint_rollback": {
@@ -61585,7 +61612,7 @@
       "difficulty": "intermediate",
       "lab_type": "build",
       "estimated_minutes": 30,
-      "symptom": "Build and validate the target configuration from guided requirements.",
+      "symptom": "Prepare a network change checkpoint and rollback workflow so a guided change can be verified, logged, and safely reverted if needed.",
       "requirements": [
         "Capture pre-change checkpoint artifacts for target devices.",
         "Implement planned configuration changes under change window constraints.",
@@ -61613,17 +61640,19 @@
       ],
       "prerequisites": [],
       "hints": [
-        "Stabilize base addressing/link state first.",
-        "Implement one requirement block at a time and verify incrementally.",
-        "Use command output evidence to confirm each objective."
+        "Capture show running-config and archive status before making the change so rollback has a trustworthy baseline.",
+        "Use configuration archive or replace/rollback features supported by the lab platform rather than relying on memory.",
+        "Check show logging for change-window markers and verification output timestamps."
       ],
       "expected_results": [
-        "Required configuration elements are present and consistent.",
-        "Verification commands show expected operational state."
+        "Archive or checkpoint settings capture a known-good baseline before the change.",
+        "Change-window logs identify the planned change and verification evidence.",
+        "The guided configuration change can be compared against the saved baseline.",
+        "Rollback restores the prior state when the acceptance checks fail."
       ],
       "answer_key": {
-        "root_cause": "Build lab with intentionally incomplete baseline.",
-        "fix_summary": "Apply guided requirements and verify with provided commands.",
+        "root_cause": "The starter baseline intentionally lacks the checkpoint/archive workflow, change-window logging, and rollback procedure for controlled configuration changes.",
+        "fix_summary": "Enable or use the platform checkpoint/archive mechanism, record pre-change evidence, apply the guided change, verify acceptance criteria, and execute rollback if validation fails.",
         "verification": [
           "show archive",
           "show running-config | include archive",
@@ -61678,8 +61707,9 @@
         "Document final state evidence."
       ],
       "coaching_notes": [
-        "Most failures come from interface/direction mismatch or identifier typos.",
-        "Validate after every major change."
+        "The rollback point must be captured before the risky change, not after the outage is observed.",
+        "Operational change control values evidence and timestamps as much as the final configuration.",
+        "A rollback procedure should be tested in the lab so it is not improvised during an incident."
       ]
     },
     "rhel9_systemd_service_recovery_journalctl": {

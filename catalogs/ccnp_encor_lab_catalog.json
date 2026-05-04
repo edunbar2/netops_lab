@@ -62849,6 +62849,111 @@
           ]
         }
       ]
+    },
+    "secure-enclave-networking": {
+      "title": "Secure Enclave Networking Practical Path",
+      "description": "A curated path for hardening access edge, management plane, firewall/NAT, encrypted transport, and audit-ready enclave baselines.",
+      "steps": [
+        {
+          "title": "Access-edge controls",
+          "objective": "Harden common campus edge controls before moving into firewall policy.",
+          "scenario_ids": [
+            "svc_bpduguard_missing_on_access",
+            "svc_port_security_maximum_too_low",
+            "svc_port_security_violation_shutdown"
+          ]
+        },
+        {
+          "title": "Management-plane and AAA hardening",
+          "objective": "Restrict administrative access and validate resilient AAA behavior.",
+          "scenario_ids": [
+            "sec_vty_acl_blocks_admin",
+            "sec_vty_transport_telnet_enabled",
+            "senk_aaa_tacacs_local_fallback"
+          ]
+        },
+        {
+          "title": "Firewall and NAT policy validation",
+          "objective": "Validate ASAv management exposure plus inside/outside and DMZ publishing NAT policy.",
+          "scenario_ids": [
+            "sec_asa_management_ssh_wrong_interface",
+            "senk_asav_inside_outside_nat",
+            "senk_asav_static_nat_dmz_publishing"
+          ]
+        },
+        {
+          "title": "Encrypted transport controls",
+          "objective": "Build and verify site-to-site IPsec VTI transport for enclave connectivity.",
+          "scenario_ids": [
+            "senk_site2site_ipsec_ikev2_vti"
+          ]
+        },
+        {
+          "title": "Audit-ready baseline validation",
+          "objective": "Confirm logging, time, and recovery signals that support enclave audit evidence.",
+          "scenario_ids": [
+            "na_syslog_wrong_source_interface",
+            "na_ntp_wrong_server",
+            "svc_errdisable_recovery_missing"
+          ]
+        }
+      ]
+    },
+    "network-troubleshooting": {
+      "title": "Network Troubleshooting Practical Path",
+      "description": "A curated incident-response path across L2 reachability, routing, services, assurance, security, and operational change control.",
+      "steps": [
+        {
+          "title": "L2 and endpoint reachability incidents",
+          "objective": "Resolve access-edge and errdisable symptoms that interrupt endpoint connectivity.",
+          "scenario_ids": [
+            "svc_errdisable_recovery_missing",
+            "svc_nat_acl_wrong_source"
+          ]
+        },
+        {
+          "title": "Routing adjacency and path incidents",
+          "objective": "Troubleshoot OSPF and BGP control-plane problems before deeper service checks.",
+          "scenario_ids": [
+            "l3_ospf_area_mismatch",
+            "l3_ospf_passive_interface",
+            "bgp_wrong_remote_as",
+            "bgp_next_hop_unreachable"
+          ]
+        },
+        {
+          "title": "Policy and path-control incidents",
+          "objective": "Fix path steering and routing-choice problems that create subtle reachability failures.",
+          "scenario_ids": [
+            "l3_pbr_acl_mismatch",
+            "l3_ospf_cost_suboptimal",
+            "bgp_missing_network_statement"
+          ]
+        },
+        {
+          "title": "Services and assurance incidents",
+          "objective": "Use monitoring and time-service failures to practice evidence-driven troubleshooting.",
+          "scenario_ids": [
+            "na_syslog_wrong_host",
+            "na_ntp_wrong_server"
+          ]
+        },
+        {
+          "title": "Security policy incidents",
+          "objective": "Differentiate management-plane filtering from broader data-plane reachability issues.",
+          "scenario_ids": [
+            "sec_vty_acl_blocks_admin"
+          ]
+        },
+        {
+          "title": "Capstone operational troubleshooting",
+          "objective": "Apply failover and rollback workflows to close the incident lifecycle.",
+          "scenario_ids": [
+            "nt_config_ip_sla_track_failover",
+            "nt_config_change_window_checkpoint_rollback"
+          ]
+        }
+      ]
     }
   },
   "qa_policy": {

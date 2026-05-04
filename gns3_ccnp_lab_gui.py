@@ -1310,8 +1310,10 @@ Collect verification: {'yes' if self.verify.get() else 'no'}
                     cwd=str(APP_DIR),
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
+                    stdin=subprocess.DEVNULL,
                     text=True,
                     bufsize=1,
+                    close_fds=True,
                 )
                 assert proc.stdout is not None
                 for line in proc.stdout:

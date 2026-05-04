@@ -5,6 +5,9 @@ These plans are stored in the catalog under `study_plans` and can be listed from
 ```bash
 ./gns3_ccnp_lab_generator.py --list-study-plan encor-core
 ./gns3_ccnp_lab_generator.py --list-study-plan encor-complete
+./gns3_ccnp_lab_generator.py --list-study-plan rhel9-operations
+./gns3_ccnp_lab_generator.py --list-study-plan secure-enclave-networking
+./gns3_ccnp_lab_generator.py --list-study-plan network-troubleshooting
 ```
 
 ## ENCOR Core Practical Path
@@ -57,6 +60,10 @@ Labs:
 
 Labs:
 
+- `virt_vrf_interface_wrong` — VRF Interface Wrong
+- `virt_vrf_route_leak_missing` — VRF Route Leak Missing
+- `virt_gre_tunnel_destination_wrong` — GRE Tunnel Destination Wrong
+- `ccnp_vrf_lite_mp_bgp_leak` — CCNP Guided Build: VRF-Lite and MP-BGP Route Leak
 
 ### 6. Security and access hardening
 
@@ -130,6 +137,12 @@ Labs:
 
 Labs:
 
+- `virt_vrf_interface_wrong` — VRF Interface Wrong
+- `virt_vrf_route_leak_missing` — VRF Route Leak Missing
+- `virt_gre_tunnel_destination_wrong` — GRE Tunnel Destination Wrong
+- `virt_gre_recursive_routing` — GRE Recursive Routing
+- `arch_underlay_overlay_mapping_error` — Architecture: Underlay/Overlay Mapping Error
+- `ccnp_vrf_lite_mp_bgp_leak` — CCNP Guided Build: VRF-Lite and MP-BGP Route Leak
 
 ### 3. Infrastructure
 
@@ -185,3 +198,154 @@ Labs:
 - `auto_yang_interface_payload_interpret` — YANG Interface Payload Interpretation
 - `auto_python_parse_show_output_bug` — Python Parser Bug
 
+## RHEL9 Operations Practical Path
+
+A practical path through existing RHEL9 endpoint networking, service recovery, logging, time, security, and container operations labs.
+
+### 1. Network identity and addressing
+
+**Objective:** Build persistent RHEL9 addressing, DNS, and VLAN endpoint connectivity with nmcli.
+
+Labs:
+
+- `rhel9_nmcli_static_ip_dns` — RHEL9 Guided Build: nmcli Static IP and DNS Baseline
+- `rhel9_vlan_subinterfaces_nmcli` — RHEL9 Guided Build: VLAN Subinterfaces with nmcli
+
+### 2. Service recovery and logging
+
+**Objective:** Recover systemd services and forward logs with durable rsyslog queue behavior.
+
+Labs:
+
+- `rhel9_systemd_service_recovery_journalctl` — RHEL9 Guided Build: systemd Service Recovery with journalctl
+- `rhel9_rsyslog_remote_forwarding_queue_hardening` — RHEL9 Guided Build: rsyslog Remote Forwarding and Queue Hardening
+
+### 3. Time and security policy hardening
+
+**Objective:** Harden time synchronization and restore SELinux/firewalld policy for required services.
+
+Labs:
+
+- `rhel9_chrony_ntp_hardening_and_drift_validation` — RHEL9 Guided Build: chrony NTP Hardening and Drift Validation
+- `rhel9_firewalld_zones_services_richrules` — RHEL9 Guided Build: firewalld Zones, Services, and Rich Rules
+- `rhel9_selinux_httpd_contexts_restorecon` — RHEL9 Guided Build: SELinux HTTPD Context Recovery with restorecon
+
+### 4. Container service operations
+
+**Objective:** Operate a Podman workload as a managed systemd service with autostart behavior.
+
+Labs:
+
+- `rhel9_podman_systemd_container_autostart` — RHEL9 Guided Build: Podman Container Service with systemd Autostart
+
+## Secure Enclave Networking Practical Path
+
+A curated path for hardening access edge, management plane, firewall/NAT, encrypted transport, and audit-ready enclave baselines.
+
+### 1. Access-edge controls
+
+**Objective:** Harden common campus edge controls before moving into firewall policy.
+
+Labs:
+
+- `svc_bpduguard_missing_on_access` — BPDU Guard Missing on Access Port
+- `svc_port_security_maximum_too_low` — Port Security Maximum Too Low
+- `svc_port_security_violation_shutdown` — Port Security Violation Mode Shutdown
+
+### 2. Management-plane and AAA hardening
+
+**Objective:** Restrict administrative access and validate resilient AAA behavior.
+
+Labs:
+
+- `sec_vty_acl_blocks_admin` — VTY Access-Class Blocks Admin
+- `sec_vty_transport_telnet_enabled` — VTY Allows Telnet
+- `senk_aaa_tacacs_local_fallback` — SENK Guided Build: AAA TACACS+ with Local Fallback
+
+### 3. Firewall and NAT policy validation
+
+**Objective:** Validate ASAv management exposure plus inside/outside and DMZ publishing NAT policy.
+
+Labs:
+
+- `sec_asa_management_ssh_wrong_interface` — ASAv SSH Management Allowed on Wrong Interface
+- `senk_asav_inside_outside_nat` — SENK Guided Build: ASAv Inside-Outside Dynamic NAT Baseline
+- `senk_asav_static_nat_dmz_publishing` — SENK Guided Build: ASAv Static NAT for DMZ Publishing
+
+### 4. Encrypted transport controls
+
+**Objective:** Build and verify site-to-site IPsec VTI transport for enclave connectivity.
+
+Labs:
+
+- `senk_site2site_ipsec_ikev2_vti` — SENK Guided Build: Site-to-Site IPsec IKEv2 over VTI
+
+### 5. Audit-ready baseline validation
+
+**Objective:** Confirm logging, time, and recovery signals that support enclave audit evidence.
+
+Labs:
+
+- `na_syslog_wrong_source_interface` — Syslog Wrong Source Interface
+- `na_ntp_wrong_server` — NTP Wrong Server
+- `svc_errdisable_recovery_missing` — Errdisable Recovery Missing
+
+## Network Troubleshooting Practical Path
+
+A curated incident-response path across L2 reachability, routing, services, assurance, security, and operational change control.
+
+### 1. L2 and endpoint reachability incidents
+
+**Objective:** Resolve access-edge and errdisable symptoms that interrupt endpoint connectivity.
+
+Labs:
+
+- `svc_errdisable_recovery_missing` — Errdisable Recovery Missing
+- `svc_nat_acl_wrong_source` — NAT ACL Wrong Source
+
+### 2. Routing adjacency and path incidents
+
+**Objective:** Troubleshoot OSPF and BGP control-plane problems before deeper service checks.
+
+Labs:
+
+- `l3_ospf_area_mismatch` — OSPF Area Mismatch
+- `l3_ospf_passive_interface` — OSPF Passive Interface
+- `bgp_wrong_remote_as` — BGP Wrong Remote AS
+- `bgp_next_hop_unreachable` — BGP Next Hop Unreachable
+
+### 3. Policy and path-control incidents
+
+**Objective:** Fix path steering and routing-choice problems that create subtle reachability failures.
+
+Labs:
+
+- `l3_pbr_acl_mismatch` — PBR ACL Mismatch
+- `l3_ospf_cost_suboptimal` — OSPF Suboptimal Path
+- `bgp_missing_network_statement` — BGP Missing Network Statement
+
+### 4. Services and assurance incidents
+
+**Objective:** Use monitoring and time-service failures to practice evidence-driven troubleshooting.
+
+Labs:
+
+- `na_syslog_wrong_host` — Syslog Wrong Host
+- `na_ntp_wrong_server` — NTP Wrong Server
+
+### 5. Security policy incidents
+
+**Objective:** Differentiate management-plane filtering from broader data-plane reachability issues.
+
+Labs:
+
+- `sec_vty_acl_blocks_admin` — VTY Access-Class Blocks Admin
+
+### 6. Capstone operational troubleshooting
+
+**Objective:** Apply failover and rollback workflows to close the incident lifecycle.
+
+Labs:
+
+- `nt_config_ip_sla_track_failover` — NT Guided Build: IP SLA Tracking and Conditional Failover
+- `nt_config_change_window_checkpoint_rollback` — NT Guided Build: Change Window Checkpoint and Rollback

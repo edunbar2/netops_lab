@@ -26,7 +26,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 try:
     from PySide6.QtCore import Qt, QThread, Signal, QObject, qInstallMessageHandler
-    from PySide6.QtGui import QPalette, QAction, QColor, QBrush, QPen, QFont, QPixmap, QTextOption
+    from PySide6.QtGui import QPalette, QAction, QColor, QBrush, QPen, QFont, QPixmap, QTextOption, QTextCursor
     from PySide6.QtWidgets import (
         QApplication,
         QAbstractItemView,
@@ -162,7 +162,6 @@ QT_STYLESHEET = """
 QMainWindow, QWidget {
     background: #111827;
     color: #e5e7eb;
-    font-size: 13px;
 }
 QFrame#Sidebar {
     background: #0b1220;
@@ -717,6 +716,25 @@ class CatalogStore:
         return []
 
 
+ANSI_ESCAPE_RE = re.compile(r"\x1B\[[0-?]*[ -/]*[@-~]")
+
+
+def sanitize_console_text(raw: bytes) -> str:
+    """Decode and normalize console output for safer rendering in Qt widgets."""
+    text = raw.decode("utf-8", errors="replace")
+    text = ANSI_ESCAPE_RE.sub("", text)
+    cleaned_chars: List[str] = []
+    for ch in text:
+        if ch in {"\n", "\r", "\t"}:
+            cleaned_chars.append(ch)
+            continue
+        category = ord(ch)
+        if category < 32 or category == 127:
+            continue
+        cleaned_chars.append(ch)
+    return "".join(cleaned_chars)
+
+
 class ConsoleWorker(QThread):
     output = Signal(str, str)
     status = Signal(str, str)
@@ -773,7 +791,9 @@ class ConsoleWorker(QThread):
                 try:
                     data = sock.recv(4096)
                     if data:
-                        self.output.emit(self.device_name, data.decode("utf-8", errors="ignore"))
+                        cleaned = sanitize_console_text(data)
+                        if cleaned:
+                            self.output.emit(self.device_name, cleaned)
                     else:
                         self.status.emit(self.device_name, "Console closed by remote host.")
                         break
@@ -802,24 +822,33 @@ class ProcessWorker(QThread):
         self.args = args
         self.cwd = cwd
 
-    def run(self) -> None:
+    def _run_once(self) -> tuple[int, str]:
         output_chunks: List[str] = []
+        proc = subprocess.Popen(
+            self.args,
+            cwd=str(self.cwd),
+            text=True,
+            stderr=subprocess.STDOUT,
+            stdout=subprocess.PIPE,
+            stdin=subprocess.DEVNULL,
+            bufsize=1,
+            close_fds=True,
+        )
+        if proc.stdout:
+            for line in proc.stdout:
+                output_chunks.append(line)
+                self.output.emit(line)
+            proc.stdout.close()
+        return_code = proc.wait()
+        return return_code, "".join(output_chunks)
+
+    def run(self) -> None:
         try:
-            proc = subprocess.Popen(
-                self.args,
-                cwd=str(self.cwd),
-                text=True,
-                stderr=subprocess.STDOUT,
-                stdout=subprocess.PIPE,
-                bufsize=1,
-            )
-            if proc.stdout:
-                for line in proc.stdout:
-                    output_chunks.append(line)
-                    self.output.emit(line)
-                proc.stdout.close()
-            return_code = proc.wait()
-            self.finished.emit(return_code, "".join(output_chunks))
+            return_code, output_text = self._run_once()
+            if return_code != 0 and "Bad file descriptor" in output_text and "init_sys_streams" in output_text:
+                self.output.emit("\n[warn] Readiness process hit a stale file-descriptor condition; retrying once with a clean subprocess context...\n")
+                return_code, output_text = self._run_once()
+            self.finished.emit(return_code, output_text)
         except Exception as exc:
             message = f"Failed to run command: {exc}"
             self.output.emit(message)
@@ -1022,6 +1051,7 @@ class MainWindow(QMainWindow):
 
         self._build_menus()
         self._build_ui()
+        self.apply_dynamic_ui_scale()
         self.statusBar().showMessage("4.0.1 ready. NetOps Labs now organizes practice by study path and lab type.")
         self.refresh_filters()
         self.refresh_scenarios()
@@ -1067,6 +1097,61 @@ class MainWindow(QMainWindow):
         self.cleanup_finished_threads()
         super().closeEvent(event)
 
+    def resizeEvent(self, event) -> None:
+        super().resizeEvent(event)
+        self.apply_dynamic_ui_scale()
+        if hasattr(self, "topology_scene") and hasattr(self, "topology_graphics") and not self.topology_scene.itemsBoundingRect().isNull():
+            self.topology_graphics.fitInView(self.topology_scene.sceneRect(), Qt.KeepAspectRatio)
+
+    def ui_scale_factor(self) -> float:
+        width_factor = self.width() / 1760.0
+        dpi_factor = max(0.9, min(1.6, self.logicalDpiX() / 96.0))
+        scale = width_factor * (0.8 + 0.2 * dpi_factor)
+        return max(0.95, min(1.9, scale))
+
+    def apply_dynamic_ui_scale(self) -> None:
+        scale = self.ui_scale_factor()
+        base_pt = max(11.5, min(22.0, 13.0 * scale))
+        mono_pt = max(11.0, min(20.0, 12.0 * scale))
+
+        regular = QFont()
+        regular.setPointSizeF(base_pt)
+        monospace = QFont("Courier New")
+        monospace.setStyleHint(QFont.Monospace)
+        monospace.setPointSizeF(mono_pt)
+
+        app = QApplication.instance()
+        if app is not None:
+            app.setFont(regular)
+
+        if hasattr(self, "menuBar") and self.menuBar() is not None:
+            self.menuBar().setFont(regular)
+        if hasattr(self, "statusBar") and self.statusBar() is not None:
+            self.statusBar().setFont(regular)
+
+        if hasattr(self, "navigation"):
+            nav_width = int(max(190, min(340, 220 * scale)))
+            self.navigation.setFixedWidth(nav_width)
+
+        for attr in [
+            "detail_text", "guided_view", "guided_hint_view", "doc_view", "topology_detail",
+            "reports_view", "lifecycle_status", "project_detail", "practice_status", "practice_summary",
+            "practice_notes", "output_text", "advanced_output"
+        ]:
+            widget = getattr(self, attr, None)
+            if widget is not None:
+                widget.setFont(regular)
+
+        for attr in ["config_view", "compare_left", "compare_right"]:
+            widget = getattr(self, attr, None)
+            if widget is not None:
+                widget.setFont(monospace)
+
+        if hasattr(self, "scenario_table"):
+            self.scenario_table.verticalHeader().setDefaultSectionSize(int(max(26, min(52, 30 * scale))))
+        if hasattr(self, "topology_table"):
+            self.topology_table.verticalHeader().setDefaultSectionSize(int(max(24, min(48, 28 * scale))))
+
     def _build_menus(self) -> None:
         menu = self.menuBar()
         file_menu = menu.addMenu("File")
@@ -1103,6 +1188,7 @@ class MainWindow(QMainWindow):
         sidebar = QFrame()
         sidebar.setObjectName("Sidebar")
         sidebar.setFixedWidth(190)
+        self.navigation = sidebar
         side_layout = QVBoxLayout(sidebar)
         title = QLabel("NetOps\nLabs")
         title.setObjectName("PageTitle")
@@ -3056,18 +3142,23 @@ NetOps Labs {APP_VERSION} is a stabilization patch for generation visibility, GN
             return
 
         node_map: Dict[str, Dict[str, Any]] = {}
-        cols = max(2, min(4, int(len(nodes) ** 0.5) + 1))
-        spacing_x = 320
-        spacing_y = 230
-        origin_x = 90
-        origin_y = 90
-        width = 96
-        height = 72
+        cols = max(2, min(3, int(len(nodes) ** 0.5) + 1))
+        scale = self.ui_scale_factor() if hasattr(self, "ui_scale_factor") else 1.0
+        topo_scale = max(1.1, min(2.4, scale * 1.3))
+        spacing_x = int(380 * topo_scale)
+        spacing_y = int(280 * topo_scale)
+        origin_x = int(90 * topo_scale)
+        origin_y = int(90 * topo_scale)
+        width = int(132 * topo_scale)
+        height = int(100 * topo_scale)
 
-        line_pen = QPen(QColor("#f2f2f2")); line_pen.setWidth(3); line_pen.setCosmetic(True)
-        node_pen = QPen(QColor("#eeeeee")); node_pen.setWidth(2); node_pen.setCosmetic(True)
+        line_pen = QPen(QColor("#f2f2f2")); line_pen.setWidth(max(2, int(3 * topo_scale))); line_pen.setCosmetic(True)
+        node_pen = QPen(QColor("#eeeeee")); node_pen.setWidth(max(1, int(2 * topo_scale))); node_pen.setCosmetic(True)
         node_brush = QBrush(QColor("#4b5563"))
         label_bg = QBrush(QColor("#343434"))
+        link_font = QFont(); link_font.setPointSizeF(max(12.0, min(24.0, 12.5 * topo_scale)))
+        node_name_font = QFont(); node_name_font.setPointSizeF(max(13.0, min(26.0, 14.0 * topo_scale))); node_name_font.setBold(True)
+        node_kind_font = QFont(); node_kind_font.setPointSizeF(max(11.0, min(20.0, 12.0 * topo_scale)))
 
         for idx, node in enumerate(nodes):
             name = str(node.get("name", f"Node{idx+1}"))
@@ -3105,9 +3196,10 @@ NetOps Labs {APP_VERSION} is a stabilization patch for generation visibility, GN
                 idx = label_offsets.get(key, 0); label_offsets[key] = idx + 1
                 offset = 22 + (idx * 18)
                 tx = scene.addText(label)
+                tx.setFont(link_font)
                 tx.setDefaultTextColor(QColor("#ffffff"))
                 tx.setZValue(4)
-                tx.setPos(mx + nx * offset - 38, my + ny * offset - 12)
+                tx.setPos(mx + nx * offset - (56 * topo_scale), my + ny * offset - (16 * topo_scale))
                 rect = tx.boundingRect().adjusted(-5, -2, 5, 2)
                 bg_item = scene.addRect(rect.translated(tx.pos()), QPen(QColor("#5f6368")), label_bg)
                 bg_item.setZValue(3)
@@ -3129,13 +3221,15 @@ NetOps Labs {APP_VERSION} is a stabilization patch for generation visibility, GN
             else:
                 self.draw_topology_fallback_node(scene, kind, x, y, w, h, node_pen, node_brush)
             name_item = scene.addText(name)
+            name_item.setFont(node_name_font)
             name_item.setDefaultTextColor(QColor("#ffffff"))
             name_item.setZValue(5)
-            name_item.setPos(x + w / 2 - min(44, len(name) * 3.2), y + h + 8)
+            name_item.setPos(x + w / 2 - min((96 * topo_scale), len(name) * (5.2 * topo_scale)), y + h + (10 * topo_scale))
             kind_item = scene.addText(kind.title())
+            kind_item.setFont(node_kind_font)
             kind_item.setDefaultTextColor(QColor("#d1d5db"))
             kind_item.setZValue(5)
-            kind_item.setPos(x + w / 2 - 28, y + h + 28)
+            kind_item.setPos(x + w / 2 - (46 * topo_scale), y + h + (38 * topo_scale))
 
         rect = scene.itemsBoundingRect()
         scene.setSceneRect(rect.adjusted(-110, -90, 110, 110))
@@ -3639,7 +3733,12 @@ NetOps Labs {APP_VERSION} is a stabilization patch for generation visibility, GN
         tab = self.console_tabs.get(device_name)
         if not tab:
             return
-        tab["output"].appendPlainText(text.rstrip("\n"))
+        output_widget = tab["output"]
+        cursor = output_widget.textCursor()
+        cursor.movePosition(QTextCursor.End)
+        cursor.insertText(text)
+        output_widget.setTextCursor(cursor)
+        output_widget.ensureCursorVisible()
 
     def on_console_status(self, device_name: str, status: str) -> None:
         if self.active_console_name() == device_name:

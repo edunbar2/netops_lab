@@ -1,6 +1,6 @@
 # Next Major Feature Status
 
-Branch: `local-agent/next-major-feature-roadmap`
+Branch: `feat/config-lab-wave1-batch-a`
 
 ## Completed in this pass
 
@@ -57,30 +57,24 @@ Current verification:
 
 ```text
 python tools/validate_catalog.py
-Result: 0 error(s), 1 warning(s)
+Result: 0 error(s), 0 warning(s)
 
 python -m unittest discover -s tests
-Ran 35 tests - OK
+Ran 35 tests - OK (skipped=2)
 ```
 
-The one validator warning is intentional:
-
-```text
-study_paths.rhel9-operations: Study path is defined but has no scenarios assigned.
-```
-
-The GUI does not currently show RHEL9 Operations because no scenarios use it yet.
+RHEL9 Operations is now seeded with real scenarios and appears in validator usage output.
 
 ### CI integration
 
 Updated `.github/workflows/unit-tests.yml` to run:
 
 ```bash
-python tools/validate_catalog.py
+python tools/validate_catalog.py --strict
 python -m unittest discover -s tests
 ```
 
-The validator is non-strict in CI for now so planned warnings do not block patch work. Future release hardening can switch to `--strict` after RHEL9 content exists or warnings are otherwise resolved.
+The validator is now strict in CI (`python tools/validate_catalog.py --strict`) because the catalog currently runs clean at 0 errors / 0 warnings.
 
 ### Study-path content seeding
 
@@ -89,21 +83,14 @@ Seeded two previously empty study paths using existing mature scenarios only. No
 Current study-path usage:
 
 ```text
-ccna-foundations: 170
-ccnp-enterprise: 312
-secure-enclave-networking: 20
-network-troubleshooting: 24
-rhel9-operations: 0
+ccna-foundations: 175
+ccnp-enterprise: 317
+secure-enclave-networking: 24
+network-troubleshooting: 27
+rhel9-operations: 8
 ```
 
-GUI-visible populated study paths now include:
-
-- CCNA Foundations
-- CCNP Enterprise
-- Secure Enclave Networking
-- Network Troubleshooting
-
-RHEL9 Operations remains defined internally but hidden from the GUI filter until real content is assigned.
+GUI-visible populated study paths include all five configured paths, including RHEL9 Operations.
 
 ## Local agent involvement
 
@@ -122,7 +109,7 @@ docs/LOCAL_AGENT_PROMPTS_NEXT_FEATURE.md
 
 ## Recommended next tasks
 
-1. Build the first real RHEL9 Operations seed labs instead of using placeholders.
-2. Decide whether validator CI should remain non-strict or become strict for release branches only.
+1. Complete manual verification and mark BUG-001/BUG-002/BUG-003 as `verified` in `docs/MINOR_RELEASE_BUG_BACKLOG.md`.
+2. Prepare a stabilization release notes section summarizing Wave 1 and the three GUI/runtime fixes.
 3. Add a GUI/CLI action for running catalog validation from developer workflows if desired.
 4. Continue toward roadmap item 4.0.2/4.0.3 content-quality improvements.

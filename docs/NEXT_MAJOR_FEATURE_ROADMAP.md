@@ -16,6 +16,54 @@ Prepare the next feature release by adding a standalone catalog validation found
 
 The feature should remain compatible with existing 3.x/4.0 catalog metadata and must not require PySide6, GNS3, network access, or local agent state to validate catalog quality.
 
+## 1.5 Pre-Next-Major Release Steps (new)
+
+### Step A — Guided Network Configuration Expansion (highest priority)
+
+Goal:
+
+- Rebalance curriculum away from troubleshooting-heavy labs.
+- Convert legacy "skill-check" style toward explicit, guided network-configuration labs that teach a concrete skill with a clear walkthrough path.
+
+Execution model:
+
+- Use agent-assisted concept generation to propose candidate labs across all study paths.
+- Human-reviewed implementation in repo to ensure technical accuracy, pedagogy quality, and consistency with catalog standards.
+
+Current concept report delivered:
+
+- 40 proposed concepts (8 per study path) with objective, prerequisites, configuration targets, 6–10 step walkthroughs, validation checks, common mistakes, estimated duration, and difficulty.
+- Prioritized first-20 implementation shortlist prepared for staged rollout.
+
+Acceptance criteria:
+
+- Add first wave of approved configuration-guided labs to each study path (balanced distribution).
+- Preserve validator compatibility and avoid student-facing answer leakage.
+- Publish updated modality ratio targets and demonstrate measurable reduction in troubleshooting-only share.
+
+### Step B — Minor Stabilization Release (bugfix + polish)
+
+Goal:
+
+- Ship a dedicated minor release focused on defects, UX polish, and reliability improvements before the next major feature release.
+
+Scope:
+
+- Address bug backlog items as they are collected.
+- Prioritize high-frequency workflow issues, GUI friction, and regressions.
+- Include desktop GUI validation pass in release checklist.
+
+Validation approach:
+
+- Desktop Qt surfaces: use Qt-native automation (`pytest-qt` / QtBot) as primary, with optional image-based fallback where needed.
+- No web/Playwright checks are required for this desktop-only application.
+
+Acceptance criteria:
+
+- Bug backlog triaged and closed to agreed threshold.
+- Regression test pass for touched areas.
+- Release notes document fixes and known residual limitations.
+
 ## 2. Completed Work
 
 ### 2.1 Catalog Validator
@@ -78,11 +126,11 @@ Status: `complete`
 Updated `.github/workflows/unit-tests.yml` so pull requests run:
 
 ```bash
-python tools/validate_catalog.py
+python tools/validate_catalog.py --strict
 python -m unittest discover -s tests
 ```
 
-Current CI mode is non-strict because the catalog intentionally defines `rhel9-operations` before real RHEL9 seed labs are assigned.
+Current CI mode is strict because the catalog currently validates cleanly with zero warnings.
 
 ### 2.4 Study-Path Seeding
 
@@ -96,11 +144,11 @@ Seeded existing mature scenarios into these study paths without adding placehold
 Current validator-reported study-path usage:
 
 ```text
-ccna-foundations: 170
-ccnp-enterprise: 312
-secure-enclave-networking: 20
-network-troubleshooting: 24
-rhel9-operations: 0
+ccna-foundations: 175
+ccnp-enterprise: 317
+secure-enclave-networking: 24
+network-troubleshooting: 27
+rhel9-operations: 8
 ```
 
 ### 2.5 Local Agent Hygiene
@@ -124,20 +172,20 @@ netops roadmap.rtf
 Last local verification:
 
 ```text
-python tools/validate_catalog.py
-Result: 0 error(s), 1 warning(s)
+python tools/validate_catalog.py --strict
+Result: 0 error(s), 0 warning(s)
 
 python -m unittest discover -s tests
-Ran 35 tests - OK
+Ran 35 tests - OK (skipped=2)
 ```
 
 Known warning:
 
 ```text
-study_paths.rhel9-operations: Study path is defined but has no scenarios assigned.
+none
 ```
 
-Disposition: acceptable for this feature PR. The GUI remains driven by populated scenario metadata, and no placeholder RHEL9 labs were added.
+Disposition: quality gate is clean; strict validation is now enabled in CI.
 
 ## 4. Pull Request Scope
 
@@ -192,7 +240,7 @@ roadmap_updated: complete
 gitignore_agent_state: complete
 unit_tests_pass: complete
 catalog_validation_errors: 0
-catalog_validation_warnings: 1
+catalog_validation_warnings: 0
 manual_gns3_required: false
 manual_gns3_reason: metadata-validation-and-ci-only-change-no-live-gns3-behavior-change
 pr_ready: true
@@ -202,31 +250,38 @@ pr_ready: true
 
 ### 6.1 RHEL9 Operations Seed Labs
 
-Status: `next`
+Status: `complete`
 
-Add real RHEL9 Operations labs instead of placeholders. Candidate starter topics:
+RHEL9 Operations now includes guided seed content and has been expanded beyond initial minimum coverage.
 
-1. service reachability and firewall basics
-2. log review and systemd troubleshooting
-3. basic network configuration and DNS validation
+Delivered topics include:
+
+1. static networking and DNS baseline (nmcli)
+2. VLAN subinterfaces with nmcli
+3. firewalld zones/services/rich rules
+4. systemd service recovery with journalctl
+5. rsyslog remote forwarding queue hardening
+6. chrony NTP hardening and drift validation
+7. SELinux context recovery with restorecon
+8. podman systemd autostart lifecycle
 
 Acceptance criteria:
 
-- at least 2 real `rhel9-operations` scenarios
-- no answer leakage in student-facing fields
-- validator warning for empty `rhel9-operations` is resolved
-- CI can optionally move to `python tools/validate_catalog.py --strict`
+- at least 2 real `rhel9-operations` scenarios ✅
+- no answer leakage in student-facing fields ✅
+- validator warning for empty `rhel9-operations` is resolved ✅
+- CI moved to `python tools/validate_catalog.py --strict` ✅
 
 ### 6.2 Strict Catalog Validation for Release Branches
 
-Status: `planned`
+Status: `complete`
 
-After RHEL9 seed content exists, consider switching release-branch CI to strict validation.
+Strict validation is enabled in CI and currently clean.
 
 Acceptance criteria:
 
-- `python tools/validate_catalog.py --strict` exits `0`
-- all warnings are either fixed or explicitly downgraded by policy
+- `python tools/validate_catalog.py --strict` exits `0` ✅
+- all warnings are either fixed or explicitly downgraded by policy ✅ (currently zero warnings)
 
 ### 6.3 Developer UX for Catalog Validation
 
@@ -257,10 +312,10 @@ For future agents:
 2. Do not commit generated lab output unless a user explicitly requests fixture data.
 3. Keep catalog validator standalone; do not import PySide6 or perform network calls.
 4. Preserve 3.x/4.0 catalog compatibility while improving 4.x metadata quality.
-5. Treat the current RHEL9 Operations warning as known and acceptable until real RHEL9 seed labs are added.
+5. RHEL9 Operations now has active scenario coverage and strict validation is enforced in CI.
 6. Run both verification commands before updating PR status:
 
 ```bash
-python tools/validate_catalog.py
+python tools/validate_catalog.py --strict
 python -m unittest discover -s tests
 ```

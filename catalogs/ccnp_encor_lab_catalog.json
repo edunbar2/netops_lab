@@ -59446,6 +59446,2842 @@
       "exam_alignment": [
         "CCNA"
       ]
+    },
+    "ccna_vlan_trunk_native_hardening": {
+      "concept_id": "ccna_vlan_trunk_native_hardening",
+      "title": "CCNA Guided Build: VLAN Trunk Native VLAN Hardening",
+      "topology": "campus_dual_core",
+      "exam_blueprints": [
+        "CCNA"
+      ],
+      "domain": "Network Access",
+      "topic": "VLANs and Trunks",
+      "difficulty": "beginner",
+      "lab_type": "build",
+      "estimated_minutes": 30,
+      "symptom": "Build and verify secure trunk behavior across distribution and access switches from requirements.",
+      "requirements": [
+        "Create VLAN 10 (USERS_A), VLAN 20 (USERS_B), and VLAN 999 (NATIVE_BLACKHOLE) on DIST1, DIST2, ACC1, and ACC2.",
+        "Configure DIST1<->ACC1 and DIST2<->ACC2 links as 802.1Q trunks.",
+        "Set native VLAN to 999 on all configured trunk links.",
+        "Restrict allowed VLAN list on trunks to 10,20,999.",
+        "Ensure access ports for hosts use VLAN 10 or VLAN 20 as labeled in the topology notes.",
+        "Verify trunk state, native VLAN, and allowed VLAN consistency end-to-end."
+      ],
+      "faults": [
+        {
+          "device": "DIST1",
+          "fault": "Starter baseline omits hardened trunk settings and native VLAN controls.",
+          "fix": "Implement all listed requirements and verify output alignment."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show vlan brief",
+        "show interfaces trunk",
+        "show interface status",
+        "show running-config interface gi0/2",
+        "show running-config interface gi0/3"
+      ],
+      "curriculum_track": "CCNA",
+      "skills": [
+        "VLAN",
+        "802.1Q Trunking",
+        "Layer 2 Hardening"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Create VLANs first on all participating switches, then apply trunk settings.",
+        "Use one interface as a golden template and replicate on peer trunk ports.",
+        "Validate both native VLAN and allowed VLAN list in show interfaces trunk output."
+      ],
+      "expected_results": [
+        "All required VLANs exist on each participating switch.",
+        "Target links are trunking with native VLAN 999.",
+        "Allowed VLAN list is limited to 10,20,999 on each trunk.",
+        "Endpoint-facing access ports map to intended VLANs."
+      ],
+      "answer_key": {
+        "root_cause": "Lab is configuration-first; secure trunk and VLAN baseline must be built from requirements.",
+        "fix_summary": "Create VLANs and apply hardened trunk settings (native VLAN 999 and allowed VLAN restrictions) on required links.",
+        "verification": [
+          "show vlan brief",
+          "show interfaces trunk",
+          "show running-config interface gi0/2",
+          "show running-config interface gi0/3"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch A initial guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "ccna",
+        "network-access",
+        "vlan",
+        "trunk",
+        "native-vlan",
+        "hardening",
+        "build"
+      ],
+      "progression_rank": [
+        2,
+        2,
+        1,
+        "VLANs and Trunks",
+        "CCNA Guided Build: VLAN Trunk Native VLAN Hardening",
+        "ccna_vlan_trunk_native_hardening"
+      ],
+      "study_paths": [
+        "ccna-foundations"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "CCNA"
+      ],
+      "walkthrough_steps": [
+        "Identify trunk-facing interfaces between distribution and access layers from topology labels.",
+        "Create VLANs 10, 20, and 999 on all required switches.",
+        "Configure trunk mode and 802.1Q encapsulation where required by platform.",
+        "Set native VLAN 999 on each trunk link.",
+        "Restrict allowed VLAN list to 10,20,999 on each trunk.",
+        "Assign endpoint access ports to VLAN 10 or 20 per host intent.",
+        "Run verification commands and capture output proving native/allowed VLAN consistency."
+      ],
+      "coaching_notes": [
+        "Mismatch native VLANs are a common issue; always verify both ends of each trunk.",
+        "Avoid allowing all VLANs by default; explicitly constrain the trunk VLAN list.",
+        "Access-port misassignment often appears as one-way reachability; verify switchport mode and access VLAN."
+      ]
+    },
+    "ccna_router_on_a_stick_intervlan": {
+      "concept_id": "ccna_router_on_a_stick_intervlan",
+      "title": "CCNA Guided Build: Router-on-a-Stick Inter-VLAN Routing",
+      "topology": "campus_dual_core",
+      "exam_blueprints": [
+        "CCNA"
+      ],
+      "domain": "IP Connectivity",
+      "topic": "Inter-VLAN Routing",
+      "difficulty": "beginner",
+      "lab_type": "build",
+      "estimated_minutes": 35,
+      "symptom": "Implement inter-VLAN routing using a single router trunk link and verify end-to-end reachability.",
+      "requirements": [
+        "Create VLAN 10 and VLAN 20 on the access/distribution path used for the lab.",
+        "Configure the switch uplink toward router as an 802.1Q trunk carrying VLANs 10 and 20.",
+        "Create router subinterfaces for VLAN 10 and VLAN 20 with dot1Q encapsulation.",
+        "Assign default-gateway addresses to each VLAN on the router subinterfaces.",
+        "Assign host-facing access ports to the correct VLANs.",
+        "Verify cross-VLAN connectivity and routing-table entries."
+      ],
+      "faults": [
+        {
+          "device": "R1",
+          "fault": "Starter baseline lacks router subinterfaces and trunk mapping.",
+          "fix": "Build subinterfaces, trunk, and VLAN assignments per requirements."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show ip interface brief",
+        "show running-config interface gi0/0.10",
+        "show running-config interface gi0/0.20",
+        "show interfaces trunk",
+        "show ip route connected"
+      ],
+      "curriculum_track": "CCNA",
+      "skills": [
+        "Inter-VLAN Routing",
+        "802.1Q Subinterfaces",
+        "Switchport Trunking"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Configure switch VLANs and trunk first, then router subinterfaces.",
+        "Encapsulation VLAN IDs on subinterfaces must match switch VLAN IDs.",
+        "Use brief show commands after each step to catch typo-driven failures early."
+      ],
+      "expected_results": [
+        "Hosts in VLAN 10 and VLAN 20 reach their respective gateway IPs.",
+        "Inter-VLAN ping succeeds through router subinterfaces.",
+        "Router shows connected routes for both VLAN subnets."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab: inter-VLAN services are intentionally absent in baseline.",
+        "fix_summary": "Configure trunk + router subinterfaces with matching VLAN IDs and gateway addressing.",
+        "verification": [
+          "show ip interface brief",
+          "show interfaces trunk",
+          "show ip route connected"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch A guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "ccna",
+        "ip-connectivity",
+        "intervlan",
+        "router-on-a-stick",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        2,
+        1,
+        "Inter-VLAN Routing",
+        "CCNA Guided Build: Router-on-a-Stick Inter-VLAN Routing",
+        "ccna_router_on_a_stick_intervlan"
+      ],
+      "study_paths": [
+        "ccna-foundations"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "CCNA"
+      ],
+      "walkthrough_steps": [
+        "Identify router-facing switch uplink interface.",
+        "Create VLAN 10 and VLAN 20 on involved switch(es).",
+        "Set uplink as trunk and allow VLANs 10,20.",
+        "Create router subinterface for VLAN 10 with encapsulation dot1Q 10 and gateway IP.",
+        "Create router subinterface for VLAN 20 with encapsulation dot1Q 20 and gateway IP.",
+        "Place host ports into correct access VLANs.",
+        "Run verification and confirm cross-VLAN reachability."
+      ],
+      "coaching_notes": [
+        "Most failures are VLAN ID mismatch between trunk and subinterface encapsulation.",
+        "For subinterfaces, parent physical interface must be up/no shut."
+      ]
+    },
+    "ccna_ospf_single_area_baseline": {
+      "concept_id": "ccna_ospf_single_area_baseline",
+      "title": "CCNA Guided Build: OSPF Single-Area Baseline",
+      "topology": "campus_dual_core",
+      "exam_blueprints": [
+        "CCNA"
+      ],
+      "domain": "IP Connectivity",
+      "topic": "OSPF",
+      "difficulty": "beginner",
+      "lab_type": "build",
+      "estimated_minutes": 35,
+      "symptom": "Build a clean single-area OSPF baseline and verify adjacency and route exchange.",
+      "requirements": [
+        "Enable OSPF process 10 on core/distribution routers used in the path.",
+        "Set explicit router IDs per device.",
+        "Advertise all inter-router transit links in area 0.",
+        "Advertise loopback or LAN test prefixes in area 0.",
+        "Set passive interfaces for non-neighbor-facing ports where appropriate.",
+        "Verify full adjacency and learned OSPF routes on each router."
+      ],
+      "faults": [
+        {
+          "device": "CORE1",
+          "fault": "OSPF process and network statements are intentionally incomplete in baseline.",
+          "fix": "Implement complete single-area OSPF requirements across participating routers."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show ip ospf neighbor",
+        "show ip protocols",
+        "show ip route ospf",
+        "show ip ospf interface brief"
+      ],
+      "curriculum_track": "CCNA",
+      "skills": [
+        "OSPF",
+        "Routing Baseline",
+        "Verification Discipline"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Bring up interfaces and IP addressing first before enabling OSPF.",
+        "Use passive-interface default plus selective no passive-interface on peering links.",
+        "Confirm area values are consistent on both sides of each adjacency."
+      ],
+      "expected_results": [
+        "All intended adjacencies reach FULL state.",
+        "Each router learns remote OSPF routes.",
+        "OSPF interface brief output matches design intent."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab: OSPF control plane is intentionally not fully configured.",
+        "fix_summary": "Configure OSPF process/router-id/networks/passive policy for a complete area 0 baseline.",
+        "verification": [
+          "show ip ospf neighbor",
+          "show ip route ospf"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch A guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "ccna",
+        "ip-connectivity",
+        "ospf",
+        "single-area",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        2,
+        1,
+        "OSPF",
+        "CCNA Guided Build: OSPF Single-Area Baseline",
+        "ccna_ospf_single_area_baseline"
+      ],
+      "study_paths": [
+        "ccna-foundations"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "CCNA"
+      ],
+      "walkthrough_steps": [
+        "Confirm addressing on all inter-router links.",
+        "Enable OSPF process 10 and set router ID on each participating router.",
+        "Advertise transit networks into area 0.",
+        "Advertise loopback/LAN networks into area 0.",
+        "Apply passive-interface policy with exceptions for peering links.",
+        "Verify FULL neighbors and OSPF routes.",
+        "Document discrepancies and remediate until outputs match expected state."
+      ],
+      "coaching_notes": [
+        "Area mismatches and wildcard typos are the two most common misses.",
+        "Neighbor comes up only when both routing and L3 interface state are correct."
+      ]
+    },
+    "senk_asav_inside_outside_nat": {
+      "concept_id": "senk_asav_inside_outside_nat",
+      "title": "SENK Guided Build: ASAv Inside-Outside Dynamic NAT Baseline",
+      "topology": "security_hardening_lab",
+      "exam_blueprints": [
+        "ENCOR"
+      ],
+      "domain": "Security",
+      "topic": "ASAv NAT",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 40,
+      "symptom": "Implement baseline inside-to-outside NAT on ASAv and verify translation and policy behavior.",
+      "requirements": [
+        "Configure inside and outside interface security levels and addressing as defined in lab brief.",
+        "Define object network for inside subnet.",
+        "Configure dynamic PAT from inside subnet to outside interface.",
+        "Allow ICMP/required test traffic from inside toward outside test target.",
+        "Verify xlate and conn tables during traffic tests.",
+        "Ensure return traffic is handled as expected by stateful inspection."
+      ],
+      "faults": [
+        {
+          "device": "ASAv1",
+          "fault": "NAT and related policy are intentionally incomplete in starter baseline.",
+          "fix": "Build object NAT/PAT and permit policy required for inside-to-outside access."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show run nat",
+        "show xlate",
+        "show conn",
+        "show access-list",
+        "packet-tracer input inside icmp 10.10.10.10 8 0 8.8.8.8"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "ASAv",
+        "NAT/PAT",
+        "Policy Verification"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Validate interface roles (inside/outside) before NAT configuration.",
+        "Confirm object network subnet mask accuracy; /24 vs /25 mistakes are common.",
+        "Generate traffic before checking xlate/conn tables."
+      ],
+      "expected_results": [
+        "Inside hosts can reach outside test destination per policy.",
+        "xlate table shows dynamic translation entries.",
+        "packet-tracer confirms expected permit path for test flow."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab: inside/outside NAT policy is intentionally absent in baseline.",
+        "fix_summary": "Define inside object, apply dynamic PAT to outside interface, and verify with traffic + xlate/conn checks.",
+        "verification": [
+          "show run nat",
+          "show xlate",
+          "show conn"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch A guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "security",
+        "asav",
+        "nat",
+        "pat",
+        "secure-enclave",
+        "build"
+      ],
+      "progression_rank": [
+        5,
+        2,
+        1,
+        "ASAv NAT",
+        "SENK Guided Build: ASAv Inside-Outside Dynamic NAT Baseline",
+        "senk_asav_inside_outside_nat"
+      ],
+      "study_paths": [
+        "secure-enclave-networking"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Confirm inside/outside interface designation and reachability.",
+        "Create object network for inside subnet.",
+        "Apply dynamic PAT to outside interface.",
+        "Review/adjust access policy to permit test flow.",
+        "Generate test traffic from inside toward outside target.",
+        "Inspect xlate and connection tables for expected entries.",
+        "Run packet-tracer and reconcile any deny outputs."
+      ],
+      "coaching_notes": [
+        "No translation appears without matching traffic; always generate traffic first.",
+        "Inside/outside reversal is a frequent configuration error."
+      ]
+    },
+    "rhel9_nmcli_static_ip_dns": {
+      "concept_id": "rhel9_nmcli_static_ip_dns",
+      "title": "RHEL9 Guided Build: nmcli Static IP and DNS Baseline",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Automation",
+      "topic": "Linux Endpoint Networking",
+      "difficulty": "beginner",
+      "lab_type": "build",
+      "estimated_minutes": 25,
+      "symptom": "Configure a RHEL9 endpoint with static addressing and DNS using nmcli, then validate resolver behavior.",
+      "requirements": [
+        "Identify active NetworkManager connection profile for the target NIC.",
+        "Configure static IPv4 address and prefix on the active profile.",
+        "Configure default gateway and DNS server list.",
+        "Disable automatic DNS overwrite where required by profile behavior.",
+        "Bring connection down/up and confirm settings persist.",
+        "Verify reachability to gateway and DNS resolution for test hostname."
+      ],
+      "faults": [
+        {
+          "device": "RHEL9-CLIENT",
+          "fault": "Endpoint starts with DHCP/default profile unsuitable for static lab target.",
+          "fix": "Apply static nmcli profile settings and validate persistency."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "nmcli connection show",
+        "nmcli device show",
+        "ip addr",
+        "ip route",
+        "resolvectl status || cat /etc/resolv.conf",
+        "ping -c 3 8.8.8.8"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "RHEL9",
+        "NetworkManager",
+        "nmcli"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Use nmcli -p connection show to avoid editing the wrong profile.",
+        "Apply ipv4.method manual when moving from DHCP to static config.",
+        "Cycle the connection profile to ensure runtime state matches saved settings."
+      ],
+      "expected_results": [
+        "Interface has configured static IP/prefix after reconnect.",
+        "Default route points to intended gateway.",
+        "DNS servers are present and name resolution works for test queries."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab: endpoint baseline uses non-static defaults.",
+        "fix_summary": "Set static IPv4/gateway/DNS via nmcli and reactivate the profile.",
+        "verification": [
+          "nmcli connection show",
+          "ip route",
+          "resolvectl status || cat /etc/resolv.conf"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch A guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "rhel9",
+        "nmcli",
+        "dns",
+        "static-ip",
+        "operations",
+        "build"
+      ],
+      "progression_rank": [
+        6,
+        1,
+        1,
+        "Linux Endpoint Networking",
+        "RHEL9 Guided Build: nmcli Static IP and DNS Baseline",
+        "rhel9_nmcli_static_ip_dns"
+      ],
+      "study_paths": [
+        "rhel9-operations"
+      ],
+      "platforms": [
+        "gns3",
+        "rhel9"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "List devices and identify active connection profile.",
+        "Set ipv4.method manual with static address/prefix.",
+        "Set gateway and DNS servers on the same profile.",
+        "Bring profile down and back up.",
+        "Validate interface and route table state.",
+        "Validate resolver configuration and DNS lookup behavior.",
+        "Capture outputs for grading evidence."
+      ],
+      "coaching_notes": [
+        "Most nmcli failures are profile-name mismatches, not syntax errors.",
+        "If DNS appears unchanged, check whether another service is managing resolv.conf."
+      ]
+    },
+    "ccna_standard_extended_acl_placement": {
+      "concept_id": "ccna_standard_extended_acl_placement",
+      "title": "CCNA Guided Build: Standard vs Extended ACL Placement",
+      "topology": "campus_dual_core",
+      "exam_blueprints": [
+        "CCNA"
+      ],
+      "domain": "Security Fundamentals",
+      "topic": "ACLs",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 35,
+      "symptom": "Design and apply standard and extended ACLs at proper locations while preserving required traffic.",
+      "requirements": [
+        "Create one standard ACL for management-plane control.",
+        "Create one extended ACL for user-to-server policy filtering.",
+        "Apply standard ACL near destination and extended ACL near source per requirement set.",
+        "Permit required business traffic and deny disallowed flows.",
+        "Add explicit logging on deny statements where requested.",
+        "Verify ACL hit counts and reachability outcomes."
+      ],
+      "faults": [
+        {
+          "device": "DIST1",
+          "fault": "Baseline has no policy controls; ACL plan must be built from requirements.",
+          "fix": "Create and place ACLs correctly on required interfaces/directions."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show access-lists",
+        "show ip interface",
+        "show running-config | section access-list",
+        "ping",
+        "traceroute"
+      ],
+      "curriculum_track": "CCNA",
+      "skills": [
+        "ACLs",
+        "Policy Placement",
+        "Traffic Verification"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Place extended ACLs close to source and standard ACLs closer to destination.",
+        "Validate direction (in/out) per interface before applying ACL.",
+        "Use hit counters to confirm traffic is matching intended statements."
+      ],
+      "expected_results": [
+        "Allowed flows succeed and blocked flows fail per policy matrix.",
+        "ACL counters increment on expected permit/deny lines."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab with no prebuilt ACL policy.",
+        "fix_summary": "Implement standard/extended ACLs with correct placement and interface direction.",
+        "verification": [
+          "show access-lists",
+          "show ip interface"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch B guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "ccna",
+        "security",
+        "acl",
+        "extended-acl",
+        "standard-acl",
+        "build"
+      ],
+      "progression_rank": [
+        5,
+        2,
+        1,
+        "ACLs",
+        "CCNA Guided Build: Standard vs Extended ACL Placement",
+        "ccna_standard_extended_acl_placement"
+      ],
+      "study_paths": [
+        "ccna-foundations"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "CCNA"
+      ],
+      "walkthrough_steps": [
+        "Review required permit/deny matrix.",
+        "Create standard ACL entries for management constraints.",
+        "Create extended ACL entries for app/user traffic policy.",
+        "Apply ACLs to correct interfaces in proper direction.",
+        "Test allow/deny behavior with representative traffic.",
+        "Inspect ACL counters and adjust sequence/order if needed."
+      ],
+      "coaching_notes": [
+        "Wrong interface direction is the most common ACL bug.",
+        "Always include required implicit/explicit permit paths to avoid overblocking."
+      ]
+    },
+    "ccna_fhrp_hsrp_gateway_redundancy": {
+      "concept_id": "ccna_fhrp_hsrp_gateway_redundancy",
+      "title": "CCNA Guided Build: HSRP Gateway Redundancy Baseline",
+      "topology": "campus_dual_core",
+      "exam_blueprints": [
+        "CCNA"
+      ],
+      "domain": "IP Services",
+      "topic": "FHRP/HSRP",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 30,
+      "symptom": "Configure resilient first-hop gateway services with HSRP and verify active/standby behavior.",
+      "requirements": [
+        "Configure HSRP for VLAN 10 and VLAN 20 SVIs on distribution switches.",
+        "Set virtual IP gateway per VLAN.",
+        "Set primary/secondary priorities and preempt policy.",
+        "Track at least one uplink object to trigger failover behavior.",
+        "Verify active/standby roles from both distribution devices.",
+        "Validate host default gateway continuity during failover event."
+      ],
+      "faults": [
+        {
+          "device": "DIST1",
+          "fault": "HSRP not configured in baseline for required VLANs.",
+          "fix": "Build HSRP groups, priorities, and tracking policy."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show standby brief",
+        "show standby vlan 10",
+        "show standby vlan 20",
+        "show track",
+        "ping"
+      ],
+      "curriculum_track": "CCNA",
+      "skills": [
+        "HSRP",
+        "Gateway Redundancy",
+        "Failover Verification"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Set deterministic priorities so expected active role is clear.",
+        "Enable preempt to restore preferred active device after recovery.",
+        "Test failover by administratively impacting tracked uplink."
+      ],
+      "expected_results": [
+        "HSRP groups elect expected active/standby devices.",
+        "Virtual IP remains reachable during failover.",
+        "Role transition behavior matches configured priority/tracking."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab: first-hop redundancy omitted from baseline.",
+        "fix_summary": "Configure HSRP groups with VIP, priority, preempt, and tracking on both peers.",
+        "verification": [
+          "show standby brief",
+          "show track"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch B guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "ccna",
+        "ip-services",
+        "hsrp",
+        "fhrp",
+        "redundancy",
+        "build"
+      ],
+      "progression_rank": [
+        4,
+        2,
+        1,
+        "FHRP/HSRP",
+        "CCNA Guided Build: HSRP Gateway Redundancy Baseline",
+        "ccna_fhrp_hsrp_gateway_redundancy"
+      ],
+      "study_paths": [
+        "ccna-foundations"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "CCNA"
+      ],
+      "walkthrough_steps": [
+        "Identify VLAN SVIs participating in gateway redundancy.",
+        "Configure HSRP group and virtual IP on DIST1 VLAN interfaces.",
+        "Configure matching HSRP groups on DIST2 with lower priority.",
+        "Enable preempt and add uplink tracking where required.",
+        "Verify active/standby state and priorities.",
+        "Trigger failover and confirm gateway continuity."
+      ],
+      "coaching_notes": [
+        "HSRP group/VLAN mismatches cause silent failures.",
+        "Failover testing is mandatory; config alone is not proof."
+      ]
+    },
+    "ccnp_ospf_multi_area_abrs_filtering": {
+      "concept_id": "ccnp_ospf_multi_area_abrs_filtering",
+      "title": "CCNP Guided Build: OSPF Multi-Area ABR Filtering",
+      "topology": "ospf_multi_area_enterprise",
+      "exam_blueprints": [
+        "ENARSI",
+        "ENCOR"
+      ],
+      "domain": "Infrastructure",
+      "topic": "OSPF",
+      "difficulty": "advanced",
+      "lab_type": "build",
+      "estimated_minutes": 50,
+      "symptom": "Build multi-area OSPF with ABR summarization/filtering to enforce route policy between areas.",
+      "requirements": [
+        "Configure area 0 backbone and at least one non-backbone area adjacency set.",
+        "Define ABR router IDs and stable adjacency policy.",
+        "Implement area range summarization at ABR where required.",
+        "Apply prefix filtering/distribution policy per scenario requirements.",
+        "Verify LSA visibility and routing table outcomes in each area.",
+        "Demonstrate policy effect before/after applying ABR controls."
+      ],
+      "faults": [
+        {
+          "device": "ABR1",
+          "fault": "ABR policy controls and summaries are absent in baseline.",
+          "fix": "Implement multi-area ABR controls per requirements and verify route propagation behavior."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show ip ospf neighbor",
+        "show ip ospf database",
+        "show ip route ospf",
+        "show ip protocols"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "OSPF Multi-Area",
+        "ABR Policy",
+        "Route Summarization"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Stabilize adjacencies before applying summarization/filtering knobs.",
+        "Validate policy from downstream area perspective, not just ABR output.",
+        "Capture baseline route table before policy changes for comparison."
+      ],
+      "expected_results": [
+        "Inter-area routes reflect configured summaries/policies.",
+        "Denied prefixes are absent where expected while required routes remain present."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab: ABR policy behavior is intentionally undeployed in starter state.",
+        "fix_summary": "Implement area design, ABR summaries, and filtering controls per requirements.",
+        "verification": [
+          "show ip ospf database",
+          "show ip route ospf"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch B guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENARSI",
+      "tags": [
+        "ccnp",
+        "enarsi",
+        "encor",
+        "ospf",
+        "multi-area",
+        "abr",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "OSPF",
+        "CCNP Guided Build: OSPF Multi-Area ABR Filtering",
+        "ccnp_ospf_multi_area_abrs_filtering"
+      ],
+      "study_paths": [
+        "ccnp-enterprise"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENARSI",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Confirm topology area boundaries and ABR roles.",
+        "Establish OSPF adjacencies for area 0 and non-backbone area.",
+        "Set ABR route summarization directives where required.",
+        "Apply area/filter policy for permitted/blocked prefixes.",
+        "Compare route tables and LSDB views before and after policy.",
+        "Remediate any unintended reachability loss."
+      ],
+      "coaching_notes": [
+        "ABR filtering mistakes can blackhole large route sets; validate incrementally.",
+        "Use controlled baseline snapshots to prove policy effect."
+      ]
+    },
+    "ccnp_qos_classification_marking_policy": {
+      "concept_id": "ccnp_qos_classification_marking_policy",
+      "title": "CCNP Guided Build: QoS Classification, Marking, and Policy Application",
+      "topology": "qos_architecture_lab",
+      "exam_blueprints": [
+        "ENCOR"
+      ],
+      "domain": "Infrastructure",
+      "topic": "QoS",
+      "difficulty": "advanced",
+      "lab_type": "build",
+      "estimated_minutes": 45,
+      "symptom": "Build QoS classes and marking policy for branch/WAN traffic and validate queuing/mark behavior.",
+      "requirements": [
+        "Define class-maps for voice, critical data, and default traffic.",
+        "Create policy-map with DSCP marking and bandwidth/priority behavior per requirements.",
+        "Apply service-policy on intended interface/direction.",
+        "Generate representative traffic classes for validation.",
+        "Verify class counters and policy actions using show commands.",
+        "Adjust policy ordering if class matches are not behaving as intended."
+      ],
+      "faults": [
+        {
+          "device": "EDGE1",
+          "fault": "QoS policies are unconfigured in baseline.",
+          "fix": "Implement classification, marking, and service-policy attachment."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show class-map",
+        "show policy-map",
+        "show policy-map interface",
+        "show run | section policy-map"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "QoS",
+        "Classification",
+        "Policy Verification"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Start by validating ACL/class-map match logic before touching policy-map actions.",
+        "Attach policy in the correct direction; wrong direction yields zero counters.",
+        "Use class counters as primary truth for matching behavior."
+      ],
+      "expected_results": [
+        "Traffic classes match expected counters.",
+        "DSCP/priority behavior aligns with policy requirements."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab: QoS controls are intentionally absent in baseline.",
+        "fix_summary": "Create class-map/policy-map and apply service-policy in correct direction.",
+        "verification": [
+          "show policy-map interface",
+          "show class-map"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch B guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "ccnp",
+        "encor",
+        "qos",
+        "classification",
+        "marking",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "QoS",
+        "CCNP Guided Build: QoS Classification, Marking, and Policy Application",
+        "ccnp_qos_classification_marking_policy"
+      ],
+      "study_paths": [
+        "ccnp-enterprise"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Define class-maps for required traffic classes.",
+        "Build policy-map actions including marking/priority directives.",
+        "Apply policy to target interface in required direction.",
+        "Generate traffic for each class.",
+        "Inspect class counters and policy results.",
+        "Refine match/action order until outcomes align with requirements."
+      ],
+      "coaching_notes": [
+        "Zero packet counters usually mean wrong attachment point/direction or match criteria mismatch."
+      ]
+    },
+    "nt_config_golden_baseline_campus_switch": {
+      "concept_id": "nt_config_golden_baseline_campus_switch",
+      "title": "NT Guided Build: Campus Switch Golden Baseline Configuration",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Infrastructure",
+      "topic": "Configuration Baselines",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 30,
+      "symptom": "Build a reusable secure campus switch baseline and verify operational consistency.",
+      "requirements": [
+        "Configure hostname, local credentials, and basic management protections.",
+        "Set management SVI/IP and default gateway per lab plan.",
+        "Enable SSH-only remote access and disable insecure services where specified.",
+        "Apply access-port baseline controls (PortFast/BPDU Guard) on endpoint ports.",
+        "Configure logging/NTP essentials according to brief.",
+        "Capture baseline verification output for compliance evidence."
+      ],
+      "faults": [
+        {
+          "device": "ACCESS1",
+          "fault": "Switch starts from minimal bootstrap config without operational baseline.",
+          "fix": "Apply required golden baseline configuration set."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show run",
+        "show ip interface brief",
+        "show spanning-tree summary",
+        "show ssh",
+        "show logging"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "Baseline Hardening",
+        "Operations Consistency",
+        "Switch Access Controls"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Apply management-plane settings before locking down remote access.",
+        "Use interface ranges for consistent access-port policy deployment.",
+        "Validate baseline against a checklist, not memory."
+      ],
+      "expected_results": [
+        "Device baseline matches required management/security standard.",
+        "Remote access and access-port controls function as intended."
+      ],
+      "answer_key": {
+        "root_cause": "Build lab: baseline standards are intentionally not pre-applied.",
+        "fix_summary": "Apply full golden baseline template and verify compliance outputs.",
+        "verification": [
+          "show run",
+          "show ssh",
+          "show spanning-tree summary"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 Batch B guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "operations",
+        "baseline",
+        "switching",
+        "hardening",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        2,
+        1,
+        "Configuration Baselines",
+        "NT Guided Build: Campus Switch Golden Baseline Configuration",
+        "nt_config_golden_baseline_campus_switch"
+      ],
+      "study_paths": [
+        "network-troubleshooting"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Apply identity and local authentication baseline.",
+        "Configure management SVI addressing and default gateway.",
+        "Enable SSH-only management and disable insecure services.",
+        "Apply access-port baseline templates using interface range.",
+        "Configure logging/NTP essentials.",
+        "Collect verification outputs and compare to baseline checklist."
+      ],
+      "coaching_notes": [
+        "Golden baseline work is about repeatability; keep config structured and template-friendly."
+      ]
+    },
+    "ccnp_bgp_ebgp_ibgp_localpref_med": {
+      "concept_id": "ccnp_bgp_ebgp_ibgp_localpref_med",
+      "title": "CCNP Guided Build: eBGP/iBGP with Local Preference and MED",
+      "topology": "advanced_routing_lab",
+      "exam_blueprints": [
+        "ENARSI",
+        "ENCOR"
+      ],
+      "domain": "Infrastructure",
+      "topic": "BGP",
+      "difficulty": "advanced",
+      "lab_type": "build",
+      "estimated_minutes": 55,
+      "symptom": "Configure eBGP/iBGP reachability with local preference and MED policy so the lab AS selects and advertises the intended BGP paths.",
+      "requirements": [
+        "Establish eBGP peering to ISP edge and iBGP inside AS.",
+        "Advertise required prefixes with route-policy controls.",
+        "Set local preference for primary exit path decisions.",
+        "Set/interpret MED for inbound path influence where required.",
+        "Validate best path selection and failover behavior."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show ip bgp summary",
+        "show ip bgp",
+        "show ip bgp neighbors",
+        "show ip route bgp"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "BGP",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Use show ip bgp summary before policy work so neighbor state problems are not mistaken for path-selection problems.",
+        "Apply local preference inbound toward the lab AS where outbound exit choice is decided.",
+        "Check show ip bgp attributes after each route-map change to confirm local preference and MED are attached to the expected prefixes."
+      ],
+      "expected_results": [
+        "eBGP and iBGP neighbors reach Established state and exchange the required prefixes.",
+        "Local preference marks the preferred outbound exit path in the BGP table.",
+        "MED values are present on advertised routes where inbound path influence is required.",
+        "BGP route and failover checks match the intended primary and backup behavior."
+      ],
+      "answer_key": {
+        "root_cause": "The starter baseline intentionally lacks the eBGP/iBGP peering and BGP path-attribute policy for local preference and MED.",
+        "fix_summary": "Configure the required BGP neighbors, advertise the lab prefixes, and apply route-map controls for local preference and MED on the correct neighbor directions.",
+        "verification": [
+          "show ip bgp summary",
+          "show ip bgp",
+          "show ip bgp neighbors"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENARSI",
+      "tags": [
+        "ccnp",
+        "bgp",
+        "ebgp",
+        "ibgp",
+        "localpref",
+        "med",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "BGP",
+        "CCNP Guided Build: eBGP/iBGP with Local Preference and MED",
+        "ccnp_bgp_ebgp_ibgp_localpref_med"
+      ],
+      "study_paths": [
+        "ccnp-enterprise"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENARSI",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "Local preference is evaluated inside the AS and is usually set on inbound updates from exits.",
+        "MED is shared toward neighboring AS paths and only matters when the compared paths are otherwise eligible.",
+        "A route-map applied in the wrong neighbor direction can look syntactically correct while leaving best-path selection unchanged."
+      ]
+    },
+    "ccnp_vrf_lite_mp_bgp_leak": {
+      "concept_id": "ccnp_vrf_lite_mp_bgp_leak",
+      "title": "CCNP Guided Build: VRF-Lite and MP-BGP Route Leak",
+      "topology": "advanced_routing_lab",
+      "exam_blueprints": [
+        "ENARSI",
+        "ENCOR"
+      ],
+      "domain": "Infrastructure",
+      "topic": "VRF/BGP",
+      "difficulty": "advanced",
+      "lab_type": "build",
+      "estimated_minutes": 60,
+      "symptom": "Build VRF-Lite segmentation with MP-BGP route leaking so only approved prefixes move between VRF contexts.",
+      "requirements": [
+        "Create VRFs and bind interfaces correctly.",
+        "Establish MP-BGP address-family configuration for VRF contexts.",
+        "Implement controlled route leaking between selected VRFs.",
+        "Verify isolation is preserved except approved leak paths."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show vrf",
+        "show ip route vrf all",
+        "show bgp vpnv4 unicast all",
+        "show bgp vpnv4 unicast vrf"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "VRF/BGP",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Confirm interface VRF membership with show vrf before troubleshooting missing routes.",
+        "Build each VRF address family separately, then verify show ip route vrf all before adding leak policy.",
+        "Use route-target or import/export policy checks to prove only the selected prefixes are leaked."
+      ],
+      "expected_results": [
+        "All required VRFs exist and the intended interfaces are bound to the correct VRF tables.",
+        "VRF routing tables show isolated routes before route leaking is applied.",
+        "MP-BGP address-family output shows the selected leaked prefixes.",
+        "Connectivity succeeds only along approved leak paths while other VRF isolation remains intact."
+      ],
+      "answer_key": {
+        "root_cause": "The starter baseline intentionally lacks the VRF definitions, interface bindings, MP-BGP address families, and controlled route-leak policy.",
+        "fix_summary": "Create the VRFs, bind interfaces, enable MP-BGP per VRF, and configure selective import/export or route-target controls for the approved leaked routes.",
+        "verification": [
+          "show vrf",
+          "show ip route vrf all",
+          "show bgp vpnv4 unicast all"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENARSI",
+      "tags": [
+        "ccnp",
+        "vrf-lite",
+        "mp-bgp",
+        "route-leak",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "VRF/BGP",
+        "CCNP Guided Build: VRF-Lite and MP-BGP Route Leak",
+        "ccnp_vrf_lite_mp_bgp_leak"
+      ],
+      "study_paths": [
+        "ccnp-enterprise"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENARSI",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "Moving an interface into a VRF can clear its IP settings on some platforms; re-check addressing after binding.",
+        "Leaking too broadly defeats the segmentation objective even if reachability works.",
+        "Use both positive and negative tests: approved prefixes should pass, unrelated VRF routes should stay hidden."
+      ]
+    },
+    "ccnp_netflow_flexible_monitor_export": {
+      "concept_id": "ccnp_netflow_flexible_monitor_export",
+      "title": "CCNP Guided Build: Flexible NetFlow Monitor and Export",
+      "topology": "network_assurance_lab",
+      "exam_blueprints": [
+        "ENCOR"
+      ],
+      "domain": "Network Assurance",
+      "topic": "NetFlow",
+      "difficulty": "advanced",
+      "lab_type": "build",
+      "estimated_minutes": 45,
+      "symptom": "Configure Flexible NetFlow records, monitors, exporters, and interface attachment so traffic flows are observed and exported.",
+      "requirements": [
+        "Create flow record with required key/non-key fields.",
+        "Create flow exporter to collector endpoint.",
+        "Create monitor and apply to target interface direction.",
+        "Verify flow cache and exporter statistics during traffic generation."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show flow monitor",
+        "show flow exporter",
+        "show flow record",
+        "show flow monitor cache"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "NetFlow",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Start with show flow record to verify match fields before attaching the monitor.",
+        "Confirm exporter destination, source interface, UDP port, and version before expecting collector visibility.",
+        "Attach the monitor in the direction where lab traffic actually crosses the interface."
+      ],
+      "expected_results": [
+        "A flow record contains the required match and collect fields for the traffic being measured.",
+        "The flow exporter points at the intended collector transport and source settings.",
+        "The flow monitor is applied on the correct interface and direction.",
+        "show flow monitor/exporter/record output reports active configuration and observed flow data."
+      ],
+      "answer_key": {
+        "root_cause": "The starter baseline intentionally lacks the Flexible NetFlow record, exporter, monitor, and interface attachment.",
+        "fix_summary": "Define the flow record, configure the exporter, bind both into a flow monitor, and apply the monitor to the traffic-bearing interface in the required direction.",
+        "verification": [
+          "show flow monitor",
+          "show flow exporter",
+          "show flow record"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "ccnp",
+        "netflow",
+        "assurance",
+        "telemetry",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "NetFlow",
+        "CCNP Guided Build: Flexible NetFlow Monitor and Export",
+        "ccnp_netflow_flexible_monitor_export"
+      ],
+      "study_paths": [
+        "ccnp-enterprise"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "A complete monitor that is never applied to an interface will not collect usable flow data.",
+        "Exporter reachability and source selection matter as much as record syntax.",
+        "Choose match fields that answer the lab question instead of collecting unrelated counters only."
+      ]
+    },
+    "senk_asav_static_nat_dmz_publishing": {
+      "concept_id": "senk_asav_static_nat_dmz_publishing",
+      "title": "SENK Guided Build: ASAv Static NAT for DMZ Publishing",
+      "topology": "security_hardening_lab",
+      "exam_blueprints": [
+        "ENCOR"
+      ],
+      "domain": "Security",
+      "topic": "ASAv NAT",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 45,
+      "symptom": "Publish the DMZ service through ASAv static NAT and access policy without exposing unrelated inside resources.",
+      "requirements": [
+        "Define inside/DMZ/outside object networks as required.",
+        "Configure static NAT for DMZ service publication.",
+        "Apply ACL/policy permitting only approved inbound ports.",
+        "Validate inbound reachability and deny behavior for non-approved traffic."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show run nat",
+        "show xlate",
+        "show access-list",
+        "packet-tracer input outside tcp 198.51.100.10 12345 203.0.113.20 443"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "ASAv NAT",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Use show run nat to verify the real and mapped objects before testing traffic.",
+        "Match the ACL to the post-NAT outside-facing service tuple expected by the ASAv policy model.",
+        "Check show xlate and show access-list counters after a connection attempt to separate NAT issues from policy issues."
+      ],
+      "expected_results": [
+        "Static NAT maps the designated DMZ service address to the approved outside address or port.",
+        "The outside access policy permits only the required published service.",
+        "Translation and access-list counters increment during test traffic.",
+        "Unapproved inbound traffic remains denied by policy."
+      ],
+      "answer_key": {
+        "root_cause": "The starter baseline intentionally lacks the ASAv object NAT and outside access rule needed to publish the DMZ service.",
+        "fix_summary": "Create the DMZ and mapped service objects, configure static NAT for the published service, and permit only the required outside-to-DMZ traffic with an access policy.",
+        "verification": [
+          "show run nat",
+          "show xlate",
+          "show access-list"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "security",
+        "asav",
+        "static-nat",
+        "dmz",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "ASAv NAT",
+        "SENK Guided Build: ASAv Static NAT for DMZ Publishing",
+        "senk_asav_static_nat_dmz_publishing"
+      ],
+      "study_paths": [
+        "secure-enclave-networking"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "NAT success without a matching access rule still leaves the service unreachable.",
+        "Overly broad outside ACLs can pass the lab ping test while violating the enclave boundary.",
+        "Use lab-only placeholder addresses and service objects; do not embed real public services or credentials."
+      ]
+    },
+    "senk_aaa_tacacs_local_fallback": {
+      "concept_id": "senk_aaa_tacacs_local_fallback",
+      "title": "SENK Guided Build: AAA TACACS+ with Local Fallback",
+      "topology": "security_hardening_lab",
+      "exam_blueprints": [
+        "ENCOR"
+      ],
+      "domain": "Security",
+      "topic": "AAA",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 35,
+      "symptom": "Configure AAA TACACS+ authentication with local fallback so management access survives TACACS outage without weakening normal login control.",
+      "requirements": [
+        "Enable AAA new-model and define TACACS+ server group.",
+        "Configure login/authz methods with local fallback path.",
+        "Apply methods to VTY/console as required.",
+        "Validate successful TACACS auth and fallback behavior during server outage simulation."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show aaa servers",
+        "show run | section aaa",
+        "debug aaa authentication",
+        "show users"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "AAA",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Use a placeholder such as <tacacs-key> for the shared secret; never add real production secrets.",
+        "Verify the local fallback username before enabling AAA on active management lines.",
+        "Check show aaa servers before interpreting debug aaa authentication failures."
+      ],
+      "expected_results": [
+        "AAA new-model and TACACS server definitions are present with a lab placeholder key.",
+        "Login authentication tries the TACACS group first and then falls back to local users.",
+        "Authorization or accounting settings match the guided requirements where included.",
+        "Debug or show output confirms both server reachability status and fallback behavior."
+      ],
+      "answer_key": {
+        "root_cause": "The starter baseline intentionally lacks AAA new-model, TACACS server configuration, method lists, and validated local fallback controls.",
+        "fix_summary": "Enable AAA, define the TACACS server group with a lab-only key placeholder, configure authentication method lists that prefer TACACS and fall back to local, and bind them to the management lines.",
+        "verification": [
+          "show aaa servers",
+          "show run | section aaa",
+          "debug aaa authentication"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "security",
+        "aaa",
+        "tacacs",
+        "fallback",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "AAA",
+        "SENK Guided Build: AAA TACACS+ with Local Fallback",
+        "senk_aaa_tacacs_local_fallback"
+      ],
+      "study_paths": [
+        "secure-enclave-networking"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "Method-list order is the lesson: local first bypasses TACACS, while no fallback can lock out the lab.",
+        "A reachable server with a bad key behaves differently from an unreachable server; inspect server status and debug output.",
+        "Keep secrets as placeholders in curriculum content and lab configs."
+      ]
+    },
+    "senk_site2site_ipsec_ikev2_vti": {
+      "concept_id": "senk_site2site_ipsec_ikev2_vti",
+      "title": "SENK Guided Build: Site-to-Site IPsec IKEv2 over VTI",
+      "topology": "security_hardening_lab",
+      "exam_blueprints": [
+        "ENCOR"
+      ],
+      "domain": "Security",
+      "topic": "IPsec",
+      "difficulty": "advanced",
+      "lab_type": "build",
+      "estimated_minutes": 60,
+      "symptom": "Build a site-to-site IPsec IKEv2 tunnel over a VTI so protected lab networks route securely between sites.",
+      "requirements": [
+        "Define IKEv2 proposal/policy/keyring/profile.",
+        "Configure tunnel interfaces for VTI endpoints.",
+        "Apply IPsec profile and route protected prefixes via tunnel.",
+        "Verify phase establishment, SA counters, and encrypted traffic flow."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show crypto ikev2 sa",
+        "show crypto ipsec sa",
+        "show interface tunnel",
+        "show ip route"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "IPsec",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Use placeholder pre-shared keys such as <ipsec-key>; never write real secrets into the lab.",
+        "Verify underlay reachability between tunnel endpoints before troubleshooting IKEv2.",
+        "Check show crypto ikev2 sa and show crypto ipsec sa after sending interesting traffic across the routed VTI."
+      ],
+      "expected_results": [
+        "IKEv2 proposal, policy, keyring/profile, and IPsec profile are configured with lab-only placeholders.",
+        "Tunnel interface/VTI state is up and bound to the IPsec profile.",
+        "Crypto IKEv2 and IPsec SAs form when protected traffic is generated.",
+        "Routes send the intended protected prefixes across the tunnel and counters increment."
+      ],
+      "answer_key": {
+        "root_cause": "The starter baseline intentionally lacks the IKEv2 policy material, IPsec profile, VTI tunnel interface, and routing for protected prefixes.",
+        "fix_summary": "Configure IKEv2 proposal/policy/keyring/profile with lab placeholders, attach an IPsec profile to the tunnel interface, and route protected networks over the VTI.",
+        "verification": [
+          "show crypto ikev2 sa",
+          "show crypto ipsec sa",
+          "show interface tunnel"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "security",
+        "ipsec",
+        "ikev2",
+        "vti",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "IPsec",
+        "SENK Guided Build: Site-to-Site IPsec IKEv2 over VTI",
+        "senk_site2site_ipsec_ikev2_vti"
+      ],
+      "study_paths": [
+        "secure-enclave-networking"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "Underlay reachability problems prevent IKE from forming even when crypto syntax is correct.",
+        "VTI designs rely on routing to select protected traffic instead of classic crypto ACL matching.",
+        "Mismatch in IKEv2 proposal, identity, or keyring peer settings commonly leaves the tunnel stuck before IPsec SAs form."
+      ]
+    },
+    "rhel9_vlan_subinterfaces_nmcli": {
+      "concept_id": "rhel9_vlan_subinterfaces_nmcli",
+      "title": "RHEL9 Guided Build: VLAN Subinterfaces with nmcli",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Automation",
+      "topic": "Linux Endpoint Networking",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 30,
+      "symptom": "Create persistent RHEL9 VLAN subinterfaces with nmcli so tagged endpoint networks receive the correct addressing and routes.",
+      "requirements": [
+        "Create VLAN connection profiles with nmcli on target parent interface.",
+        "Assign static IP settings for each VLAN profile.",
+        "Activate profiles and verify link/addressing state.",
+        "Validate routing and connectivity per VLAN segment requirements."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "nmcli connection show",
+        "ip -d link show",
+        "ip addr",
+        "ip route"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "Linux Endpoint Networking",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Identify the parent NIC with nmcli device status before creating VLAN profiles.",
+        "Set both vlan.id and vlan.parent correctly; a valid profile on the wrong parent will not pass tagged traffic.",
+        "Use nmcli connection up followed by ip -d link show to confirm the kernel created the VLAN device."
+      ],
+      "expected_results": [
+        "nmcli shows parent and VLAN connection profiles with the expected VLAN IDs.",
+        "ip -d link show displays VLAN subinterfaces tied to the correct parent link.",
+        "IPv4 addressing and default or specific routes appear on the intended VLAN profiles.",
+        "Traffic tests use the tagged subinterface path rather than the untagged parent only."
+      ],
+      "answer_key": {
+        "root_cause": "The starter baseline intentionally lacks persistent nmcli VLAN connection profiles and IP settings for the tagged endpoint networks.",
+        "fix_summary": "Create nmcli VLAN profiles on the correct parent interface, assign the required IP addressing and routes, and bring the profiles up persistently.",
+        "verification": [
+          "nmcli connection show",
+          "ip -d link show",
+          "ip addr"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "rhel9",
+        "nmcli",
+        "vlan",
+        "operations",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "Linux Endpoint Networking",
+        "RHEL9 Guided Build: VLAN Subinterfaces with nmcli",
+        "rhel9_vlan_subinterfaces_nmcli"
+      ],
+      "study_paths": [
+        "rhel9-operations"
+      ],
+      "platforms": [
+        "gns3",
+        "rhel9"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "Temporary ip link commands may pass a quick test but miss the persistence objective.",
+        "RHEL connection names and interface names are separate; verify both when troubleshooting.",
+        "Leaving IP settings on the parent interface can hide VLAN mistakes during partial reachability tests."
+      ]
+    },
+    "rhel9_firewalld_zones_services_richrules": {
+      "concept_id": "rhel9_firewalld_zones_services_richrules",
+      "title": "RHEL9 Guided Build: firewalld Zones, Services, and Rich Rules",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Automation",
+      "topic": "Linux Security",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 35,
+      "symptom": "Configure RHEL9 firewalld zones, service allowances, and rich rules to permit required lab traffic while denying everything else.",
+      "requirements": [
+        "Assign interfaces/sources to correct firewalld zones.",
+        "Enable required services and remove unneeded defaults.",
+        "Add rich rules for explicit allow/deny policy cases.",
+        "Reload firewalld and verify effective runtime/permanent policy state."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "firewall-cmd --get-active-zones",
+        "firewall-cmd --list-all",
+        "firewall-cmd --list-rich-rules",
+        "firewall-cmd --runtime-to-permanent"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "Linux Security",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Check firewall-cmd --get-active-zones before adding rules so you edit the zone that actually handles traffic.",
+        "Add services before rich rules when the lab calls for standard service objects; reserve rich rules for source-specific controls.",
+        "Compare firewall-cmd --list-all with --permanent output to catch runtime-only changes."
+      ],
+      "expected_results": [
+        "firewall-cmd shows the intended active zone assignments for the relevant interfaces or sources.",
+        "Allowed services and ports appear only in the required zones.",
+        "Rich rules match the specified source/service conditions.",
+        "Runtime and permanent firewalld state remain consistent after reload."
+      ],
+      "answer_key": {
+        "root_cause": "The starter baseline intentionally lacks the firewalld zone assignments, service allowances, rich rules, and permanent state required by the policy.",
+        "fix_summary": "Assign interfaces or sources to the correct zones, add the required services/ports, create source-specific rich rules, and save the runtime policy permanently.",
+        "verification": [
+          "firewall-cmd --get-active-zones",
+          "firewall-cmd --list-all",
+          "firewall-cmd --list-rich-rules"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "rhel9",
+        "firewalld",
+        "zones",
+        "rich-rules",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "Linux Security",
+        "RHEL9 Guided Build: firewalld Zones, Services, and Rich Rules",
+        "rhel9_firewalld_zones_services_richrules"
+      ],
+      "study_paths": [
+        "rhel9-operations"
+      ],
+      "platforms": [
+        "gns3",
+        "rhel9"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "Editing the default zone is not enough if the active interface belongs to a different zone.",
+        "Runtime-only changes vanish after reload and should not be treated as a completed build.",
+        "Rich rules can accidentally over-permit if the source or service qualifier is omitted."
+      ]
+    },
+    "nt_config_ip_sla_track_failover": {
+      "concept_id": "nt_config_ip_sla_track_failover",
+      "title": "NT Guided Build: IP SLA Tracking and Conditional Failover",
+      "topology": "enterprise_wan_isp",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Infrastructure",
+      "topic": "IP SLA",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 35,
+      "symptom": "Configure IP SLA tracking with conditional routes so traffic fails over to the backup path when the primary probe fails.",
+      "requirements": [
+        "Configure IP SLA probe to target health endpoint.",
+        "Create track object tied to IP SLA reachability state.",
+        "Bind static/default route preference to track object.",
+        "Validate route failover and restoration behavior through state changes."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show ip sla statistics",
+        "show track",
+        "show ip route",
+        "show run | section ip sla"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "IP SLA",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Verify the probe target is reachable from the intended source before tying it to routing.",
+        "Use show ip sla statistics and show track together; SLA success and track state must agree.",
+        "Compare administrative distance on primary and backup routes so failover selects the intended path."
+      ],
+      "expected_results": [
+        "IP SLA operation runs on schedule and reports reachability statistics for the tracked target.",
+        "Track state follows the SLA result and changes when the primary path fails or recovers.",
+        "The routing table installs the primary conditional route only while the track is up.",
+        "Backup routing takes over during failure and reverts after recovery."
+      ],
+      "answer_key": {
+        "root_cause": "The starter baseline intentionally lacks the IP SLA probe, track object, and conditional primary/backup route logic.",
+        "fix_summary": "Create the IP SLA operation and schedule, bind it to a track object, attach the track to the primary static route, and configure a higher-distance backup route.",
+        "verification": [
+          "show ip sla statistics",
+          "show track",
+          "show ip route"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "operations",
+        "ip-sla",
+        "tracking",
+        "failover",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "IP SLA",
+        "NT Guided Build: IP SLA Tracking and Conditional Failover",
+        "nt_config_ip_sla_track_failover"
+      ],
+      "study_paths": [
+        "network-troubleshooting"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "A scheduled but unsourced SLA can test the wrong path and give misleading failover results.",
+        "If the backup route has the same or better distance, traffic may bypass the tracked primary route.",
+        "Failback should be verified too; passing only the failure test misses recovery behavior."
+      ]
+    },
+    "nt_config_change_window_checkpoint_rollback": {
+      "concept_id": "nt_config_change_window_checkpoint_rollback",
+      "title": "NT Guided Build: Change Window Checkpoint and Rollback",
+      "topology": "campus_dual_core",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Infrastructure",
+      "topic": "Change Management",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 30,
+      "symptom": "Prepare a network change checkpoint and rollback workflow so a guided change can be verified, logged, and safely reverted if needed.",
+      "requirements": [
+        "Capture pre-change checkpoint artifacts for target devices.",
+        "Implement planned configuration changes under change window constraints.",
+        "Run post-change validation checks and compare to expected state.",
+        "Execute rollback procedure when validation criteria are not met."
+      ],
+      "faults": [
+        {
+          "device": "LAB",
+          "fault": "Starter baseline intentionally omits required configuration intent.",
+          "fix": "Implement the listed requirements and verify outcomes."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "show archive",
+        "show running-config | include archive",
+        "show logging",
+        "show ip interface brief"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "Change Management",
+        "Configuration"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Capture show running-config and archive status before making the change so rollback has a trustworthy baseline.",
+        "Use configuration archive or replace/rollback features supported by the lab platform rather than relying on memory.",
+        "Check show logging for change-window markers and verification output timestamps."
+      ],
+      "expected_results": [
+        "Archive or checkpoint settings capture a known-good baseline before the change.",
+        "Change-window logs identify the planned change and verification evidence.",
+        "The guided configuration change can be compared against the saved baseline.",
+        "Rollback restores the prior state when the acceptance checks fail."
+      ],
+      "answer_key": {
+        "root_cause": "The starter baseline intentionally lacks the checkpoint/archive workflow, change-window logging, and rollback procedure for controlled configuration changes.",
+        "fix_summary": "Enable or use the platform checkpoint/archive mechanism, record pre-change evidence, apply the guided change, verify acceptance criteria, and execute rollback if validation fails.",
+        "verification": [
+          "show archive",
+          "show running-config | include archive",
+          "show logging"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Wave 1 guided build lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "operations",
+        "change-window",
+        "rollback",
+        "checkpoint",
+        "build"
+      ],
+      "progression_rank": [
+        3,
+        3,
+        1,
+        "Change Management",
+        "NT Guided Build: Change Window Checkpoint and Rollback",
+        "nt_config_change_window_checkpoint_rollback"
+      ],
+      "study_paths": [
+        "network-troubleshooting"
+      ],
+      "platforms": [
+        "gns3",
+        "cisco-iol"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review requirements and target state.",
+        "Apply core configuration primitives.",
+        "Apply policy/feature-specific commands.",
+        "Run verification commands and capture outputs.",
+        "Remediate mismatches and re-verify.",
+        "Document final state evidence."
+      ],
+      "coaching_notes": [
+        "The rollback point must be captured before the risky change, not after the outage is observed.",
+        "Operational change control values evidence and timestamps as much as the final configuration.",
+        "A rollback procedure should be tested in the lab so it is not improvised during an incident."
+      ]
+    },
+    "rhel9_systemd_service_recovery_journalctl": {
+      "concept_id": "rhel9_systemd_service_recovery_journalctl",
+      "title": "RHEL9 Guided Build: systemd Service Recovery with journalctl",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Automation",
+      "topic": "Linux Operations",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 30,
+      "symptom": "Harden service startup and troubleshooting workflow by validating unit state, logs, restart policy, and dependency ordering.",
+      "requirements": [
+        "Inspect service and unit-file state with systemctl and identify startup blockers.",
+        "Use journalctl filtering to isolate the latest failure reason for the target service.",
+        "Apply required unit overrides (for restart behavior and ordering) using drop-in configuration.",
+        "Reload daemon metadata and recover the service to stable active state.",
+        "Verify service persistence and clean restart behavior across manual restart tests."
+      ],
+      "faults": [
+        {
+          "device": "RHEL9-SRV",
+          "fault": "Target service baseline lacks resilient restart/ordering configuration.",
+          "fix": "Apply guided systemd override and validate recovered health."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "systemctl status LABAPP.service",
+        "systemctl cat LABAPP.service",
+        "journalctl -u LABAPP.service -n 80 --no-pager",
+        "systemctl show LABAPP.service -p ActiveState -p SubState -p Restart",
+        "systemctl restart LABAPP.service"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "RHEL9",
+        "systemd",
+        "journalctl"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Use `systemctl edit` for overrides instead of editing vendor unit files directly.",
+        "Confirm both runtime health and configured restart semantics.",
+        "Validate after each override change to isolate mistakes early."
+      ],
+      "expected_results": [
+        "Service reaches and stays in active (running) state.",
+        "Journal entries no longer show repeating startup-failure loop.",
+        "Unit override parameters match required policy and survive daemon-reload."
+      ],
+      "answer_key": {
+        "root_cause": "Service resiliency and ordering controls were not aligned with operational requirements.",
+        "fix_summary": "Use journal-driven diagnosis, apply drop-in override, daemon-reload, and restart validation.",
+        "verification": [
+          "systemctl status LABAPP.service",
+          "journalctl -u LABAPP.service -n 50 --no-pager",
+          "systemctl show LABAPP.service -p Restart"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Step 3 RHEL9 Operations expansion lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "rhel9",
+        "systemd",
+        "journalctl",
+        "service-recovery",
+        "operations",
+        "build"
+      ],
+      "progression_rank": [
+        6,
+        2,
+        1,
+        "Linux Operations",
+        "RHEL9 Guided Build: systemd Service Recovery with journalctl",
+        "rhel9_systemd_service_recovery_journalctl"
+      ],
+      "study_paths": [
+        "rhel9-operations"
+      ],
+      "platforms": [
+        "gns3",
+        "rhel9"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Capture current unit status and recent failure logs.",
+        "Identify required restart/order policy from requirements.",
+        "Create or update service drop-in override entries.",
+        "Run daemon-reload and restart the service.",
+        "Validate active state and absence of recurring startup errors.",
+        "Document final override and health evidence."
+      ],
+      "coaching_notes": [
+        "Avoid direct edits under /usr/lib/systemd/system in guided labs.",
+        "Keep log window narrow while iterating to focus on current attempt."
+      ]
+    },
+    "rhel9_rsyslog_remote_forwarding_queue_hardening": {
+      "concept_id": "rhel9_rsyslog_remote_forwarding_queue_hardening",
+      "title": "RHEL9 Guided Build: rsyslog Remote Forwarding and Queue Hardening",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Automation",
+      "topic": "Linux Operations",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 35,
+      "symptom": "Configure reliable log forwarding with buffering so temporary collector interruption does not lose critical events.",
+      "requirements": [
+        "Create dedicated rsyslog forwarding rule for selected facilities/severities.",
+        "Configure action queue parameters to tolerate collector outages.",
+        "Validate spool/queue behavior during transient destination unreachability.",
+        "Restore connectivity and confirm queued events flush successfully.",
+        "Persist and verify forwarding configuration after rsyslog restart."
+      ],
+      "faults": [
+        {
+          "device": "RHEL9-SRV",
+          "fault": "Baseline logs are local-only and lose burst events when remote collector is unavailable.",
+          "fix": "Implement queued forwarding path with durable buffering."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "rsyslogd -N1",
+        "systemctl status rsyslog",
+        "logger -p local0.notice \"queue-test-event\"",
+        "ls -l /var/spool/rsyslog",
+        "tail -n 50 /var/log/messages"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "RHEL9",
+        "rsyslog",
+        "operations"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Validate syntax with rsyslogd -N1 before restart.",
+        "Separate input filtering from forwarding action tuning.",
+        "Use controlled test events with logger for deterministic validation."
+      ],
+      "expected_results": [
+        "Forwarding action is active and queue-backed.",
+        "Queue persists events during simulated outage.",
+        "Buffered events flush when collector path is restored."
+      ],
+      "answer_key": {
+        "root_cause": "Forwarding path lacked durable queue controls for intermittent collector reachability.",
+        "fix_summary": "Build queued forwarding action, verify during outage simulation, confirm flush on recovery.",
+        "verification": [
+          "rsyslogd -N1",
+          "systemctl status rsyslog",
+          "ls -l /var/spool/rsyslog"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Step 3 RHEL9 Operations expansion lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "rhel9",
+        "rsyslog",
+        "logging",
+        "queue",
+        "operations",
+        "build"
+      ],
+      "progression_rank": [
+        6,
+        2,
+        1,
+        "Linux Operations",
+        "RHEL9 Guided Build: rsyslog Remote Forwarding and Queue Hardening",
+        "rhel9_rsyslog_remote_forwarding_queue_hardening"
+      ],
+      "study_paths": [
+        "rhel9-operations"
+      ],
+      "platforms": [
+        "gns3",
+        "rhel9"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Define forwarding target and message selection policy.",
+        "Implement queued forwarding action in rsyslog config.",
+        "Validate syntax and restart rsyslog safely.",
+        "Generate test logs and simulate collector interruption.",
+        "Observe queue growth and confirm no event loss.",
+        "Restore path and verify queue drain/forward completion."
+      ],
+      "coaching_notes": [
+        "Queue settings are action-specific; global defaults can be misleading.",
+        "Treat rsyslog syntax validation as a required checkpoint."
+      ]
+    },
+    "rhel9_chrony_ntp_hardening_and_drift_validation": {
+      "concept_id": "rhel9_chrony_ntp_hardening_and_drift_validation",
+      "title": "RHEL9 Guided Build: chrony NTP Hardening and Drift Validation",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Automation",
+      "topic": "Linux Operations",
+      "difficulty": "beginner",
+      "lab_type": "build",
+      "estimated_minutes": 25,
+      "symptom": "Standardize secure time synchronization and verify offset stability for operations and logging accuracy.",
+      "requirements": [
+        "Configure approved NTP sources in chrony and remove unauthorized defaults.",
+        "Enforce chrony startup and persistent service enablement.",
+        "Validate synchronization state, source reachability, and offset/drift.",
+        "Confirm time service behavior after service restart and reboot simulation checks."
+      ],
+      "faults": [
+        {
+          "device": "RHEL9-CLIENT",
+          "fault": "Baseline chrony configuration references non-approved defaults and lacks validation evidence.",
+          "fix": "Apply approved source policy and verify stable synchronization."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "chronyc sources -v",
+        "chronyc tracking",
+        "timedatectl status",
+        "systemctl status chronyd"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "RHEL9",
+        "chrony",
+        "time-sync"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Check both source reachability and current selected source.",
+        "Tracking output provides offset and root dispersion evidence.",
+        "Restart chronyd once after config edits to confirm startup cleanliness."
+      ],
+      "expected_results": [
+        "chronyd is enabled and active.",
+        "Approved sources are configured and reachable.",
+        "Tracking output shows healthy offset/jitter suitable for operations."
+      ],
+      "answer_key": {
+        "root_cause": "Time-sync policy was not aligned to approved sources or operational verification.",
+        "fix_summary": "Update chrony source list, restart service, and validate tracking/sources output.",
+        "verification": [
+          "chronyc sources -v",
+          "chronyc tracking",
+          "timedatectl status"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Step 3 RHEL9 Operations expansion lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "CCNA",
+      "tags": [
+        "rhel9",
+        "chrony",
+        "ntp",
+        "time-sync",
+        "operations",
+        "build"
+      ],
+      "progression_rank": [
+        6,
+        1,
+        1,
+        "Linux Operations",
+        "RHEL9 Guided Build: chrony NTP Hardening and Drift Validation",
+        "rhel9_chrony_ntp_hardening_and_drift_validation"
+      ],
+      "study_paths": [
+        "rhel9-operations"
+      ],
+      "platforms": [
+        "gns3",
+        "rhel9"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Review baseline chrony configuration and identify unauthorized sources.",
+        "Apply approved NTP source entries and service settings.",
+        "Restart chronyd and validate active/enable state.",
+        "Run chronyc sources and tracking for sync evidence.",
+        "Confirm system time status and persistence checks.",
+        "Record output evidence for grading artifacts."
+      ],
+      "coaching_notes": [
+        "Source reachability can lag briefly after restart\u2014recheck before concluding failure.",
+        "Capture both source list and tracking output for complete evidence."
+      ]
+    },
+    "rhel9_selinux_httpd_contexts_restorecon": {
+      "concept_id": "rhel9_selinux_httpd_contexts_restorecon",
+      "title": "RHEL9 Guided Build: SELinux HTTPD Context Recovery with restorecon",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Automation",
+      "topic": "Linux Security",
+      "difficulty": "intermediate",
+      "lab_type": "build",
+      "estimated_minutes": 30,
+      "symptom": "Recover a web content path blocked by incorrect SELinux labels and validate durable context policy handling.",
+      "requirements": [
+        "Identify SELinux denial indicators impacting web content access.",
+        "Inspect file contexts on served content path and compare with expected type.",
+        "Apply persistent context mapping and relabel target content path.",
+        "Validate HTTP service access and absence of repeat SELinux denials."
+      ],
+      "faults": [
+        {
+          "device": "RHEL9-WEB",
+          "fault": "Web content path has non-compliant SELinux labels causing access denial.",
+          "fix": "Define expected context mapping and relabel affected paths."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "getenforce",
+        "ls -Z /var/www/html",
+        "semanage fcontext -l | grep /var/www/html",
+        "restorecon -Rv /var/www/html",
+        "journalctl -t setroubleshoot --no-pager -n 30 || ausearch -m AVC -ts recent"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "RHEL9",
+        "SELinux",
+        "restorecon"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Use persistent fcontext mapping before restorecon when non-default paths are involved.",
+        "Verify labels after relabel, not only command exit status.",
+        "Confirm service functionality alongside AVC silence."
+      ],
+      "expected_results": [
+        "Content path has expected SELinux type labels.",
+        "HTTP service can access content without AVC denials.",
+        "Context behavior remains correct after repeated restorecon."
+      ],
+      "answer_key": {
+        "root_cause": "SELinux file context mismatch blocked HTTPD content access.",
+        "fix_summary": "Apply persistent fcontext mapping and relabel with restorecon.",
+        "verification": [
+          "ls -Z /var/www/html",
+          "semanage fcontext -l | grep /var/www/html",
+          "ausearch -m AVC -ts recent"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Step 3 RHEL9 Operations expansion lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "rhel9",
+        "selinux",
+        "httpd",
+        "restorecon",
+        "security",
+        "build"
+      ],
+      "progression_rank": [
+        6,
+        2,
+        1,
+        "Linux Security",
+        "RHEL9 Guided Build: SELinux HTTPD Context Recovery with restorecon",
+        "rhel9_selinux_httpd_contexts_restorecon"
+      ],
+      "study_paths": [
+        "rhel9-operations"
+      ],
+      "platforms": [
+        "gns3",
+        "rhel9"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Trigger and capture baseline access-denied symptoms.",
+        "Inspect current file labels and expected SELinux types.",
+        "Define persistent context mapping with semanage fcontext.",
+        "Relabel path using restorecon and re-test access.",
+        "Check logs for AVC cleanup and stable operation.",
+        "Archive evidence outputs for learner verification."
+      ],
+      "coaching_notes": [
+        "Temporary chcon changes are insufficient for durable operations workflows.",
+        "Always validate both labeling state and application behavior."
+      ]
+    },
+    "rhel9_podman_systemd_container_autostart": {
+      "concept_id": "rhel9_podman_systemd_container_autostart",
+      "title": "RHEL9 Guided Build: Podman Container Service with systemd Autostart",
+      "topology": "access_edge_services_lab",
+      "exam_blueprints": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "domain": "Automation",
+      "topic": "Linux Operations",
+      "difficulty": "advanced",
+      "lab_type": "build",
+      "estimated_minutes": 40,
+      "symptom": "Operationalize a Podman workload by generating and validating systemd-managed lifecycle controls.",
+      "requirements": [
+        "Deploy target container with explicit port/volume/runtime constraints.",
+        "Generate systemd unit for container lifecycle management.",
+        "Enable autostart and verify container recovery after service restart simulation.",
+        "Validate logs and health checks from both podman and systemd perspectives."
+      ],
+      "faults": [
+        {
+          "device": "RHEL9-SRV",
+          "fault": "Container runs manually but has no durable service lifecycle integration.",
+          "fix": "Integrate container with systemd unit and verify persistence behavior."
+        }
+      ],
+      "data_patches": [],
+      "verification": [
+        "podman ps -a",
+        "systemctl status container-LABAPP.service",
+        "systemctl is-enabled container-LABAPP.service",
+        "podman logs LABAPP",
+        "ss -tulpn"
+      ],
+      "curriculum_track": "ENCOR",
+      "skills": [
+        "RHEL9",
+        "Podman",
+        "systemd"
+      ],
+      "prerequisites": [],
+      "hints": [
+        "Use generated unit files to standardize restart behavior.",
+        "Validate both container status and exposed service socket state.",
+        "Capture unit enablement evidence, not just running state."
+      ],
+      "expected_results": [
+        "Container lifecycle is controlled by a systemd service.",
+        "Service is enabled and recovers cleanly after restart tests.",
+        "Application endpoint remains reachable with expected logging output."
+      ],
+      "answer_key": {
+        "root_cause": "Workload lacked managed lifecycle controls for operational reliability.",
+        "fix_summary": "Generate/enable container systemd unit and validate restart/autostart behavior.",
+        "verification": [
+          "podman ps -a",
+          "systemctl status container-LABAPP.service",
+          "systemctl is-enabled container-LABAPP.service"
+        ]
+      },
+      "qa_status": "draft",
+      "qa_notes": [
+        "Step 3 RHEL9 Operations expansion lab."
+      ],
+      "learner_artifacts": [
+        "student_brief.md",
+        "requirements.md",
+        "hints.md",
+        "expected_results.md",
+        "verification.md",
+        "answer_key.md"
+      ],
+      "primary_exam": "ENCOR",
+      "tags": [
+        "rhel9",
+        "podman",
+        "systemd",
+        "containers",
+        "operations",
+        "build"
+      ],
+      "progression_rank": [
+        6,
+        3,
+        1,
+        "Linux Operations",
+        "RHEL9 Guided Build: Podman Container Service with systemd Autostart",
+        "rhel9_podman_systemd_container_autostart"
+      ],
+      "study_paths": [
+        "rhel9-operations"
+      ],
+      "platforms": [
+        "gns3",
+        "rhel9"
+      ],
+      "exam_alignment": [
+        "CCNA",
+        "ENCOR"
+      ],
+      "walkthrough_steps": [
+        "Deploy baseline container using required runtime settings.",
+        "Generate a systemd unit and place it in correct scope.",
+        "Reload daemon, enable, and start the container service.",
+        "Run lifecycle restart checks and verify container recovery.",
+        "Validate app reachability and inspect logs.",
+        "Document operational evidence for autostart compliance."
+      ],
+      "coaching_notes": [
+        "Service naming consistency matters between podman and systemd artifacts.",
+        "Don\u2019t skip daemon-reload after unit generation updates."
+      ]
     }
   },
   "study_plans": {
@@ -59492,7 +62328,12 @@
         {
           "title": "Virtualization and tunneling",
           "objective": "Practice VRF-Lite and GRE issues without requiring controllers.",
-          "scenario_ids": []
+          "scenario_ids": [
+            "virt_vrf_interface_wrong",
+            "virt_vrf_route_leak_missing",
+            "virt_gre_tunnel_destination_wrong",
+            "ccnp_vrf_lite_mp_bgp_leak"
+          ]
         },
         {
           "title": "Security and access hardening",
@@ -59560,7 +62401,14 @@
         {
           "title": "Virtualization",
           "objective": "Troubleshoot VRF and tunnel-based segmentation/transport labs.",
-          "scenario_ids": []
+          "scenario_ids": [
+            "virt_vrf_interface_wrong",
+            "virt_vrf_route_leak_missing",
+            "virt_gre_tunnel_destination_wrong",
+            "virt_gre_recursive_routing",
+            "arch_underlay_overlay_mapping_error",
+            "ccnp_vrf_lite_mp_bgp_leak"
+          ]
         },
         {
           "title": "Infrastructure",
@@ -59960,6 +62808,149 @@
             "ccna_auto_json_invalid",
             "ccna_auto_iac_config_drift",
             "ccna_auto_ansible_inventory_basic"
+          ]
+        }
+      ]
+    },
+    "rhel9-operations": {
+      "title": "RHEL9 Operations Practical Path",
+      "description": "A practical path through existing RHEL9 endpoint networking, service recovery, logging, time, security, and container operations labs.",
+      "steps": [
+        {
+          "title": "Network identity and addressing",
+          "objective": "Build persistent RHEL9 addressing, DNS, and VLAN endpoint connectivity with nmcli.",
+          "scenario_ids": [
+            "rhel9_nmcli_static_ip_dns",
+            "rhel9_vlan_subinterfaces_nmcli"
+          ]
+        },
+        {
+          "title": "Service recovery and logging",
+          "objective": "Recover systemd services and forward logs with durable rsyslog queue behavior.",
+          "scenario_ids": [
+            "rhel9_systemd_service_recovery_journalctl",
+            "rhel9_rsyslog_remote_forwarding_queue_hardening"
+          ]
+        },
+        {
+          "title": "Time and security policy hardening",
+          "objective": "Harden time synchronization and restore SELinux/firewalld policy for required services.",
+          "scenario_ids": [
+            "rhel9_chrony_ntp_hardening_and_drift_validation",
+            "rhel9_firewalld_zones_services_richrules",
+            "rhel9_selinux_httpd_contexts_restorecon"
+          ]
+        },
+        {
+          "title": "Container service operations",
+          "objective": "Operate a Podman workload as a managed systemd service with autostart behavior.",
+          "scenario_ids": [
+            "rhel9_podman_systemd_container_autostart"
+          ]
+        }
+      ]
+    },
+    "secure-enclave-networking": {
+      "title": "Secure Enclave Networking Practical Path",
+      "description": "A curated path for hardening access edge, management plane, firewall/NAT, encrypted transport, and audit-ready enclave baselines.",
+      "steps": [
+        {
+          "title": "Access-edge controls",
+          "objective": "Harden common campus edge controls before moving into firewall policy.",
+          "scenario_ids": [
+            "svc_bpduguard_missing_on_access",
+            "svc_port_security_maximum_too_low",
+            "svc_port_security_violation_shutdown"
+          ]
+        },
+        {
+          "title": "Management-plane and AAA hardening",
+          "objective": "Restrict administrative access and validate resilient AAA behavior.",
+          "scenario_ids": [
+            "sec_vty_acl_blocks_admin",
+            "sec_vty_transport_telnet_enabled",
+            "senk_aaa_tacacs_local_fallback"
+          ]
+        },
+        {
+          "title": "Firewall and NAT policy validation",
+          "objective": "Validate ASAv management exposure plus inside/outside and DMZ publishing NAT policy.",
+          "scenario_ids": [
+            "sec_asa_management_ssh_wrong_interface",
+            "senk_asav_inside_outside_nat",
+            "senk_asav_static_nat_dmz_publishing"
+          ]
+        },
+        {
+          "title": "Encrypted transport controls",
+          "objective": "Build and verify site-to-site IPsec VTI transport for enclave connectivity.",
+          "scenario_ids": [
+            "senk_site2site_ipsec_ikev2_vti"
+          ]
+        },
+        {
+          "title": "Audit-ready baseline validation",
+          "objective": "Confirm logging, time, and recovery signals that support enclave audit evidence.",
+          "scenario_ids": [
+            "na_syslog_wrong_source_interface",
+            "na_ntp_wrong_server",
+            "svc_errdisable_recovery_missing"
+          ]
+        }
+      ]
+    },
+    "network-troubleshooting": {
+      "title": "Network Troubleshooting Practical Path",
+      "description": "A curated incident-response path across L2 reachability, routing, services, assurance, security, and operational change control.",
+      "steps": [
+        {
+          "title": "L2 and endpoint reachability incidents",
+          "objective": "Resolve access-edge and errdisable symptoms that interrupt endpoint connectivity.",
+          "scenario_ids": [
+            "svc_errdisable_recovery_missing",
+            "svc_nat_acl_wrong_source"
+          ]
+        },
+        {
+          "title": "Routing adjacency and path incidents",
+          "objective": "Troubleshoot OSPF and BGP control-plane problems before deeper service checks.",
+          "scenario_ids": [
+            "l3_ospf_area_mismatch",
+            "l3_ospf_passive_interface",
+            "bgp_wrong_remote_as",
+            "bgp_next_hop_unreachable"
+          ]
+        },
+        {
+          "title": "Policy and path-control incidents",
+          "objective": "Fix path steering and routing-choice problems that create subtle reachability failures.",
+          "scenario_ids": [
+            "l3_pbr_acl_mismatch",
+            "l3_ospf_cost_suboptimal",
+            "bgp_missing_network_statement"
+          ]
+        },
+        {
+          "title": "Services and assurance incidents",
+          "objective": "Use monitoring and time-service failures to practice evidence-driven troubleshooting.",
+          "scenario_ids": [
+            "na_syslog_wrong_host",
+            "na_ntp_wrong_server"
+          ]
+        },
+        {
+          "title": "Security policy incidents",
+          "objective": "Differentiate management-plane filtering from broader data-plane reachability issues.",
+          "scenario_ids": [
+            "sec_vty_acl_blocks_admin"
+          ]
+        },
+        {
+          "title": "Capstone operational troubleshooting",
+          "objective": "Apply failover and rollback workflows to close the incident lifecycle.",
+          "scenario_ids": [
+            "nt_config_ip_sla_track_failover",
+            "nt_config_change_window_checkpoint_rollback"
           ]
         }
       ]

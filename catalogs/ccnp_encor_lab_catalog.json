@@ -62811,6 +62811,44 @@
           ]
         }
       ]
+    },
+    "rhel9-operations": {
+      "title": "RHEL9 Operations Practical Path",
+      "description": "A practical path through existing RHEL9 endpoint networking, service recovery, logging, time, security, and container operations labs.",
+      "steps": [
+        {
+          "title": "Network identity and addressing",
+          "objective": "Build persistent RHEL9 addressing, DNS, and VLAN endpoint connectivity with nmcli.",
+          "scenario_ids": [
+            "rhel9_nmcli_static_ip_dns",
+            "rhel9_vlan_subinterfaces_nmcli"
+          ]
+        },
+        {
+          "title": "Service recovery and logging",
+          "objective": "Recover systemd services and forward logs with durable rsyslog queue behavior.",
+          "scenario_ids": [
+            "rhel9_systemd_service_recovery_journalctl",
+            "rhel9_rsyslog_remote_forwarding_queue_hardening"
+          ]
+        },
+        {
+          "title": "Time and security policy hardening",
+          "objective": "Harden time synchronization and restore SELinux/firewalld policy for required services.",
+          "scenario_ids": [
+            "rhel9_chrony_ntp_hardening_and_drift_validation",
+            "rhel9_firewalld_zones_services_richrules",
+            "rhel9_selinux_httpd_contexts_restorecon"
+          ]
+        },
+        {
+          "title": "Container service operations",
+          "objective": "Operate a Podman workload as a managed systemd service with autostart behavior.",
+          "scenario_ids": [
+            "rhel9_podman_systemd_container_autostart"
+          ]
+        }
+      ]
     }
   },
   "qa_policy": {

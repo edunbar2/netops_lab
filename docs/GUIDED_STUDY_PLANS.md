@@ -5,6 +5,7 @@ These plans are stored in the catalog under `study_plans` and can be listed from
 ```bash
 ./gns3_ccnp_lab_generator.py --list-study-plan encor-core
 ./gns3_ccnp_lab_generator.py --list-study-plan encor-complete
+./gns3_ccnp_lab_generator.py --list-study-plan rhel9-operations
 ```
 
 ## ENCOR Core Practical Path
@@ -195,3 +196,42 @@ Labs:
 - `auto_yang_interface_payload_interpret` — YANG Interface Payload Interpretation
 - `auto_python_parse_show_output_bug` — Python Parser Bug
 
+## RHEL9 Operations Practical Path
+
+A practical path through existing RHEL9 endpoint networking, service recovery, logging, time, security, and container operations labs.
+
+### 1. Network identity and addressing
+
+**Objective:** Build persistent RHEL9 addressing, DNS, and VLAN endpoint connectivity with nmcli.
+
+Labs:
+
+- `rhel9_nmcli_static_ip_dns` — RHEL9 Guided Build: nmcli Static IP and DNS Baseline
+- `rhel9_vlan_subinterfaces_nmcli` — RHEL9 Guided Build: VLAN Subinterfaces with nmcli
+
+### 2. Service recovery and logging
+
+**Objective:** Recover systemd services and forward logs with durable rsyslog queue behavior.
+
+Labs:
+
+- `rhel9_systemd_service_recovery_journalctl` — RHEL9 Guided Build: systemd Service Recovery with journalctl
+- `rhel9_rsyslog_remote_forwarding_queue_hardening` — RHEL9 Guided Build: rsyslog Remote Forwarding and Queue Hardening
+
+### 3. Time and security policy hardening
+
+**Objective:** Harden time synchronization and restore SELinux/firewalld policy for required services.
+
+Labs:
+
+- `rhel9_chrony_ntp_hardening_and_drift_validation` — RHEL9 Guided Build: chrony NTP Hardening and Drift Validation
+- `rhel9_firewalld_zones_services_richrules` — RHEL9 Guided Build: firewalld Zones, Services, and Rich Rules
+- `rhel9_selinux_httpd_contexts_restorecon` — RHEL9 Guided Build: SELinux HTTPD Context Recovery with restorecon
+
+### 4. Container service operations
+
+**Objective:** Operate a Podman workload as a managed systemd service with autostart behavior.
+
+Labs:
+
+- `rhel9_podman_systemd_container_autostart` — RHEL9 Guided Build: Podman Container Service with systemd Autostart

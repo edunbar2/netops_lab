@@ -57,6 +57,10 @@ Labs:
 
 Labs:
 
+- `virt_vrf_interface_wrong` — VRF Interface Wrong
+- `virt_vrf_route_leak_missing` — VRF Route Leak Missing
+- `virt_gre_tunnel_destination_wrong` — GRE Tunnel Destination Wrong
+- `ccnp_vrf_lite_mp_bgp_leak` — CCNP Guided Build: VRF-Lite and MP-BGP Route Leak
 
 ### 6. Security and access hardening
 
@@ -130,6 +134,12 @@ Labs:
 
 Labs:
 
+- `virt_vrf_interface_wrong` — VRF Interface Wrong
+- `virt_vrf_route_leak_missing` — VRF Route Leak Missing
+- `virt_gre_tunnel_destination_wrong` — GRE Tunnel Destination Wrong
+- `virt_gre_recursive_routing` — GRE Recursive Routing
+- `arch_underlay_overlay_mapping_error` — Architecture: Underlay/Overlay Mapping Error
+- `ccnp_vrf_lite_mp_bgp_leak` — CCNP Guided Build: VRF-Lite and MP-BGP Route Leak
 
 ### 3. Infrastructure
 

@@ -62328,7 +62328,12 @@
         {
           "title": "Virtualization and tunneling",
           "objective": "Practice VRF-Lite and GRE issues without requiring controllers.",
-          "scenario_ids": []
+          "scenario_ids": [
+            "virt_vrf_interface_wrong",
+            "virt_vrf_route_leak_missing",
+            "virt_gre_tunnel_destination_wrong",
+            "ccnp_vrf_lite_mp_bgp_leak"
+          ]
         },
         {
           "title": "Security and access hardening",
@@ -62396,7 +62401,14 @@
         {
           "title": "Virtualization",
           "objective": "Troubleshoot VRF and tunnel-based segmentation/transport labs.",
-          "scenario_ids": []
+          "scenario_ids": [
+            "virt_vrf_interface_wrong",
+            "virt_vrf_route_leak_missing",
+            "virt_gre_tunnel_destination_wrong",
+            "virt_gre_recursive_routing",
+            "arch_underlay_overlay_mapping_error",
+            "ccnp_vrf_lite_mp_bgp_leak"
+          ]
         },
         {
           "title": "Infrastructure",
